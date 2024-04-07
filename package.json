@@ -12,17 +12,18 @@
     "lint:fix": "eslint --fix --ext ts,tsx src/",
     "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
-    "pre-commit": "lint-staged",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
-    "*.{ts, tsx, scss}": [
+    "*.{ts,tsx,scss}": [
       "npm run lint",
       "npm run prettier:fix"
     ]
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.10",
+    "@types/lint-staged": "^13.3.0",
     "framer-motion": "^11.0.25",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

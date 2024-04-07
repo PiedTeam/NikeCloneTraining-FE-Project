@@ -35,7 +35,6 @@ module.exports = {
     'no-magic-numbers': 'warn',
     'no-nested-ternary': 'warn',
     'require-await': 'error',
-    '@typescript-eslint/no-unused-vars': ['warn'],
     'prettier/prettier': [
       'warn',
       {
