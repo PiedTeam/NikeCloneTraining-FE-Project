@@ -16,10 +16,7 @@
   "plugins": ["react", "prettier"],
   "settings": {
     "import/resolver": {
-      "node": {
-        "paths": ["${__dirname}"],
-        "extensions": [".ts", ".tsx"]
-      },
+      "node": {},
       "typescript": {}
     },
     "react": {
