@@ -1,2 +1,7 @@
-@import 'global';
-@import 'vars';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "global";
+@import "vars";
+@import "typo";
