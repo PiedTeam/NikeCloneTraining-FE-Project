@@ -10,7 +10,6 @@
     "prepare": "husky",
     "lint": "eslint --ext .ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .ts,.tsx src/",
-    "format:check": "prettier --check src --cache",
     "format:write": "prettier --write src --cache",
     "postinstall": "husky install",
     "lint-staged": "lint-staged"
@@ -21,14 +20,12 @@
       "npm run lint"
     ]
   },
-  "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
-  },
   "dependencies": {
     "@nextui-org/react": "^2.2.10",
     "@types/lint-staged": "^13.3.0",
-    "framer-motion": "^11.0.25"
+    "framer-motion": "^11.0.25",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
@@ -51,8 +48,6 @@
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.13",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "sass": "^1.74.1",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
