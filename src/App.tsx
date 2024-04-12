@@ -13,6 +13,7 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 const Register = lazy(() => import("@pages/Register"));
 const Homepage = lazy(() => import("@pages/Homepage"));
 const PageNotFound = lazy(() => import("@pages/PageNotFound"));
+const Login = lazy(() => import("@pages/Login"));
 
 function App() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Homepage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/404" />} />
         <Route path="/404" element={<PageNotFound />} />
       </Routes>
