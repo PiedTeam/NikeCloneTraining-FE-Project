@@ -1,0 +1,54 @@
+{
+  "firstnameRule": {
+    "required": {
+      "value": true,
+      "message": "Required"
+    }
+  },
+  "lastnameRule": {
+    "required": {
+      "value": true,
+      "message": "Required"
+    }
+  },
+  "usernameRule": {
+    "required": {
+      "value": true,
+      "message": "Required"
+    }
+  },
+  "passwordRule": {
+    "required": {
+      "value": true,
+      "message": "Required"
+    },
+    "minLength": {
+      "value": 8,
+      "message": "Password must be at least 8 characters"
+    },
+    "pattern": {
+      "value": "^[a-zA-Z0-9!@#$%^&*.]{6,16}$",
+      "message": "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    }
+  },
+  "emailRule": {
+    "required": {
+      "value": true,
+      "message": "Required"
+    },
+    "isEmail": {
+      "value": true,
+      "message": "Email is invalid"
+    }
+  },
+  "phonenumberRule": {
+    "required": {
+      "value": true,
+      "message": "Required"
+    },
+    "pattern": {
+      "value": "/(84|0[3|5|7|8|9])+([0-9]{8})\b/g",
+      "message": "Phone number is invalid"
+    }
+  }
+}
