@@ -1,82 +1,62 @@
 // utils
-
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 // styles
 
 // contexts
 
+// constants
+import ValidationRules from "@constants/validationRules.json";
 // hooks
-
+import useWindowSize from "@hooks/useWindowSize";
+import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
 //components
 import DocumentTitle from "@components/DocumentTitle";
 import { Button, Checkbox, Input } from "@nextui-org/react";
 import LogoNike from "@assets/logo/logo_nike.svg";
-
-// import { useNavigate } from "react-router-dom";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import ValidationRules from "@constants/validationRules.json";
-import useWindowSize from "@hooks/useWindowSize";
-import { useState } from "react";
 import EyeSlashFilledIcon from "@components/EyeSlashFilledIcon";
 import EyeFilledIcon from "@components/EyeFilledIcon";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-enum VerifyMethod {
-  EMAIL = "email",
-  SMS = "sms",
-}
+// enum VerifyMethod {
+//   EMAIL = "email",
+//   SMS = "sms",
+// }
 
 interface IRegisterForm {
   firstname: string;
   lastname: string;
   username: string;
   password: string;
-  email: string;
-  phonenumber: string;
-  verifyMethod: VerifyMethod;
   agreeToTerms: boolean;
-  subcribe: boolean;
+  subcribe?: boolean;
 }
 
-const schema: yup.ObjectSchema<IRegisterForm> = yup
-  .object({
-    firstname: yup
-      .string()
-      .required(ValidationRules.firstnameRule.required.message),
-    lastname: yup
-      .string()
-      .required(ValidationRules.lastnameRule.required.message),
-    username: yup
-      .string()
-      .required(ValidationRules.usernameRule.required.message),
-    password: yup
-      .string()
-      .required(ValidationRules.passwordRule.required.message)
-      .min(
-        ValidationRules.passwordRule.minLength.value,
-        ValidationRules.passwordRule.minLength.message,
-      )
-      .matches(
-        new RegExp(ValidationRules.passwordRule.pattern.value),
-        ValidationRules.passwordRule.pattern.message,
-      ),
-    email: yup
-      .string()
-      .email(ValidationRules.emailRule.isEmail.message)
-      .required(ValidationRules.emailRule.required.message),
-    phonenumber: yup
-      .string()
-      .required(ValidationRules.phonenumberRule.required.message)
-      .matches(
-        new RegExp(ValidationRules.phonenumberRule.pattern.value),
-        ValidationRules.phonenumberRule.pattern.message,
-      ),
-    verifyMethod: yup.string().oneOf(Object.values(VerifyMethod)).required(),
-    agreeToTerms: yup.boolean().required(),
-    subcribe: yup.boolean().required(),
-  })
-  .required();
+const schema: yup.ObjectSchema<IRegisterForm> = yup.object().shape({
+  firstname: yup
+    .string()
+    .required(ValidationRules.firstnameRule.required.message),
+  lastname: yup
+    .string()
+    .required(ValidationRules.lastnameRule.required.message),
+  username: yup
+    .string()
+    .required(ValidationRules.usernameRule.required.message),
+  password: yup
+    .string()
+    .required(ValidationRules.passwordRule.required.message)
+    .min(
+      ValidationRules.passwordRule.minLength.value,
+      ValidationRules.passwordRule.minLength.message,
+    )
+    .matches(
+      new RegExp(ValidationRules.passwordRule.pattern.value),
+      ValidationRules.passwordRule.pattern.message,
+    ),
+  agreeToTerms: yup.boolean().required(),
+  subcribe: yup.boolean(),
+});
 
 const Register = () => {
   // const navigate = useNavigate()
@@ -90,8 +70,13 @@ const Register = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IRegisterForm>({ resolver: yupResolver(schema) });
-  const onSubmit: SubmitHandler<IRegisterForm> = (data) => console.log(data);
+  } = useForm<IRegisterForm>({
+    resolver: yupResolver(schema),
+    criteriaMode: "all",
+  });
+  const onSubmit: SubmitHandler<IRegisterForm> = (_data) => {
+    console.log(_data);
+  };
 
   return (
     <>
@@ -253,83 +238,37 @@ const Register = () => {
                         </button>
                       }
                       type={isVisible ? "text" : "password"}
-                      // variant="bordered"
                     />
                   )}
                 />
-                <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
-                  {errors.password?.message}
-                </p>
-
-                {/* <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    classNames={{
-                      input: [
-                        "bg-transparent",
-                        "placeholder:text-default-700/50 placeholder:text-lg",
-                      ],
-                      innerWrapper: ["bg-transparent"],
-                      inputWrapper: [
-                        "mt-unit-8",
-                        "w-full",
-                        "h-unit-13",
-                        "border",
-                        errors.email ? "border-red-600" : "border-black",
-                        "bg-white",
-                      ],
-                    }}
-                    radius="sm"
-                    placeholder="Email *"
-                    type="text"
-                  />
-                )}
-              />
-              <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
-                {errors.email?.message}
-              </p>
-
-              <Controller
-                name="phonenumber"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    classNames={{
-                      input: [
-                        "bg-transparent",
-                        "placeholder:text-default-700/50 placeholder:text-lg",
-                      ],
-                      innerWrapper: ["bg-transparent"],
-                      inputWrapper: [
-                        "mt-unit-8",
-                        "w-full",
-                        "h-unit-13",
-                        "border",
-                        errors.phonenumber ? "border-red-600" : "border-black",
-                        "bg-white",
-                      ],
-                    }}
-                    radius="sm"
-                    type="text"
-                    placeholder="Phone Number *"
-                  />
-                )}
-              />
-              <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
-                {errors.phonenumber?.message}
-              </p> */}
+                <div className="text-xs ml-2 font-medium mt-2 text-red-500">
+                  <p>
+                    {errors.password?.types?.required ||
+                    errors.password?.types?.optionality
+                      ? "Required"
+                      : ""}
+                  </p>
+                  <p
+                    className={`text-xs mt-2 ${errors.password?.types?.min || errors.password?.types?.optionality ? "" : "text-black"}`}
+                  >
+                    Minumum of 8 characters
+                  </p>
+                  <p
+                    className={`text-xs mt-2 ${errors.password?.types?.matches || errors.password?.types?.optionality ? "" : "text-black"}`}
+                  >
+                    Uppercase, lowercase letters, and one number
+                  </p>
+                </div>
                 <Controller
                   name="subcribe"
                   control={control}
-                  render={() => (
+                  render={({ field }) => (
                     <Checkbox
                       color="default"
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
                       classNames={{
-                        base: ["mt-8"],
+                        base: ["mt-4"],
                         label: ["text-md"],
                       }}
                     >
@@ -373,6 +312,9 @@ const Register = () => {
                   )}
                 />
 
+                <button type="button" onClick={() => console.log(errors)}>
+                  Ahhi
+                </button>
                 <Button
                   type="submit"
                   className="block mt-12 h-unit-13 bg-black text-white justify-end font-bold px-8 text-lg left-[60%]"
