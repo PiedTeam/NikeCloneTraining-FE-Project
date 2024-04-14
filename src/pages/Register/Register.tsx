@@ -312,9 +312,6 @@ const Register = () => {
                   )}
                 />
 
-                <button type="button" onClick={() => console.log(errors)}>
-                  Ahhi
-                </button>
                 <Button
                   type="submit"
                   className="block mt-12 h-unit-13 bg-black text-white justify-end font-bold px-8 text-lg left-[60%]"
