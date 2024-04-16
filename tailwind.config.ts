@@ -3,7 +3,7 @@
 import { nextui } from "@nextui-org/react";
 import { Config } from "tailwindcss/types/config";
 
-const config: Pick<Config, "content" | "plugins"> = {
+const config: Config = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -11,24 +11,8 @@ const config: Pick<Config, "content" | "plugins"> = {
   ],
   plugins: [
     nextui({
-      prefix: "nextui", // prefix for themes variables
-      addCommonColors: false, // override common colors (e.g. "blue", "green", "pink").
-      defaultTheme: "light", // default theme from the themes object
-      defaultExtendTheme: "light", // default theme to extend on custom themes
-      layout: {
-        spacingUnit: 4, // in px
-      }, // common layout tokens (applied to all themes)
-      themes: {
-        light: {
-          layout: {}, // light theme layout tokens
-          colors: {}, // light theme colors
-        },
-        dark: {
-          layout: {}, // dark theme layout tokens
-          colors: {}, // dark theme colors
-        },
-        // ... custom themes
-      },
+      prefix: "nextui",
+      addCommonColors: false,
     }),
   ],
 };

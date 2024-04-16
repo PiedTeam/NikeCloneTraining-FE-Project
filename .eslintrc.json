@@ -28,7 +28,6 @@
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "eqeqeq": "error",
-    // "no-magic-numbers": "error",
     "no-nested-ternary": "error",
     "require-await": "error",
     "prettier/prettier": [

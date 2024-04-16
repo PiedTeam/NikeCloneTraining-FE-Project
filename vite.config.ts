@@ -1,7 +1,7 @@
 import { defineConfig, UserConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
-const viteConfig: Pick<UserConfig, "plugins" | "server" | "css" | "resolve"> = {
+const viteConfig: UserConfig = {
   plugins: [react()],
   server: {
     port: 3000,
