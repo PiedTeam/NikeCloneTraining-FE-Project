@@ -1,13 +1,30 @@
+//utils
+import { lazy } from "react";
+
+// providers
 import { NextUIProvider } from "@nextui-org/react";
 
-const App = () => {
+// hooks
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+
+// components
+
+// pages
+const Register = lazy(() => import("@pages/Register"));
+const Homepage = lazy(() => import("@pages/Homepage"));
+
+function App() {
+  const navigate = useNavigate();
+
   return (
-    <>
-      <NextUIProvider>
-        <h1 className="text-red-400">Hello World</h1>
-      </NextUIProvider>
-    </>
+    <NextUIProvider navigate={navigate}>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Homepage />} />
+        <Route path="*" element={<Navigate to="/404" />} />
+      </Routes>
+    </NextUIProvider>
   );
-};
+}
 
 export default App;
