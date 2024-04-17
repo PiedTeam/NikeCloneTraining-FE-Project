@@ -12,7 +12,6 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 // pages
 const Register = lazy(() => import("@pages/Register"));
 const Homepage = lazy(() => import("@pages/Homepage"));
-const PageNotFound = lazy(() => import("@pages/PageNotFound"));
 const Login = lazy(() => import("@pages/Login"));
 
 function App() {
@@ -25,7 +24,6 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/404" />} />
-        <Route path="/404" element={<PageNotFound />} />
       </Routes>
     </NextUIProvider>
   );
