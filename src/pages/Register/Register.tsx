@@ -345,7 +345,6 @@ const Register = () => {
                 >
                   Register with Google
                 </Button>
-              </div>
             </div>
           </div>
         </div>
