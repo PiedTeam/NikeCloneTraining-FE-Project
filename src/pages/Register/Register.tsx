@@ -18,11 +18,8 @@ import LogoNike from "@assets/logo/logo_nike.svg";
 import EyeSlashFilledIcon from "@components/EyeSlashFilledIcon";
 import EyeFilledIcon from "@components/EyeFilledIcon";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-
-// enum VerifyMethod {
-//   EMAIL = "email",
-//   SMS = "sms",
-// }
+import FacebookSVG from "@assets/logo/FacebookSVG";
+import GoogleSVG from "@assets/logo/GoogleSVG";
 
 interface IRegisterForm {
   firstname: string;
@@ -268,7 +265,7 @@ const Register = () => {
                       checked={field.value}
                       onChange={(e) => field.onChange(e.target.checked)}
                       classNames={{
-                        base: ["mt-4"],
+                        base: ["mt-2"],
                         label: ["text-md"],
                       }}
                     >
@@ -287,7 +284,7 @@ const Register = () => {
                       checked={field.value}
                       onChange={(e) => field.onChange(e.target.checked)}
                       classNames={{
-                        base: ["mt-3"],
+                        base: ["mt-1"],
                         label: [
                           "text-md",
                           errors.agreeToTerms ? "text-red-500" : "text-black",
@@ -314,13 +311,40 @@ const Register = () => {
 
                 <Button
                   type="submit"
-                  className="block mt-12 h-unit-13 bg-black text-white justify-end font-bold px-8 text-lg left-[60%]"
+                  className="block mt-6 h-unit-13 bg-black text-white justify-end font-bold px-8 text-lg w-full"
                   radius="full"
                   // isLoading={true}
                 >
                   Create Account
                 </Button>
               </form>
+              <div className="mt-6 flex items-center justify-between">
+                <div className="border border-slate-400 w-5/12"></div>
+                <div>
+                  <p className="block text-center text-2xl">OR</p>
+                </div>
+                <div className="border border-slate-400 w-5/12"></div>
+              </div>
+
+              <div className="mt-4 text-center flex items-center justify-between">
+                <Button
+                  type="submit"
+                  className="h-unit-13 w-50 font-medium text-small"
+                  radius="full"
+                  // color="primary"
+                  startContent={<FacebookSVG />}
+                >
+                  Register with Facebook
+                </Button>
+                <Button
+                  type="submit"
+                  className="h-unit-13 w-50 font-medium px-5 text-small"
+                  radius="full"
+                  startContent={<GoogleSVG />}
+                  // color="primary"
+                >
+                  Register with Google
+                </Button>
             </div>
           </div>
         </div>
