@@ -1,14 +1,15 @@
 import React, { MouseEventHandler } from "react";
-import { Input, Link, Button } from "@nextui-org/react";
+import { Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import EyeFilledIcon from "../../components/EyeFilledIcon.tsx";
-import EyeSlashFilledIcon from "../../components/EyeSlashFilledIcon.tsx";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import BrandLogo from "@components/common/BrandLogo.tsx";
+import InputControl from "@components/common/InputControl";
+import ButtonPreviewPassword from "@components/common/ButtonPreviewPassword";
 
-interface FormData {
+interface LoginFormValues {
   email: string;
   password: string;
 }
@@ -22,17 +23,17 @@ const schema = yup.object().shape({
 });
 
 const Login = () => {
-  const [isVisible, setIsVisible] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState<boolean>(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<LoginFormValues>({
     resolver: yupResolver(schema),
   });
 
-  const handleLogin: SubmitHandler<FormData> = (data) => {
+  const handleLogin: SubmitHandler<LoginFormValues> = (data) => {
     console.log(data);
   };
 
@@ -44,53 +45,34 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center  h-full  ">
-      <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
+    <div className="flex justify-center h-full">
+      <div className="flex flex-col mt-24 items-center w-1/2 h-3/4 max-[900px]:text-[14 px] p-12 transform -translate-y-5 shadow-2xl">
         <h1>WELCOME BACK</h1>
-        <div className="flex justify-center mx-10">
-          <img
-            src="../../src/assets/images/jordan.jpg"
-            alt=""
-            className="w-4/12 h-6/12 max-[600px]:hidden "
-          />
-          <img
-            src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
-            alt=""
-            className="w-4/12 h-6/12 max-[600px]:hidden"
-          />
-        </div>
-        <Input
-          {...register("email")}
+        <BrandLogo />
+        <InputControl<LoginFormValues>
+          isRequired
+          isError={!!errors.email}
+          errorMessage={errors.email?.message}
+          register={register}
+          name="email"
           type="email"
           label="Email"
-          variant="bordered"
           placeholder="Enter your email"
-          isInvalid={errors.email ? true : undefined}
-          color={errors.email ? "danger" : "success"}
-          errorMessage={errors.email?.message}
           className="max-w-xs mb-4"
         />
-
-        <Input
-          {...register("password")}
+        <InputControl<LoginFormValues>
+          isError={!!errors.password}
+          register={register}
+          name="password"
           isRequired
           label="Password"
-          variant="bordered"
           placeholder="Enter your password"
-          color={errors.password ? "danger" : "success"}
           errorMessage={errors.password?.message}
           endContent={
-            <button
-              className="focus:outline-none mb4"
-              type="button"
-              onClick={toggleVisibility}
-            >
-              {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )}
-            </button>
+            <ButtonPreviewPassword
+              toggleVisibility={toggleVisibility}
+              isVisible={isVisible}
+            />
           }
           type={isVisible ? "text" : "password"}
           className="max-w-xs"
@@ -121,16 +103,16 @@ const Login = () => {
           <Button
             className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16 "
             radius="none"
+            endContent={<FaFacebook className="text-blue-800 text-5xl " />}
           >
             Login With Facebook
-            <FaFacebook className="text-blue-800 text-5xl " />
           </Button>
           <Button
             className="ml-4 border-4 w-2/4 max-[900px]:w-32 max-[900px]:text-[0] max-[600px]:w-16   "
             radius="none"
+            endContent={<FcGoogle className="text-4xl" />}
           >
             Login With Google
-            <FcGoogle className="text-4xl" />
           </Button>
         </div>
         <p className="text-center">
