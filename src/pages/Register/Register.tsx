@@ -21,7 +21,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import FacebookSVG from "@assets/logo/FacebookSVG";
 import GoogleSVG from "@assets/logo/GoogleSVG";
 
-interface IRegisterForm {
+export interface IRegisterForm {
   firstname: string;
   lastname: string;
   username: string;
@@ -345,6 +345,7 @@ const Register = () => {
                 >
                   Register with Google
                 </Button>
+              </div>
             </div>
           </div>
         </div>
