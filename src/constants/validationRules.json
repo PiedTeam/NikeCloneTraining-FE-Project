@@ -1,11 +1,11 @@
 {
-  "firstnameRule": {
+  "first_nameRule": {
     "required": {
       "value": true,
       "message": "Required"
     }
   },
-  "lastnameRule": {
+  "last_nameRule": {
     "required": {
       "value": true,
       "message": "Required"
