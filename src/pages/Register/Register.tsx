@@ -1,22 +1,13 @@
 // utils
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-// styles
-
-// contexts
-
-// constants
 import ValidationRules from "@constants/validationRules.json";
-// hooks
 import useWindowSize from "@hooks/useWindowSize";
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-//components
-import DocumentTitle from "@components/DocumentTitle";
+import DocumentTitle from "@components/common/DocumentTitle";
 import { Button, Checkbox, Input } from "@nextui-org/react";
-import LogoNike from "@assets/logo/logo_nike.svg";
-import EyeSlashFilledIcon from "@components/EyeSlashFilledIcon";
-import EyeFilledIcon from "@components/EyeFilledIcon";
+import EyeSlashFilledIcon from "@components/icons/EyeSlashFilledIcon";
+import EyeFilledIcon from "@components/icons/EyeFilledIcon";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import FacebookSVG from "@assets/logo/FacebookSVG";
 import GoogleSVG from "@assets/logo/GoogleSVG";
@@ -83,7 +74,10 @@ const Register = () => {
           {width >= 1024 && (
             <div className="flex flex-col justify-center items-center lg:p-[60px]">
               <div>
-                <img src={LogoNike} alt="Pied" />
+                <img
+                  src="../../../public/assets/logo/logo_nike.svg"
+                  alt="Pied"
+                />
               </div>
             </div>
           )}
@@ -345,6 +339,7 @@ const Register = () => {
                 >
                   Register with Google
                 </Button>
+              </div>
             </div>
           </div>
         </div>

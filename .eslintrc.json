@@ -13,7 +13,10 @@
     "eslint-config-prettier",
     "prettier"
   ],
-  "plugins": ["react", "prettier"],
+  "plugins": [
+    "react",
+    "prettier"
+  ],
   "settings": {
     "import/resolver": {
       "node": {},
@@ -24,6 +27,7 @@
     }
   },
   "rules": {
+    "react/jsx-closing-tag-location": "off",
     "react/jsx-no-target-blank": "error",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
