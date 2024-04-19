@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
-    "@nextui-org/link": "^2.0.28",
     "@nextui-org/react": "^2.2.10",
     "@tanstack/react-query": "^5.29.2",
     "@types/lint-staged": "^13.3.0",
