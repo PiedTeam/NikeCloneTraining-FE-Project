@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react-swc";
 const viteConfig: UserConfig = {
   plugins: [react()],
   server: {
-    port: 4000,
+    port: 3000,
     watch: {
       usePolling: true,
     },
