@@ -8,14 +8,24 @@ import { FcGoogle } from "react-icons/fc";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DocumentTitle from "@components/DocumentTitle.tsx";
+import { useMutation } from "@tanstack/react-query";
+// import { isAxiosError } from "@utils/utils.ts";
+import { useNavigate } from "react-router-dom";
+import { login } from "@apis/users.api.ts";
 
-interface FormData {
-  email: string;
+export interface LoginFormData {
+  username: string;
   password: string;
 }
 
+// type FormError =
+//   | {
+//       [key in keyof FormData]?: string;
+//     }
+//   | null;
+
 const schema = yup.object().shape({
-  email: yup.string().required("Email is required"),
+  username: yup.string().required("Username is required"),
   password: yup
     .string()
     .required("Password is required")
@@ -23,18 +33,40 @@ const schema = yup.object().shape({
 });
 
 const Login = () => {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   });
 
-  const handleLogin: SubmitHandler<FormData> = (data) => {
+  const { mutate } = useMutation({
+    mutationFn: (body: LoginFormData) => {
+      return login(body);
+    },
+  });
+
+  // const errorForm: FormError = useMemo(() => {
+  //   if (
+  //     isAxiosError<{ error: FormError }>(error) &&
+  //     error.response?.status === 422
+  //   ) {
+  //     return error.response?.data.error;
+  //   }
+  //   return null;
+  // }, [error]);
+
+  const handleLogin: SubmitHandler<LoginFormData> = (data) => {
     console.log(data);
+    mutate(data, {
+      onSuccess: () => {
+        navigate("/");
+      },
+    });
   };
 
   const handleLoginButtonClick: MouseEventHandler<HTMLButtonElement> = (
@@ -63,14 +95,14 @@ const Login = () => {
             />
           </div>
           <Input
-            {...register("email")}
-            type="email"
-            label="Email"
+            {...register("username")}
+            type="username"
+            label="Username"
             variant="bordered"
-            placeholder="Enter your email"
-            isInvalid={errors.email ? true : undefined}
-            color={errors.email ? "danger" : "success"}
-            errorMessage={errors.email?.message}
+            placeholder="Enter your username"
+            isInvalid={errors.username ? true : undefined}
+            color={errors.username ? "danger" : "success"}
+            errorMessage={errors.username?.message}
             className="max-w-xs mb-4"
           />
 
