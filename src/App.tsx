@@ -14,6 +14,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 const Register = lazy(() => import("@pages/Register"));
 const Homepage = lazy(() => import("@pages/Homepage"));
 const Login = lazy(() => import("@pages/Login"));
+const VerifyAccount = lazy(() => import("@pages/VerifyAccount"));
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/verify-account" element={<VerifyAccount />} />
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>
