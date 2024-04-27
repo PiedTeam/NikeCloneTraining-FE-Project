@@ -9,8 +9,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ValidationRules from "@constants/validationRules.json";
 // hooks
 import useWindowSize from "@hooks/useWindowSize";
-import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 //components
 import DocumentTitle from "@components/DocumentTitle";
 import { Button, Checkbox, Input } from "@nextui-org/react";
@@ -20,10 +20,13 @@ import EyeFilledIcon from "@components/EyeFilledIcon";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import FacebookSVG from "@assets/logo/FacebookSVG";
 import GoogleSVG from "@assets/logo/GoogleSVG";
+import { useMutation } from "@tanstack/react-query";
+import { register } from "@apis/users.api";
+import { isAxiosError } from "@utils/utils";
 
 export interface IRegisterForm {
-  firstname: string;
-  lastname: string;
+  first_name: string;
+  last_name: string;
   username: string;
   password: string;
   agreeToTerms: boolean;
@@ -31,10 +34,10 @@ export interface IRegisterForm {
 }
 
 const schema: yup.ObjectSchema<IRegisterForm> = yup.object().shape({
-  firstname: yup
+  first_name: yup
     .string()
     .required(ValidationRules.firstnameRule.required.message),
-  lastname: yup
+  last_name: yup
     .string()
     .required(ValidationRules.lastnameRule.required.message),
   username: yup
@@ -51,16 +54,37 @@ const schema: yup.ObjectSchema<IRegisterForm> = yup.object().shape({
       new RegExp(ValidationRules.passwordRule.pattern.value),
       ValidationRules.passwordRule.pattern.message,
     ),
-  agreeToTerms: yup.boolean().required(),
+  agreeToTerms: yup.boolean().required().isTrue(),
   subcribe: yup.boolean(),
 });
 
+type FormError =
+  | {
+      [key in keyof Omit<IRegisterForm, "agreeToTerms">]?: string;
+    }
+  | null;
+
 const Register = () => {
-  // const navigate = useNavigate()
+  const navigate = useNavigate();
   const { width } = useWindowSize();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const { mutate, error } = useMutation({
+    mutationFn: (_body: Omit<IRegisterForm, "agreeToTerms">) => {
+      return register(_body);
+    },
+  });
+
+  const errorForm: FormError = useMemo(() => {
+    if (
+      isAxiosError<{ error: FormError }>(error) &&
+      error.response?.status === 422
+    ) {
+      return error.response?.data.error;
+    }
+    return null;
+  }, [error]);
 
   const {
     // register,
@@ -72,7 +96,11 @@ const Register = () => {
     criteriaMode: "all",
   });
   const onSubmit: SubmitHandler<IRegisterForm> = (_data) => {
-    console.log(_data);
+    mutate(_data, {
+      onSuccess: () => {
+        navigate("/");
+      },
+    });
   };
 
   return (
@@ -96,7 +124,7 @@ const Register = () => {
                 <div className="grid grid-cols-2 gap-5 mt-unit-8">
                   <div className="col-span-1">
                     <Controller
-                      name="firstname"
+                      name="first_name"
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -113,7 +141,7 @@ const Register = () => {
                               "h-unit-13",
                               "border",
                               "border-1",
-                              errors.firstname
+                              errors.first_name
                                 ? "border-red-600"
                                 : "border-black",
                               "bg-white",
@@ -126,13 +154,13 @@ const Register = () => {
                       )}
                     />
                     <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
-                      {errors.firstname?.message}
+                      {errors.first_name?.message}
                     </p>
                   </div>
 
                   <div className="col-span-1">
                     <Controller
-                      name="lastname"
+                      name="last_name"
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -147,7 +175,7 @@ const Register = () => {
                               "w-full",
                               "h-unit-13",
                               "border",
-                              errors.lastname
+                              errors.last_name
                                 ? "border-red-600"
                                 : "border-black",
                               "bg-white",
@@ -160,7 +188,7 @@ const Register = () => {
                       )}
                     />
                     <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
-                      {errors.lastname?.message}
+                      {errors.last_name?.message}
                     </p>
                   </div>
                 </div>
@@ -309,6 +337,12 @@ const Register = () => {
                   )}
                 />
 
+                {errorForm && (
+                  <div className="mt-2 text-red-500 text-sm font-medium">
+                    {errorForm.username}
+                  </div>
+                )}
+
                 <Button
                   type="submit"
                   className="block mt-6 h-unit-13 bg-black text-white justify-end font-bold px-8 text-lg w-full"
@@ -331,7 +365,6 @@ const Register = () => {
                   type="submit"
                   className="h-unit-13 w-50 font-medium text-small"
                   radius="full"
-                  // color="primary"
                   startContent={<FacebookSVG />}
                 >
                   Register with Facebook
@@ -341,7 +374,6 @@ const Register = () => {
                   className="h-unit-13 w-50 font-medium px-5 text-small"
                   radius="full"
                   startContent={<GoogleSVG />}
-                  // color="primary"
                 >
                   Register with Google
                 </Button>
