@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import EyeFilledIcon from "../../components/EyeFilledIcon.tsx";
@@ -12,10 +12,14 @@ import { useMutation } from "@tanstack/react-query";
 // import { isAxiosError } from "@utils/utils.ts";
 import { useNavigate } from "react-router-dom";
 import { login } from "@apis/users.api.ts";
+import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
+import { ResponseApi } from "@utils/utils.type.ts";
 
 export interface LoginFormData {
-  username: string;
+  email_phone: string;
   password: string;
+  email?: string;
+  phone_number?: string;
 }
 
 // type FormError =
@@ -25,7 +29,7 @@ export interface LoginFormData {
 //   | null;
 
 const schema = yup.object().shape({
-  username: yup.string().required("Username is required"),
+  email_phone: yup.string().required("Email or Phone is required"),
   password: yup
     .string()
     .required("Password is required")
@@ -36,9 +40,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
@@ -64,7 +70,25 @@ const Login = () => {
     console.log(data);
     mutate(data, {
       onSuccess: () => {
-        navigate("/");
+        setIsOpen(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      },
+      onError: (error) => {
+        if (
+          isAxiosUnprocessableEntityError<ResponseApi<LoginFormData>>(error)
+        ) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof LoginFormData, {
+                message: formError[key as keyof LoginFormData],
+                type: "Server",
+              });
+            });
+          }
+        }
       },
     });
   };
@@ -79,7 +103,12 @@ const Login = () => {
   return (
     <>
       <DocumentTitle title="Login" />
-      <div className="flex justify-center h-full  ">
+      <div className="flex justify-center h-full">
+        <div
+          className={`fixed top-10 border border-black rounded py-3 px-6 font-medium text-lg bg-blue-500 ${isOpen ? "" : "hidden"}`}
+        >
+          <p>Login Successfully</p>
+        </div>
         <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
           <h1>WELCOME BACK</h1>
           <div className="flex justify-center mx-10">
@@ -95,14 +124,27 @@ const Login = () => {
             />
           </div>
           <Input
-            {...register("username")}
-            type="username"
-            label="Username"
+            {...register("email_phone")}
+            isRequired
+            type="email_phone"
+            label="Email Or Phone"
             variant="bordered"
-            placeholder="Enter your username"
-            isInvalid={errors.username ? true : undefined}
-            color={errors.username ? "danger" : "success"}
-            errorMessage={errors.username?.message}
+            placeholder="Enter your Email or Phone Number"
+            isInvalid={
+              errors.email_phone || errors.email || errors.phone_number
+                ? true
+                : undefined
+            }
+            color={
+              errors.email_phone || errors.email || errors.phone_number
+                ? "danger"
+                : "success"
+            }
+            errorMessage={
+              errors.email_phone?.message ||
+              errors.email?.message ||
+              errors.phone_number?.message
+            }
             className="max-w-xs mb-4"
           />
 
@@ -156,6 +198,9 @@ const Login = () => {
             <Button
               className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16 "
               radius="none"
+              onClick={() => {
+                window.location.href = import.meta.env.VITE_FACEBOOK_OAUTH_URL;
+              }}
             >
               Login With Facebook
               <FaFacebook className="text-blue-800 text-5xl " />
@@ -163,6 +208,9 @@ const Login = () => {
             <Button
               className="ml-4 border-4 w-2/4 max-[900px]:w-32 max-[900px]:text-[0] max-[600px]:w-16   "
               radius="none"
+              onClick={() => {
+                window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
+              }}
             >
               Login With Google
               <FcGoogle className="text-4xl" />
