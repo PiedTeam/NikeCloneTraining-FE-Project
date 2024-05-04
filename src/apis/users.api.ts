@@ -1,4 +1,5 @@
 import { LoginFormData } from "@pages/Login/Login";
+import { RecoveryForm } from "@pages/Recovery/Recovery";
 import { IRegisterForm } from "@pages/Register/Register";
 import http from "@utils/http";
 
@@ -12,3 +13,5 @@ export const register = (_data: Omit<IRegisterForm, "agreeToTerms">) =>
 
 export const login = (_data: LoginFormData) =>
   http.post<TokenResponse>("user/login", _data);
+export const recovery = (_data: RecoveryForm) =>
+  http.post<TokenResponse>("user/forgot-password", _data);
