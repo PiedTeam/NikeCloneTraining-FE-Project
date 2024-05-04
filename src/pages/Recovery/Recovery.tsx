@@ -10,12 +10,14 @@ import { useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 export interface RecoveryForm {
-  username: string;
+  email_phone: string;
+  phone_number?: string;
+  email?: string;
 }
 
 const Recovery = () => {
   const navigate = useNavigate();
-  const [selectedKey, setSelectedKey] = React.useState("email"); // Change to single selectedKey state
+  const [selectedKey, setSelectedKey] = React.useState("email");
 
   const recoveryMethods = [
     { label: "Email", value: "email" },
@@ -23,7 +25,7 @@ const Recovery = () => {
   ];
 
   const schema = yup.object().shape({
-    username:
+    email_phone:
       selectedKey === "email"
         ? yup.string().email("Invalid email").required("Email is required")
         : yup
@@ -62,10 +64,20 @@ const Recovery = () => {
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ResponseApi<RecoveryForm>>(error)) {
           const formError = error.response?.data.data;
+          console.log(formError);
+
           if (formError) {
+            toast.success(
+              formError.email ? formError.email : formError.phone_number,
+              {
+                position: "top-right",
+                autoClose: 2000,
+              },
+            );
             Object.keys(formError).forEach((key) => {
+              const errorMessage = formError[key as keyof RecoveryForm];
               setError(key as keyof RecoveryForm, {
-                message: formError[key as keyof RecoveryForm],
+                message: errorMessage?.toString(),
                 type: "Server",
               });
             });
@@ -93,23 +105,21 @@ const Recovery = () => {
     <div>
       <div className="flex justify-center h-full  ">
         <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px] max-[600px]:p-4   p-12 transform -translate-y-5 shadow-2xl ">
-          <h1>RECOVERY PASSWORD</h1>
+          <h1 className="text-center">RECOVERY PASSWORD</h1>
           <Input
-            {...register("username")}
-            type="username"
+            {...register("email_phone")}
+            type="email_phone"
             label="Phone/Email"
             variant="bordered"
             placeholder="Enter your email or phone number"
-            isInvalid={errors.username ? true : undefined}
-            color={errors.username ? "danger" : "success"}
-            errorMessage={errors.username && errors.username.message}
+            isInvalid={errors.email_phone ? true : undefined}
+            color={errors.email_phone ? "danger" : "success"}
+            errorMessage={errors.email_phone && errors.email_phone.message}
             className="max-w-xs mb-4 mt-4"
             isRequired
           />
-          <div className="flex max-[900px]:flex-col">
-            <p className="mt-2 mr-2 font-bold text-center">
-              CHOICE YOUR METHOD:{" "}
-            </p>
+          <div className="">
+            <p className="mr-2 mb-4 font-bold ">CHOICE YOUR METHOD:</p>
             <Select
               isRequired
               label="Recovery Method"
