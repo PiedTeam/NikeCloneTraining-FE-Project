@@ -31,6 +31,11 @@ const Recovery = () => {
         : yup
             .string()
             .matches(/^[0-9]+$/, "Invalid phone number")
+            .test(
+              "len",
+              "Phone number must be exactly 10 digits",
+              (val: string | undefined) => val!.length === 10,
+            )
             .required("Phone number is required"),
   });
 
