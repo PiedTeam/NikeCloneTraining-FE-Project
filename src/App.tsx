@@ -15,6 +15,7 @@ const Register = lazy(() => import("@pages/Register"));
 const Homepage = lazy(() => import("@pages/Homepage"));
 const Login = lazy(() => import("@pages/Login"));
 const VerifyAccount = lazy(() => import("@pages/VerifyAccount"));
+const OAuth = lazy(() => import("@pages/OAuth"));
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
+          <Route path="/oauth" element={<OAuth />} />
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>

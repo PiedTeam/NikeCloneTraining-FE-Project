@@ -22,41 +22,45 @@ import FacebookSVG from "@assets/logo/FacebookSVG";
 import GoogleSVG from "@assets/logo/GoogleSVG";
 import { useMutation } from "@tanstack/react-query";
 import { register } from "@apis/users.api";
-import { isAxiosError } from "@utils/utils";
+import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
+import { ResponseApi } from "@utils/utils.type";
 
 export interface IRegisterForm {
   first_name: string;
   last_name: string;
-  username: string;
+  email_phone: string;
+  email?: string;
+  phone_number?: string;
   password: string;
   agreeToTerms: boolean;
   subcribe?: boolean;
 }
 
-const schema: yup.ObjectSchema<IRegisterForm> = yup.object().shape({
-  first_name: yup
-    .string()
-    .required(ValidationRules.firstnameRule.required.message),
-  last_name: yup
-    .string()
-    .required(ValidationRules.lastnameRule.required.message),
-  username: yup
-    .string()
-    .required(ValidationRules.usernameRule.required.message),
-  password: yup
-    .string()
-    .required(ValidationRules.passwordRule.required.message)
-    .min(
-      ValidationRules.passwordRule.minLength.value,
-      ValidationRules.passwordRule.minLength.message,
-    )
-    .matches(
-      new RegExp(ValidationRules.passwordRule.pattern.value),
-      ValidationRules.passwordRule.pattern.message,
-    ),
-  agreeToTerms: yup.boolean().required().isTrue(),
-  subcribe: yup.boolean(),
-});
+const schema: yup.ObjectSchema<Omit<IRegisterForm, "email" | "phone_number">> =
+  yup.object().shape({
+    first_name: yup
+      .string()
+      .required(ValidationRules.firstnameRule.required.message),
+    last_name: yup
+      .string()
+      .required(ValidationRules.lastnameRule.required.message),
+    email_phone: yup
+      .string()
+      .required(ValidationRules.usernameRule.required.message),
+    password: yup
+      .string()
+      .required(ValidationRules.passwordRule.required.message)
+      .min(
+        ValidationRules.passwordRule.minLength.value,
+        ValidationRules.passwordRule.minLength.message,
+      )
+      .matches(
+        new RegExp(ValidationRules.passwordRule.pattern.value),
+        ValidationRules.passwordRule.pattern.message,
+      ),
+    agreeToTerms: yup.boolean().required().isTrue(),
+    subcribe: yup.boolean(),
+  });
 
 type FormError =
   | {
@@ -68,6 +72,7 @@ const Register = () => {
   const navigate = useNavigate();
   const { width } = useWindowSize();
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const { mutate, error } = useMutation({
@@ -90,6 +95,7 @@ const Register = () => {
     // register,
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<IRegisterForm>({
     resolver: yupResolver(schema),
@@ -98,7 +104,37 @@ const Register = () => {
   const onSubmit: SubmitHandler<IRegisterForm> = (_data) => {
     mutate(_data, {
       onSuccess: () => {
-        navigate("/");
+        // alert("Register successfully");
+        setIsOpen(true);
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
+      },
+      onError: (error) => {
+        if (
+          isAxiosUnprocessableEntityError<
+            ResponseApi<Omit<IRegisterForm, "agreeToTerms" | "subcribe">>
+          >(error)
+        ) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(
+                key as keyof Omit<IRegisterForm, "agreeToTerms" | "subcribe">,
+                {
+                  message:
+                    formError[
+                      key as keyof Omit<
+                        IRegisterForm,
+                        "agreeToTerms" | "subcribe"
+                      >
+                    ],
+                  type: "Server",
+                },
+              );
+            });
+          }
+        }
       },
     });
   };
@@ -107,6 +143,11 @@ const Register = () => {
     <>
       <DocumentTitle title="Register" />
       <div className="flex justify-center items-center h-screen">
+        <div
+          className={`fixed top-10 border border-black rounded py-3 px-6 font-medium text-lg bg-blue-500 ${isOpen ? "" : "hidden"}`}
+        >
+          <p>Register Successfully</p>
+        </div>
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 4xl:grid-cols-[minmax(0,_1030px)_minmax(0,_1fr)]">
           {width >= 1024 && (
             <div className="flex flex-col justify-center items-center lg:p-[60px]">
@@ -195,7 +236,7 @@ const Register = () => {
 
                 <div className="mt-unit-8">
                   <Controller
-                    name="username"
+                    name="email_phone"
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -210,18 +251,22 @@ const Register = () => {
                             "w-full",
                             "h-unit-13",
                             "border",
-                            errors.username ? "border-red-600" : "border-black",
+                            errors.email_phone
+                              ? "border-red-600"
+                              : "border-black",
                             "bg-white",
                           ],
                         }}
                         radius="sm"
-                        placeholder="User Name *"
+                        placeholder="Email or Phone number *"
                         type="text"
                       />
                     )}
                   />
                   <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
-                    {errors.username?.message}
+                    {errors.email_phone?.message ||
+                      errors.email?.message ||
+                      errors.phone_number?.message}
                   </p>
                 </div>
 
@@ -339,7 +384,7 @@ const Register = () => {
 
                 {errorForm && (
                   <div className="mt-2 text-red-500 text-sm font-medium">
-                    {errorForm.username}
+                    {errorForm.email}
                   </div>
                 )}
 
@@ -366,6 +411,10 @@ const Register = () => {
                   className="h-unit-13 w-50 font-medium text-small"
                   radius="full"
                   startContent={<FacebookSVG />}
+                  onClick={() => {
+                    window.location.href =
+                      import.meta.env.VITE_FACEBOOK_OAUTH_URL;
+                  }}
                 >
                   Register with Facebook
                 </Button>
@@ -374,6 +423,10 @@ const Register = () => {
                   className="h-unit-13 w-50 font-medium px-5 text-small"
                   radius="full"
                   startContent={<GoogleSVG />}
+                  onClick={() => {
+                    window.location.href =
+                      import.meta.env.VITE_GOOGLE_OAUTH_URL;
+                  }}
                 >
                   Register with Google
                 </Button>
