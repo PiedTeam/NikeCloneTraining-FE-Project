@@ -3,16 +3,18 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, Select, SelectItem, Button } from "@nextui-org/react"; // Import Select and SelectItem
-
-// import { useMutation } from "@tanstack/react-query";
-// import { useNavigate } from "react-router-dom";
-
+import { recovery } from "@apis/users.api";
+import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
+import { ResponseApi } from "@utils/utils.type.ts";
 export interface RecoveryForm {
   username: string;
 }
 
 const Recovery = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email"); // Change to single selectedKey state
 
   const recoveryMethods = [
@@ -30,34 +32,54 @@ const Recovery = () => {
             .required("Phone number is required"),
   });
 
-  // const { mutate } = useMutation({
-  //   mutationFn: (body: RecoveryForm) => {
-  //     return login({ ...body, password: "" });
-  //   },
-  // });
+  const { mutate } = useMutation({
+    mutationFn: (body: RecoveryForm) => {
+      return recovery(body);
+    },
+  });
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<RecoveryForm>({
     resolver: yupResolver(schema),
   });
 
-  const handleLogin: SubmitHandler<RecoveryForm> = (data) => {
+  const handleRecovery: SubmitHandler<RecoveryForm> = (data) => {
     console.log(data);
-    // mutate(data, {
-    //   onSuccess: () => {
-    //     navigate("/");
-    //   },
-    // });
+    mutate(data, {
+      onSuccess: () => {
+        toast.success("Recovery successful!", {
+          position: "top-left",
+          autoClose: 2000,
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      },
+      onError: (error) => {
+        if (isAxiosUnprocessableEntityError<ResponseApi<RecoveryForm>>(error)) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof RecoveryForm, {
+                message: formError[key as keyof RecoveryForm],
+                type: "Server",
+              });
+            });
+          }
+        }
+      },
+    });
   };
 
-  const handleLoginButtonClick: MouseEventHandler<HTMLButtonElement> = (
+  const handleRecoveryButtonClick: MouseEventHandler<HTMLButtonElement> = (
     event,
   ) => {
     event.preventDefault();
-    handleSubmit(handleLogin)();
+    handleSubmit(handleRecovery)();
   };
 
   const handleSelectionChange = (selectedValue: ChangeEvent) => {
@@ -106,7 +128,7 @@ const Recovery = () => {
             className="mt-4"
             size="lg"
             color="danger"
-            onClick={handleLoginButtonClick}
+            onClick={handleRecoveryButtonClick}
           >
             Recovery
           </Button>
