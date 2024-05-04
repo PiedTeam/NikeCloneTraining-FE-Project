@@ -2,18 +2,17 @@ import React, { ChangeEvent, MouseEventHandler } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { login } from "@apis/users.api.ts";
 import { Input, Select, SelectItem, Button } from "@nextui-org/react"; // Import Select and SelectItem
 
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+// import { useMutation } from "@tanstack/react-query";
+// import { useNavigate } from "react-router-dom";
 
 export interface RecoveryForm {
   username: string;
 }
 
 const Recovery = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email"); // Change to single selectedKey state
 
   const recoveryMethods = [
@@ -31,11 +30,11 @@ const Recovery = () => {
             .required("Phone number is required"),
   });
 
-  const { mutate } = useMutation({
-    mutationFn: (body: RecoveryForm) => {
-      return login({ ...body, password: "" });
-    },
-  });
+  // const { mutate } = useMutation({
+  //   mutationFn: (body: RecoveryForm) => {
+  //     return login({ ...body, password: "" });
+  //   },
+  // });
 
   const {
     register,
@@ -47,11 +46,11 @@ const Recovery = () => {
 
   const handleLogin: SubmitHandler<RecoveryForm> = (data) => {
     console.log(data);
-    mutate(data, {
-      onSuccess: () => {
-        navigate("/");
-      },
-    });
+    // mutate(data, {
+    //   onSuccess: () => {
+    //     navigate("/");
+    //   },
+    // });
   };
 
   const handleLoginButtonClick: MouseEventHandler<HTMLButtonElement> = (
