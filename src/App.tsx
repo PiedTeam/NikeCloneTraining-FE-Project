@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // hooks
 import { Route, Routes, useNavigate } from "react-router-dom";
+import Recovery from "@pages/Recovery";
 
 // components
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
+          <Route path="/recovery" element={<Recovery />} />
           <Route path="/oauth" element={<OAuth />} />
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
