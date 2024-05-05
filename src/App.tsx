@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 // hooks
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Recovery from "@pages/Recovery";
+import ChangePassword from "@pages/ChangePassword";
 
 // components
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/recovery" element={<Recovery />} />
           <Route path="/oauth" element={<OAuth />} />
+          <Route path="/change-password" element={<ChangePassword />} />
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>

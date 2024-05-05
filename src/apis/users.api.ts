@@ -1,3 +1,4 @@
+import { FormDataChangePassword } from "@pages/ChangePassword/ChangePassword";
 import { LoginFormData } from "@pages/Login/Login";
 import { RecoveryForm } from "@pages/Recovery/Recovery";
 import { IRegisterForm } from "@pages/Register/Register";
@@ -15,3 +16,5 @@ export const login = (_data: LoginFormData) =>
   http.post<TokenResponse>("user/login", _data);
 export const recovery = (_data: RecoveryForm) =>
   http.post<TokenResponse>("user/forgot-password", _data);
+export const changePassword = (_data: FormDataChangePassword) =>
+  http.post<TokenResponse>("user/reset-password", _data);
