@@ -1,6 +1,14 @@
+import { sendVerifyAccountOTP, verifyAccount } from "@apis/users.api";
 import DocumentTitle from "@components/DocumentTitle";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
-import { validateEmail, validatePhoneNumber } from "@utils/utils";
+import { useMutation } from "@tanstack/react-query";
+import {
+  isAxiosUnprocessableEntityError,
+  validateEmail,
+  validatePhoneNumber,
+} from "@utils/utils";
+import { ResponseApi } from "@utils/utils.type";
+import { AxiosError } from "axios";
 import { useRef, useState } from "react";
 
 enum VerifyMethod {
@@ -8,15 +16,39 @@ enum VerifyMethod {
   SMS = "sms",
 }
 
+interface SendOTPErrorProps {
+  email?: string;
+  phone_number?: string;
+}
+
+interface VerifyAccountErrorProps {
+  email_phone?: string;
+  verify_account_otp?: string;
+}
+
 const VerifyAccount = () => {
   const [otpIsSent, setOtpIsSent] = useState<boolean>(false);
   const [otpIsClicked, setOtpIsClicked] = useState<boolean>(false);
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
+  const [sendOTPError, setSendOTPError] = useState<string>("");
   const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(
     VerifyMethod.EMAIL,
   );
+  const [validateOTPError, setValidateOTPError] =
+    useState<VerifyAccountErrorProps>({
+      email_phone: "",
+      verify_account_otp: "",
+    });
+
+  const { mutate } = useMutation({
+    mutationFn: (_body: { email_phone: string }) => {
+      return sendVerifyAccountOTP(_body);
+    },
+  });
+
   const receiveOTPRef = useRef<HTMLInputElement>(null);
+  const OTPRef = useRef<HTMLInputElement>(null);
 
   const checkValidation = () => {
     if (
@@ -31,20 +63,80 @@ const VerifyAccount = () => {
   };
 
   const handleSendOtp = () => {
-    // window.location.href =
-    //   "https://nikeclonetraining-be-project.onrender.com/oauth/google";
+    console.log(receiveOTPRef.current?.value);
     setOtpIsClicked(true);
     if (checkValidation()) {
       setOtpIsSent(true);
-      setIsResendAvailable(false);
-      const interval = setInterval(() => {
-        setTimeRemaining((prev) => prev - 1);
-      }, 1000);
-      setTimeout(() => {
-        clearInterval(interval);
-        setIsResendAvailable(true);
-        setTimeRemaining(30);
-      }, 30 * 1000);
+      mutate(
+        { email_phone: receiveOTPRef.current?.value || "" },
+        {
+          onSuccess: () => {
+            alert("OTP sent successfully");
+            setSendOTPError("");
+            setIsResendAvailable(false);
+            const interval = setInterval(() => {
+              setTimeRemaining((prev) => prev - 1);
+            }, 1000);
+            setTimeout(() => {
+              clearInterval(interval);
+              setIsResendAvailable(true);
+              setTimeRemaining(30);
+            }, 30 * 1000);
+          },
+          onError: (error) => {
+            console.log(error);
+            if (
+              isAxiosUnprocessableEntityError<ResponseApi<SendOTPErrorProps>>(
+                error,
+              )
+            ) {
+              const formError = error.response?.data.data;
+              console.log(isResendAvailable);
+              if (formError) {
+                if (formError.email) {
+                  setSendOTPError(formError.email);
+                } else if (formError.phone_number) {
+                  setSendOTPError(formError.phone_number);
+                }
+              }
+            }
+          },
+        },
+      );
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    if (
+      OTPRef.current?.value !== null &&
+      receiveOTPRef.current?.value !== null
+    ) {
+      try {
+        const result = await verifyAccount({
+          email_phone: receiveOTPRef.current?.value as string,
+          verify_account_otp: OTPRef.current?.value as string,
+        });
+        if (result) {
+          setValidateOTPError({
+            ...validateOTPError,
+            email_phone: "",
+            verify_account_otp: "",
+          });
+          alert("Account Verified Successfully");
+        }
+      } catch (error: unknown) {
+        if (
+          error instanceof Error &&
+          isAxiosUnprocessableEntityError<ResponseApi<VerifyAccountErrorProps>>(
+            error,
+          )
+        ) {
+          setValidateOTPError(
+            (error as AxiosError<ResponseApi<VerifyAccountErrorProps>>).response
+              ?.data.data as VerifyAccountErrorProps,
+          );
+        }
+      }
     }
   };
 
@@ -64,28 +156,33 @@ const VerifyAccount = () => {
             your account.
           </p>
           <div className="flex justify-center items-center mt-8 gap-4">
-            <Input
-              classNames={{
-                base: ["w-8/12"],
-                input: [
-                  "bg-transparent",
-                  "placeholder:text-default-700/50 placeholder:text-lg",
-                ],
-                inputWrapper: [
-                  "w-full",
-                  "h-unit-13",
-                  "border",
-                  "border-1",
-                  "bg-white",
-                ],
-              }}
-              ref={receiveOTPRef}
-              placeholder={
-                selectedMethod === VerifyMethod.SMS
-                  ? "Phone Number *"
-                  : "Email *"
-              }
-            />
+            <div className="w-8/12">
+              <Input
+                classNames={{
+                  base: ["w-full"],
+                  input: [
+                    "bg-transparent",
+                    "placeholder:text-default-700/50 placeholder:text-lg",
+                  ],
+                  inputWrapper: [
+                    "w-full",
+                    "h-unit-13",
+                    "border",
+                    "border-1",
+                    "bg-white",
+                  ],
+                }}
+                ref={receiveOTPRef}
+                placeholder={
+                  selectedMethod === VerifyMethod.SMS
+                    ? "Phone Number *"
+                    : "Email *"
+                }
+              />
+              <p className="fixed mt-1 ml-3 text-sm text-red-500">
+                {sendOTPError}
+              </p>
+            </div>
             <Select
               label="Verify method *"
               variant="bordered"
@@ -124,6 +221,7 @@ const VerifyAccount = () => {
                   "bg-white",
                 ],
               }}
+              ref={OTPRef}
               placeholder="Code *"
             />
             <Button
@@ -132,7 +230,7 @@ const VerifyAccount = () => {
               onClick={handleSendOtp}
               isDisabled={isResendAvailable ? false : true}
               startContent={
-                otpIsSent && (
+                !isResendAvailable && (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -147,9 +245,13 @@ const VerifyAccount = () => {
                 )
               }
             >
-              {otpIsSent ? "Resend OTP" : "Send OTP"}
+              {isResendAvailable ? "Send OTP" : "Resend OTP"}
             </Button>
           </div>
+          <p className="text-sm mt-2 relative ml-3 italic text-red-500">
+            {validateOTPError.email_phone ||
+              validateOTPError.verify_account_otp}
+          </p>
           {!isResendAvailable && (
             <p className="text-sm mt-2 relative left-3/4 italic">
               Resend code in {timeRemaining}s
@@ -161,7 +263,7 @@ const VerifyAccount = () => {
             size="lg"
             color="primary"
             variant="ghost"
-            onClick={() => {}}
+            onClick={handleVerifyOTP}
           >
             Submit
           </Button>
