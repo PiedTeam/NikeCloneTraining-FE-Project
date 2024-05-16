@@ -87,10 +87,8 @@ const useApi = <T>(
     error: "",
   });
   const fetchData = useCallback(async () => {
-    if (data !== undefined) {
-      const newState = await runApi<T>(fn, accessToken, data, method);
-      setState(newState);
-    }
+    const newState = await runApi<T>(fn, accessToken, data, method);
+    setState(newState);
   }, [fn, accessToken, data, method]);
 
   useEffect(() => {

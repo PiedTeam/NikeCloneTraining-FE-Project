@@ -7,7 +7,11 @@ const OAuth = () => {
   const navigate = useNavigate();
   const user_infor = useQueryString();
   const [newUser, setNewUser] = useState(false);
-
+  const navigateFunc = () => {
+    if (newUser) {
+      navigate("/password");
+    }
+  };
   useEffect(() => {
     const user: UserInfo = {
       access_token: user_infor.access_token,
@@ -15,15 +19,12 @@ const OAuth = () => {
       iat: user_infor.iat,
       new_user: Boolean(user_infor.new_user),
     };
-    console.log(user_infor);
     localStorage.setItem("user", JSON.stringify(user));
-    if (user.new_user) {
-      setNewUser(true);
-    }
+
+    setNewUser(user_infor.new_user ? true : false);
+    navigateFunc();
   }, [user_infor]);
-  if (newUser) {
-    navigate("/password");
-  }
+
   return <div>OAuth</div>;
 };
 

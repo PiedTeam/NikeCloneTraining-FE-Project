@@ -52,7 +52,7 @@ const Password = () => {
   const handleUpdatePassword: SubmitHandler<PasswordForm> = async (
     dataForm,
   ) => {
-    const patchData = { ...dataForm, email: userInfo!.data.email };
+    const patchData = { ...dataForm, email: userInfo!.data!.email };
     console.log(patchData);
 
     try {
