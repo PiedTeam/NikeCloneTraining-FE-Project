@@ -326,7 +326,8 @@ const Register = () => {
                   <p
                     className={`text-xs mt-2 ${errors.password?.types?.matches || errors.password?.types?.optionality ? "" : "text-black"}`}
                   >
-                    Uppercase, lowercase letters, and one number
+                    Uppercase, lowercase letters, one number and special
+                    characters
                   </p>
                 </div>
                 <Controller
