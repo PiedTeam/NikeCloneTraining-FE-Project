@@ -5,40 +5,76 @@ import EyeFilledIcon from "../../components/EyeFilledIcon.tsx";
 import EyeSlashFilledIcon from "../../components/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useApi, { runApi } from "@hooks/useApi.ts";
+import { getMe, updatePassword } from "@apis/users.api.ts";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-interface FormData {
-  confirmPassword: string;
+export interface PasswordForm {
   password: string;
+  confirmPassword: string;
+}
+interface UserInfo {
+  data: {
+    email: string;
+  };
+}
+interface response {
+  message: string;
 }
 
-const schema = yup.object().shape({
-  password: yup.string().required("Password is required"),
-  confirmPassword: yup
-    .string()
-    .required("Confirm password is required")
-    .oneOf([yup.ref("password")], "Confirm password must match with passwords"),
-});
-
 const Password = () => {
+  const userObject = localStorage.getItem("user");
+  const access_token = JSON.parse(userObject!).access_token;
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
+  const { data: userInfo } = useApi<UserInfo>(getMe, access_token);
+
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const schema = yup.object().shape({
+    password: yup.string().required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .required("Confirm password is required")
+      .oneOf(
+        [yup.ref("password")],
+        "Confirm password must match with passwords",
+      ),
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<PasswordForm>({
     resolver: yupResolver(schema),
   });
 
-  const handleLogin: SubmitHandler<FormData> = (data) => {
-    console.log(data);
-  };
+  const handleUpdatePassword: SubmitHandler<PasswordForm> = async (
+    dataForm,
+  ) => {
+    const patchData = { ...dataForm, email: userInfo!.data!.email };
+    console.log(patchData);
 
-  const handleLoginButtonClick: MouseEventHandler<HTMLButtonElement> = (
+    try {
+      const { data } = await runApi<response>(
+        updatePassword,
+        access_token,
+        patchData,
+        "POST",
+      );
+
+      toast.success(data?.message);
+      setTimeout(() => navigate("/"), 3000);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleUpdateButtonClick: MouseEventHandler<HTMLButtonElement> = (
     event,
   ) => {
     event.preventDefault();
-    handleSubmit(handleLogin)();
+    console.log("Button Clicked, preparing to submit the form");
+    handleSubmit(handleUpdatePassword)();
   };
 
   return (
@@ -85,7 +121,7 @@ const Password = () => {
         <Input
           {...register("confirmPassword")}
           isRequired
-          label="Password"
+          label="Confirm Password"
           variant="bordered"
           placeholder="Enter your Confirm password"
           color={errors.confirmPassword ? "danger" : "success"}
@@ -119,7 +155,7 @@ const Password = () => {
           disableRipple
           size="lg"
           className="relative mt-4 mb-4 overflow-visible rounded-full hover:-translate-y-1 px-12 shadow-xl bg-black  text-white"
-          onClick={handleLoginButtonClick}
+          onClick={handleUpdateButtonClick}
         >
           Next
         </Button>
