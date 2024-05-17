@@ -90,6 +90,10 @@ const CompareOtpPage = () => {
     <div className="flex justify-center  h-full  ">
       <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
         <h1 className="mb-4">Confirm Your Otp</h1>
+        <p className="my-4">
+          <strong>Verification only takes a few minutes</strong>, helps secure
+          your account.
+        </p>
         <OtpInput
           value={otp}
           onChange={setOtp}
