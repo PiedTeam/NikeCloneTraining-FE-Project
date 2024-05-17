@@ -1,4 +1,5 @@
 import { GetMeFunction } from "@hooks/useApi";
+import { FormDataChangePasswordApi } from "@pages/ChangePassword/ChangePassword";
 import { LoginFormData } from "@pages/Login/Login";
 import { compareOtpApi, sendOtp } from "@pages/Otp/CompareOtpPage";
 import { passwordInterfaceApi } from "@pages/Password/Password";
@@ -60,6 +61,15 @@ export const compareOtp = (
   _data: compareOtpApi | undefined,
 ) =>
   http.post("user/verify-otp", _data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+export const changePassword = (
+  accessToken: string,
+  _data: FormDataChangePasswordApi | undefined,
+) =>
+  http.post("user/change-password", _data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
