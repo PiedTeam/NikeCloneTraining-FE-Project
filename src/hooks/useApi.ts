@@ -1,28 +1,49 @@
 import { useCallback, useEffect, useState } from "react";
 import { AxiosResponse } from "axios";
-import { PasswordForm } from "@pages/Password/Password";
+import { isAxiosUnprocessableEntityError } from "@utils/utils";
 
-interface ApiResponse {
+export interface ApiResponse {
   message: string;
-  data: object;
+  data: {
+    email: string;
+  };
 }
-type GetMeFunction = (
-  accessToken: string,
-  data?: PasswordForm | undefined,
-) => Promise<AxiosResponse<ApiResponse>>;
 
+interface ErrorData {
+  password: string;
+  forgot_password_otp: string;
+}
+
+export interface ErrorForm {
+  response: {
+    data: {
+      data: ErrorData;
+    };
+  };
+}
+
+export type GetMeFunction<T> = (
+  accessToken: string,
+  data?: T,
+) => Promise<AxiosResponse<ApiResponse> | AxiosResponse<ErrorForm>>;
 interface ApiState<T> {
   data: T | null;
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
-  error: string;
+  message: T | string;
+  error: ErrorForm | string;
 }
+const isApiResponse = (
+  res: AxiosResponse<ApiResponse> | AxiosResponse<ErrorForm>,
+): res is AxiosResponse<ApiResponse> => {
+  return (res.data as ApiResponse).message !== undefined;
+};
 
 export const runApi = async <T>(
-  fn: GetMeFunction,
+  fn: GetMeFunction<T>,
   accessToken: string,
-  data: PasswordForm | undefined,
+  data: T,
   method: "GET" | "POST",
 ): Promise<ApiState<T>> => {
   const initialState: ApiState<T> = {
@@ -30,10 +51,11 @@ export const runApi = async <T>(
     isLoading: true,
     isSuccess: false,
     isError: false,
+    message: "",
     error: "",
   };
 
-  let apiCall: Promise<AxiosResponse<ApiResponse>>;
+  let apiCall: Promise<AxiosResponse<ApiResponse> | AxiosResponse<ErrorForm>>;
   if (method === "GET") {
     apiCall = fn(accessToken);
   } else if (method === "POST") {
@@ -49,18 +71,37 @@ export const runApi = async <T>(
 
   try {
     const res = await apiCall;
-    return {
-      ...initialState,
-      data: res.data as T,
-      isLoading: false,
-      isSuccess: true,
-    };
+    if (isApiResponse(res)) {
+      return {
+        ...initialState,
+        data: res.data as T,
+        message: res.data.message,
+        isLoading: false,
+        isSuccess: true,
+      };
+    } else {
+      return {
+        ...initialState,
+        isLoading: false,
+        isError: true,
+        error: res.data,
+      };
+    }
   } catch (err) {
-    if (err instanceof Error) {
+    if (isAxiosUnprocessableEntityError(err)) {
+      let errorResponse: ErrorForm | string = "Validation error";
+      if (err.response && err.response.data) {
+        const errorData = err.response.data as { data: ErrorData };
+        errorResponse = {
+          response: {
+            data: errorData,
+          },
+        };
+      }
       return {
         ...initialState,
         isError: true,
-        error: err.message || "failed to fetch",
+        error: errorResponse,
       };
     } else {
       console.error("Unknown error:", err);
@@ -74,9 +115,9 @@ export const runApi = async <T>(
 };
 
 const useApi = <T>(
-  fn: GetMeFunction,
+  fn: GetMeFunction<T>,
   accessToken: string,
-  data?: PasswordForm | undefined,
+  data?: T,
   method: "GET" | "POST" = "GET",
 ) => {
   const [state, setState] = useState<ApiState<T>>({
@@ -84,10 +125,11 @@ const useApi = <T>(
     isLoading: true,
     isSuccess: false,
     isError: false,
+    message: "",
     error: "",
   });
   const fetchData = useCallback(async () => {
-    const newState = await runApi<T>(fn, accessToken, data, method);
+    const newState = await runApi<T>(fn, accessToken, data!, method);
     setState(newState);
   }, [fn, accessToken, data, method]);
 

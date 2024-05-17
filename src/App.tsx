@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Recovery from "@pages/Recovery";
 import Password from "@pages/Password";
+import CompareOtpPage from "@pages/Otp";
 
 // components
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/recovery" element={<Recovery />} />
           <Route path="/oauth" element={<OAuth />} />
           <Route path="/password" element={<Password />} />
+          <Route path="/otp" element={<CompareOtpPage />} />
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>

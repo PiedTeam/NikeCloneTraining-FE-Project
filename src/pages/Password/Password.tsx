@@ -5,30 +5,30 @@ import EyeFilledIcon from "../../components/EyeFilledIcon.tsx";
 import EyeSlashFilledIcon from "../../components/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useApi, { runApi } from "@hooks/useApi.ts";
+import useApi, { ApiResponse, runApi } from "@hooks/useApi.ts";
 import { getMe, updatePassword } from "@apis/users.api.ts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-export interface PasswordForm {
-  password: string;
-  confirmPassword: string;
-}
-interface UserInfo {
+export interface UserInfoForm {
   data: {
     email: string;
   };
 }
-interface response {
-  message: string;
+export interface passwordInterfaceApi {
+  email: string;
+  password: string;
 }
-
+export interface passwordInterface {
+  password: string;
+  confirmPassword: string;
+}
 const Password = () => {
   const userObject = localStorage.getItem("user");
-  const access_token = JSON.parse(userObject!).access_token;
+  const access_token: string = JSON.parse(userObject!).access_token;
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
-  const { data: userInfo } = useApi<UserInfo>(getMe, access_token);
+  const { data: userInfo } = useApi<ApiResponse>(getMe, access_token);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const schema = yup.object().shape({
@@ -45,28 +45,30 @@ const Password = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<PasswordForm>({
+  } = useForm<passwordInterface>({
     resolver: yupResolver(schema),
   });
 
-  const handleUpdatePassword: SubmitHandler<PasswordForm> = async (
+  const handleUpdatePassword: SubmitHandler<passwordInterface> = async (
     dataForm,
   ) => {
-    const patchData = { ...dataForm, email: userInfo!.data!.email };
-    console.log(patchData);
+    const patchData: passwordInterfaceApi = {
+      email: userInfo!.data.email,
+      password: dataForm.password,
+    };
 
-    try {
-      const { data } = await runApi<response>(
-        updatePassword,
-        access_token,
-        patchData,
-        "POST",
-      );
+    const { message, error } = await runApi<passwordInterfaceApi>(
+      updatePassword,
+      access_token,
+      patchData,
+      "POST",
+    );
 
-      toast.success(data?.message);
+    if (typeof error === "object" && error !== null && "response" in error) {
+      toast.error(error.response.data.data.password);
+    } else {
+      toast.success(message as string);
       setTimeout(() => navigate("/"), 3000);
-    } catch (err) {
-      console.log(err);
     }
   };
   const handleUpdateButtonClick: MouseEventHandler<HTMLButtonElement> = (

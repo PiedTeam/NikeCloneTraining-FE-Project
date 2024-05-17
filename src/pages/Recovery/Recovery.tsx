@@ -55,15 +55,21 @@ const Recovery = () => {
   });
 
   const handleRecovery: SubmitHandler<RecoveryForm> = (data) => {
-    console.log(data);
     mutate(data, {
-      onSuccess: () => {
+      onSuccess: (dataRes) => {
+        console.log();
+
         toast.success("Recovery successful!", {
           position: "top-left",
           autoClose: 2000,
         });
+        const otp = dataRes.data.details.otp;
+        const email_phone = data.email_phone;
+
+        const newData = { otp, email_phone };
+
         setTimeout(() => {
-          navigate("/");
+          navigate("/otp", { state: newData });
         }, 2000);
       },
       onError: (error) => {
@@ -75,7 +81,6 @@ const Recovery = () => {
             toast.success(
               formError.email ? formError.email : formError.phone_number,
               {
-                position: "top-right",
                 autoClose: 2000,
               },
             );
