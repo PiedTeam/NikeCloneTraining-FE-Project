@@ -1,6 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 
 export const isProduction = process.env.NODE_ENV === "production";
+console.log("ahihi");
+console.log("isProduction", isProduction);
 const backendURL = isProduction
   ? (import.meta.env.VITE_PRODUCTION_BACKEND_URL as string)
   : (import.meta.env.VITE_DEVELOPMENT_BACKEND_URL as string);
