@@ -31,11 +31,7 @@ const Recovery = () => {
         : yup
             .string()
             .matches(/^[0-9]+$/, "Invalid phone number")
-            .test(
-              "len",
-              "Phone number must be exactly 10 digits",
-              (val: string | undefined) => val!.length === 10,
-            )
+            .test("len", "Phone number must be exactly 10 digits", (val: string | undefined) => val!.length === 10)
             .required("Phone number is required"),
   });
 
@@ -78,12 +74,9 @@ const Recovery = () => {
           console.log(formError);
 
           if (formError) {
-            toast.success(
-              formError.email ? formError.email : formError.phone_number,
-              {
-                autoClose: 2000,
-              },
-            );
+            toast.success(formError.email ? formError.email : formError.phone_number, {
+              autoClose: 2000,
+            });
             Object.keys(formError).forEach((key) => {
               const errorMessage = formError[key as keyof RecoveryForm];
               setError(key as keyof RecoveryForm, {
@@ -97,19 +90,14 @@ const Recovery = () => {
     });
   };
 
-  const handleRecoveryButtonClick: MouseEventHandler<HTMLButtonElement> = (
-    event,
-  ) => {
+  const handleRecoveryButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
     handleSubmit(handleRecovery)();
   };
 
   const handleSelectionChange = (selectedValue: ChangeEvent) => {
     setSelectedKey((selectedValue.target as HTMLSelectElement).value);
-    console.log(
-      "Selected Method",
-      (selectedValue.target as HTMLSelectElement).value,
-    );
+    console.log("Selected Method", (selectedValue.target as HTMLSelectElement).value);
   };
   return (
     <div>
@@ -144,12 +132,7 @@ const Recovery = () => {
               ))}
             </Select>
           </div>
-          <Button
-            className="mt-4"
-            size="lg"
-            color="danger"
-            onClick={handleRecoveryButtonClick}
-          >
+          <Button className="mt-4" size="lg" color="danger" onClick={handleRecoveryButtonClick}>
             Recovery
           </Button>
         </div>
