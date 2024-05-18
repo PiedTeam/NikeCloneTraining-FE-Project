@@ -41,7 +41,7 @@
         "endOfLine": "auto",
         "useTabs": false,
         "singleQuote": false,
-        "printWidth": 80
+        "printWidth": 120
       }
     ]
   }
