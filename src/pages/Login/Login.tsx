@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState } from "react";
+import React, { MouseEventHandler } from "react";
 import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import EyeFilledIcon from "../../components/EyeFilledIcon.tsx";
@@ -12,8 +12,9 @@ import { useMutation } from "@tanstack/react-query";
 // import { isAxiosError } from "@utils/utils.ts";
 import { useNavigate } from "react-router-dom";
 import { login } from "@apis/users.api.ts";
-import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
+import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
+import { toast } from "react-toastify";
 import { isProduction } from "@utils/http.ts";
 
 export interface LoginFormData {
@@ -38,7 +39,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -68,14 +68,15 @@ const Login = () => {
     console.log(data);
     mutate(data, {
       onSuccess: () => {
-        setIsOpen(true);
+        toast.success("Login successfully");
         setTimeout(() => {
           navigate("/");
-        }, 2000);
+        }, 3000);
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ResponseApi<LoginFormData>>(error)) {
           const formError = error.response?.data.data;
+          toast.error("Email/Phone number or Password is incorrect");
           if (formError) {
             Object.keys(formError).forEach((key) => {
               setError(key as keyof LoginFormData, {
@@ -83,6 +84,10 @@ const Login = () => {
                 type: "Server",
               });
             });
+          }
+        } else if (isAxiosError(error)) {
+          if (error.response?.status === 429) {
+            toast.error("Please try again after 5 minutes");
           }
         }
       },
@@ -98,11 +103,6 @@ const Login = () => {
     <>
       <DocumentTitle title="Login" />
       <div className="flex justify-center h-full">
-        <div
-          className={`fixed top-10 border border-black rounded py-3 px-6 font-medium text-lg bg-blue-500 ${isOpen ? "" : "hidden"}`}
-        >
-          <p>Login Successfully</p>
-        </div>
         <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
           <h1>WELCOME BACK</h1>
           <div className="flex justify-center mx-10">
@@ -132,7 +132,8 @@ const Login = () => {
             label="Password"
             variant="bordered"
             placeholder="Enter your password"
-            color={errors.password ? "danger" : "success"}
+            isInvalid={errors.email_phone || errors.email || errors.phone_number ? true : undefined}
+            color={errors.email_phone || errors.email || errors.phone_number ? "danger" : "success"}
             errorMessage={errors.password?.message}
             endContent={
               <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>

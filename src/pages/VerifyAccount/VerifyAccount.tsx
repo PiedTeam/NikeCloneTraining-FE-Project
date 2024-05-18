@@ -2,10 +2,12 @@ import { sendVerifyAccountOTP, verifyAccount } from "@apis/users.api";
 import DocumentTitle from "@components/DocumentTitle";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { isAxiosUnprocessableEntityError, validateEmail, validatePhoneNumber } from "@utils/utils";
 import { ResponseApi } from "@utils/utils.type";
 import { AxiosError } from "axios";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 enum VerifyMethod {
   EMAIL = "email",
@@ -28,6 +30,7 @@ const VerifyAccount = () => {
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
   const [sendOTPError, setSendOTPError] = useState<string>("");
+  const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(VerifyMethod.EMAIL);
   const [validateOTPError, setValidateOTPError] = useState<VerifyAccountErrorProps>({
     email_phone: "",
@@ -62,7 +65,7 @@ const VerifyAccount = () => {
         { email_phone: receiveOTPRef.current?.value || "" },
         {
           onSuccess: () => {
-            alert("OTP sent successfully");
+            toast.success("OTP sent successfully");
             setSendOTPError("");
             setIsResendAvailable(false);
             const interval = setInterval(() => {
@@ -106,7 +109,8 @@ const VerifyAccount = () => {
             email_phone: "",
             verify_account_otp: "",
           });
-          alert("Account Verified Successfully");
+          toast.success("Account Verified Successfully");
+          setTimeout(() => navigate("/"), 3000);
         }
       } catch (error: unknown) {
         if (error instanceof Error && isAxiosUnprocessableEntityError<ResponseApi<VerifyAccountErrorProps>>(error)) {

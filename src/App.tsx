@@ -11,6 +11,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Recovery from "@pages/Recovery";
 import Password from "@pages/Password";
 import CompareOtpPage from "@pages/Otp";
+import ChangePassword from "@pages/ChangePassword";
 
 // components
 
@@ -38,6 +39,7 @@ function App() {
           <Route path="/oauth" element={<OAuth />} />
           <Route path="/password" element={<Password />} />
           <Route path="/otp" element={<CompareOtpPage />} />
+          <Route path="/change-password" element={<ChangePassword />} />
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>

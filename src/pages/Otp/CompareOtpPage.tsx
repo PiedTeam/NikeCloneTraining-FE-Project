@@ -54,7 +54,7 @@ const CompareOtpPage = () => {
     };
     console.log(dataIs);
 
-    const { message, error, data } = await runApi<compareOtpApi>(
+    const { message, error } = await runApi<compareOtpApi>(
       compareOtp,
       accessToken,
       {
@@ -67,19 +67,9 @@ const CompareOtpPage = () => {
       toast.error(error.response.data.data.forgot_password_otp);
     } else {
       toast.success(message as string);
-      setTimeout(() => navigate("/"), 3000);
+      setTimeout(() => navigate("/password"), 3000);
     }
-    console.log(error);
-    console.log(data);
   };
-
-  // const { data } = await runApi<response>(
-  //   updatePassword,
-  //   access_token,
-  //   patchData,
-  //   "POST",
-  // );
-  console.log(otp);
 
   return (
     <div className="flex justify-center  h-full  ">
