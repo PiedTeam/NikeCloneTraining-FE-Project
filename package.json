@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite",
     "build": "tsc && vite build",
-    "preview": "cross-env NODE_ENV=production vite preview --host",
+    "preview": "cross-env NODE_ENV=production vite preview --host 0.0.0.0",
     "prepare": "husky",
     "lint": "eslint --ext .ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .ts,.tsx src/",
