@@ -344,8 +344,8 @@ const Register = () => {
                   startContent={<FacebookSVG />}
                   onClick={() => {
                     window.location.href = isProduction
-                      ? (import.meta.env.PRODUCTION_VITE_FACEBOOK_OAUTH_URL as string)
-                      : (import.meta.env.DEVELOPEMENT_VITE_FACEBOOK_OAUTH_URL as string);
+                      ? (import.meta.env.VITE_PRODUCTION_FACEBOOK_OAUTH_URL as string)
+                      : (import.meta.env.VITE_DEVELOPEMENT_FACEBOOK_OAUTH_URL as string);
                   }}
                 >
                   Register with Facebook
@@ -357,8 +357,8 @@ const Register = () => {
                   startContent={<GoogleSVG />}
                   onClick={() => {
                     window.location.href = isProduction
-                      ? (import.meta.env.PRODUCTION_VITE_GOOGLE_OAUTH_URL as string)
-                      : (import.meta.env.DEVELOPEMENT_VITE_GOOGLE_OAUTH_URL as string);
+                      ? (import.meta.env.VITE_PRODUCTION_GOOGLE_OAUTH_URL as string)
+                      : (import.meta.env.VITE_DEVELOPEMENT_GOOGLE_OAUTH_URL as string);
                   }}
                 >
                   Register with Google
