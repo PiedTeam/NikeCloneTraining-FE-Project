@@ -60,7 +60,7 @@ const Recovery = () => {
         console.log();
 
         toast.success("Recovery successful!", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
         });
         const otp = dataRes.data.details.otp;
@@ -78,7 +78,7 @@ const Recovery = () => {
           console.log(formError);
 
           if (formError) {
-            toast.success(
+            toast.error(
               formError.email ? formError.email : formError.phone_number,
               {
                 autoClose: 2000,
