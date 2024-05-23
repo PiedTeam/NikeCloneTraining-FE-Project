@@ -12,6 +12,7 @@ import Recovery from "@pages/Recovery";
 import Password from "@pages/Password";
 import CompareOtpPage from "@pages/Otp";
 import ChangePassword from "@pages/ChangePassword";
+import Account from "@pages/Account";
 
 // components
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/password" element={<Password />} />
           <Route path="/otp" element={<CompareOtpPage />} />
           <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/account" element={<Account />} />
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>
