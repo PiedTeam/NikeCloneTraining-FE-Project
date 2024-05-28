@@ -36,10 +36,7 @@ const Password = () => {
     confirmPassword: yup
       .string()
       .required("Confirm password is required")
-      .oneOf(
-        [yup.ref("password")],
-        "Confirm password must match with passwords",
-      ),
+      .oneOf([yup.ref("password")], "Confirm password must match with passwords"),
   });
   const {
     register,
@@ -49,20 +46,13 @@ const Password = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleUpdatePassword: SubmitHandler<passwordInterface> = async (
-    dataForm,
-  ) => {
+  const handleUpdatePassword: SubmitHandler<passwordInterface> = async (dataForm) => {
     const patchData: passwordInterfaceApi = {
       email: userInfo!.data.email,
       password: dataForm.password,
     };
 
-    const { message, error } = await runApi<passwordInterfaceApi>(
-      updatePassword,
-      access_token,
-      patchData,
-      "POST",
-    );
+    const { message, error } = await runApi<passwordInterfaceApi>(updatePassword, access_token, patchData, "POST");
 
     if (typeof error === "object" && error !== null && "response" in error) {
       toast.error(error.response.data.data.password);
@@ -71,9 +61,7 @@ const Password = () => {
       setTimeout(() => navigate("/"), 3000);
     }
   };
-  const handleUpdateButtonClick: MouseEventHandler<HTMLButtonElement> = (
-    event,
-  ) => {
+  const handleUpdateButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
     console.log("Button Clicked, preparing to submit the form");
     handleSubmit(handleUpdatePassword)();
@@ -84,11 +72,7 @@ const Password = () => {
       <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
         <h1> Your Password </h1>
         <div className="flex justify-center mx-10">
-          <img
-            src="../../src/assets/images/jordan.jpg"
-            alt=""
-            className="w-4/12 h-4/12 max-[600px]:hidden "
-          />
+          <img src="../../src/assets/images/jordan.jpg" alt="" className="w-4/12 h-4/12 max-[600px]:hidden " />
           <img
             src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
             alt=""
@@ -105,11 +89,7 @@ const Password = () => {
           color={errors.password ? "danger" : "success"}
           errorMessage={errors.password?.message}
           endContent={
-            <button
-              className="focus:outline-none mb4"
-              type="button"
-              onClick={toggleVisibility}
-            >
+            <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>
               {isVisible ? (
                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
               ) : (
@@ -129,11 +109,7 @@ const Password = () => {
           color={errors.confirmPassword ? "danger" : "success"}
           errorMessage={errors.confirmPassword?.message}
           endContent={
-            <button
-              className="focus:outline-none mb4"
-              type="button"
-              onClick={toggleVisibility}
-            >
+            <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>
               {isVisible ? (
                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
               ) : (
@@ -144,13 +120,7 @@ const Password = () => {
           type={isVisible ? "text" : "password"}
           className="max-w-xs mt-4"
         />
-        <Link
-          className="mt-4 t-0"
-          isBlock
-          showAnchorIcon
-          href="#"
-          color="primary"
-        >
+        <Link className="mt-4 t-0" isBlock showAnchorIcon href="#" color="primary">
           Back to email
         </Link>
         <Button
