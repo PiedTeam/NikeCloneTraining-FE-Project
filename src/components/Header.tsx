@@ -32,18 +32,14 @@ const Header = (props: HeaderProps) => {
       {/* RIGHT SIDE */}
       <div className="basis-1/2 w-full">
         <ul className="flex flex-row justify-end h-full w-full">
-          {props.featureArray.map((feature, index) => {
-            return (
-              <li key={index} className="flex flex-row items-center h-full">
-                <a href={feature.route} className="text-[#121212] font-medium">
-                  {feature.featureName}
-                </a>
-                {feature.separator === false ? null : (
-                  <div className={`inline-block border-r-1 border-r-black h-4 mx-2`}></div>
-                )}
-              </li>
-            );
-          })}
+          {props.featureArray.map((feature, index) => (
+            <li key={index} className="flex flex-row items-center h-full">
+              <a href={feature.route} className="text-[#121212] font-medium">
+                {feature.featureName}
+              </a>
+              {feature.separator !== false && <div className={`inline-block border-r-1 border-r-black h-4 mx-2`}></div>}
+            </li>
+          ))}
         </ul>
       </div>
     </div>
