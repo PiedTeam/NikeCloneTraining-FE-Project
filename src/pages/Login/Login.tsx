@@ -176,7 +176,7 @@ const Login = () => {
             className="mt-4 t-0"
             isBlock
             showAnchorIcon
-            href="#"
+            href="/recovery"
             color="primary"
           >
             Forgot Password
@@ -218,13 +218,7 @@ const Login = () => {
           </div>
           <p className="text-center">
             You just found out Nike ?
-            <Link
-              className="mt-4 t-0"
-              isBlock
-              isExternal={false}
-              href="/register"
-              color="primary"
-            >
+            <Link className="mt-4 t-0" isBlock href="/register" color="primary">
               Register
             </Link>
           </p>
