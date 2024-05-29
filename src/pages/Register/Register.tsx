@@ -46,7 +46,21 @@ const schema: yup.ObjectSchema<Omit<IRegisterForm, "email" | "phone_number">> =
       .required(ValidationRules.lastnameRule.required.message),
     email_phone: yup
       .string()
-      .required(ValidationRules.usernameRule.required.message),
+      .required("This field is required")
+      .test(
+        "is-email-or-phone",
+        "Must be a valid email or phone number",
+        (value) => {
+          const isEmail = new RegExp(
+            ValidationRules.emailRule.isEmail.value,
+          ).test(value);
+          const isPhone = new RegExp(
+            ValidationRules.phonenumberRule.pattern.value,
+            "g",
+          ).test(value);
+          return isEmail || isPhone;
+        },
+      ),
     password: yup
       .string()
       .required(ValidationRules.passwordRule.required.message)
@@ -105,6 +119,7 @@ const Register = () => {
     mutate(_data, {
       onSuccess: () => {
         // alert("Register successfully");
+
         setIsOpen(true);
         setTimeout(() => {
           navigate("/login");
