@@ -1,4 +1,6 @@
+import AdvertiseBar from "@components/AdvertiseBar";
 import Header from "@components/Header";
+import Navbar from "@components/Navbar";
 
 const Homepage = () => {
   // TEST DATA
@@ -10,10 +12,11 @@ const Homepage = () => {
   ];
 
   return (
-    <div className="container">
+    <div className="">
       {/* tý thêm px-2 vô */}
       <Header featureArray={featureArray} />
-      {/* <Navbar /> */}
+      <Navbar />
+      <AdvertiseBar />
     </div>
   );
 };

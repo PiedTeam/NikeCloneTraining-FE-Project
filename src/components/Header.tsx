@@ -11,22 +11,12 @@ interface HeaderProps {
 }
 
 const Header = (props: HeaderProps) => {
-  // // TEST FIX CỨNG DATA
-  // props = {
-  //   featureArray: [
-  //     { featureName: "Find a Store", route: "/retail" },
-  //     { featureName: "Help", route: "/help" },
-  //     { featureName: "Join Us", route: "/membership" },
-  //     { featureName: "Sign In", route: "/signin", separator: false },
-  //   ],
-  // };
-
   return (
-    <div className="bg-[#f5f5f5] w-full h-10 flex flex-row">
+    <div className="my-1 bg-[#f5f5f5] w-full h-8 flex flex-row">
       {/* LEFT SIDE */}
-      <div className="basis-1/2 w-full">
-        <div className="inline-block items-start h-full">
-          <SiJordan className="text-4xl" />
+      <div className="basis-1/2 w-full flex">
+        <div className="inline-block items-start py-1">
+          <SiJordan className="text-2xl" />
         </div>
       </div>
       {/* RIGHT SIDE */}
@@ -34,7 +24,7 @@ const Header = (props: HeaderProps) => {
         <ul className="flex flex-row justify-end h-full w-full">
           {props.featureArray.map((feature, index) => (
             <li key={index} className="flex flex-row items-center h-full">
-              <a href={feature.route} className="text-[#121212] font-medium">
+              <a href={feature.route} className="text-[#121212] font-medium text-sm hover:text-[#12121285]">
                 {feature.featureName}
               </a>
               {feature.separator !== false && <div className={`inline-block border-r-1 border-r-black h-4 mx-2`}></div>}
