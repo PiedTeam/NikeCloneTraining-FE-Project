@@ -12,7 +12,8 @@
     "lint": "eslint --ext .ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .ts,.tsx src/",
     "format:write": "prettier --write src --cache",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "build:digitalocean": "yarn install --production=false && yarn run build && rm -rf node_modules && yarn install --production --frozen-lockfile"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
