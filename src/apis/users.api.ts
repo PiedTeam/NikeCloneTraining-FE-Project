@@ -9,8 +9,7 @@ import { IRegisterForm } from "@pages/Register/Register";
 import http from "@utils/http";
 
 type TokenResponse = {
-  access_token: string;
-  refresh_token: string;
+  data: { access_token: string; refresh_token: string };
 };
 
 type RecoveryResponse = {

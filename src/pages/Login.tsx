@@ -59,7 +59,8 @@ const Login = () => {
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
     mutate(data, {
       onSuccess: (data) => {
-        localStorage.setItem("access_token", data?.data.data.access_token);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        localStorage.setItem("access_token", data?.data.data.access_token as any);
         toast.success("Login successfully");
         setTimeout(() => {
           navigate("/");
