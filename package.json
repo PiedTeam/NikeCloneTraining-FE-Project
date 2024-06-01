@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development vite",
+    "dev": "vite",
     "build": "tsc && vite build",
     "preview": "cross-env NODE_ENV=production vite preview --host 0.0.0.0",
     "prepare": "husky",
@@ -21,7 +21,6 @@
     ]
   },
   "dependencies": {
-    "@esbuild/linux-x64": "^0.21.3",
     "@hookform/resolvers": "^3.3.4",
     "@nextui-org/react": "^2.2.10",
     "@tanstack/react-query": "^5.36.0",
