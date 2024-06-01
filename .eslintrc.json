@@ -43,6 +43,7 @@
         "singleQuote": false,
         "printWidth": 120
       }
-    ]
+    ],
+    "@typescript-eslint/no-unused-vars": "warn"
   }
 }

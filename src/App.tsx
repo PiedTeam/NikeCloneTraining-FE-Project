@@ -13,8 +13,6 @@ import Password from "@pages/Password";
 import CompareOtpPage from "@pages/Otp";
 import ChangePassword from "@pages/ChangePassword";
 import Account from "@pages/Account";
-import Register from "@pages/Register";
-import Login from "@pages/Login";
 
 // components
 
