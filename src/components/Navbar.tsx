@@ -38,7 +38,7 @@ const Navbar = () => {
               <button key={mainCategory.id} className="h-full flex flex-row items-center justify-around px-2">
                 <a
                   href={mainCategory.route}
-                  className="text-[#121212] border-2 font-semibold text-lg border-transparent hover:border-2 hover:border-b-black hover:text-slate-500"
+                  className="text-[#121212] border-2 cursor-pointer font-semibold text-lg border-transparent hover:border-2 hover:border-b-black hover:text-slate-500"
                 >
                   {mainCategory.mainCategoryName}
                 </a>
@@ -48,9 +48,14 @@ const Navbar = () => {
               >
                 {mainCategory.subCategory?.map(({ id, subCategoryName, tags }) => (
                   <div key={id}>
-                    <li className="block text-black px-3 py-2 font-semibold hover:text-black">{subCategoryName}</li>
+                    <li className="block text-black px-3 py-2 cursor-pointer font-semibold hover:text-black">
+                      {subCategoryName}
+                    </li>
                     {tags.map((tag) => (
-                      <li key={tag.id} className="block px-3 mb-1 text-sm font-semibold text-gray-500 hover:text-black">
+                      <li
+                        key={tag.id}
+                        className="block px-3 mb-1 cursor-pointer text-sm font-semibold text-gray-500 hover:text-black"
+                      >
                         {tag.name}
                       </li>
                     ))}
