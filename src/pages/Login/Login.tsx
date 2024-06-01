@@ -147,7 +147,7 @@ const Login = () => {
             type={isVisible ? "text" : "password"}
             className="max-w-xs"
           />
-          <Link className="mt-4 t-0" isBlock showAnchorIcon href="#" color="primary">
+          <Link className="mt-4 t-0" isBlock showAnchorIcon href="/recovery" color="primary">
             Forgot Password
           </Link>
           <Button
@@ -191,7 +191,7 @@ const Login = () => {
           </div>
           <p className="text-center">
             You just found out Nike ?
-            <Link className="mt-4 t-0" isBlock isExternal={false} href="/register" color="primary">
+            <Link className="mt-4 t-0" isBlock href="/register" color="primary">
               Register
             </Link>
           </p>

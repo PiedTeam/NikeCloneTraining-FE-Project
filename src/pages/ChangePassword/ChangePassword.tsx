@@ -130,7 +130,7 @@ const ChangePassword = () => {
           <Input
             {...register("confirmPassword")}
             isRequired
-            label="Password"
+            label="Confirm Password"
             variant="bordered"
             placeholder="Enter confirm new password"
             color={errors.confirmPassword ? "danger" : "success"}
