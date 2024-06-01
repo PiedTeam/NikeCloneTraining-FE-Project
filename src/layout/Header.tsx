@@ -12,9 +12,9 @@ interface HeaderProps {
 
 const Header = (props: HeaderProps) => {
   return (
-    <div className="my-1 bg-[#f5f5f5] w-full h-8 flex flex-row">
+    <div className="bg-[#f5f5f5] w-full h-8 m-0 flex py-5 px-16 flex-row">
       {/* LEFT SIDE */}
-      <div className="basis-1/2 w-full flex">
+      <div className="basis-1/2 w-full flex h-full items-center">
         <div className="inline-block items-start py-1">
           <SiJordan className="text-2xl" />
         </div>
