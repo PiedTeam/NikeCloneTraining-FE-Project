@@ -19,8 +19,10 @@ import Login from "@pages/Login";
 // components
 
 // pages
-
+import Login from "@pages/Login";
+const Register = lazy(() => import("@pages/Register"));
 const Homepage = lazy(() => import("@pages/Homepage"));
+// const Login = lazy(() => import("@pages/Login"));
 const VerifyAccount = lazy(() => import("@pages/VerifyAccount"));
 const OAuth = lazy(() => import("@pages/OAuth"));
 

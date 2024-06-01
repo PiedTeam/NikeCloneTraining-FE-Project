@@ -1,8 +1,8 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import EyeFilledIcon from "../../components/EyeFilledIcon.tsx";
-import EyeSlashFilledIcon from "../../components/EyeSlashFilledIcon.tsx";
+import EyeFilledIcon from "../../components/icons/EyeFilledIcon.tsx";
+import EyeSlashFilledIcon from "../../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { changePassword } from "@apis/users.api.ts";

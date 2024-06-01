@@ -1,8 +1,6 @@
-interface EyeSlashFilledIconProps {
-  className?: string;
-}
+import { SVGProps } from "react";
 
-const EyeSlashFilledIcon = (props: EyeSlashFilledIconProps) => (
+const EyeSlashFilledIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     aria-hidden="true"
     fill="none"

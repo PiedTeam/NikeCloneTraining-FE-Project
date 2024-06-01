@@ -1,6 +1,6 @@
 import { GetMeFunction } from "@hooks/useApi";
 import { FormDataChangePasswordApi } from "@pages/ChangePassword/ChangePassword";
-import { LoginFormData } from "@pages/Login/Login";
+import { LoginFormData } from "@pages/Login";
 import { compareOtpApi, sendOtp } from "@pages/Otp/CompareOtpPage";
 import { passwordInterfaceApi } from "@pages/Password/Password";
 
@@ -23,7 +23,7 @@ interface ApiResponse {
   data: object;
 }
 
-export const register = (_data: Omit<IRegisterForm, "agreeToTerms">) =>
+export const registerApi = (_data: Omit<IRegisterForm, "agreeToTerms">) =>
   http.post<TokenResponse>("user/register", _data);
 
 export const login = (_data: LoginFormData) => http.post<TokenResponse>("user/login", _data);
