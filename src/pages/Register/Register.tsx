@@ -12,18 +12,17 @@ import useWindowSize from "@hooks/useWindowSize";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //components
-import DocumentTitle from "@components/DocumentTitle";
 import { Button, Checkbox, Input } from "@nextui-org/react";
-import LogoNike from "@assets/logo/logo_nike.svg";
-import EyeSlashFilledIcon from "@components/EyeSlashFilledIcon";
-import EyeFilledIcon from "@components/EyeFilledIcon";
+import LogoNike from "../../../public/assets/logo/logo_nike.svg";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import FacebookSVG from "@assets/logo/FacebookSVG";
-import GoogleSVG from "@assets/logo/GoogleSVG";
+import FacebookSVG from "../../../public/assets/logo/FacebookSVG";
+import GoogleSVG from "../../../public/assets/logo/GoogleSVG";
 import { useMutation } from "@tanstack/react-query";
-import { register } from "@apis/users.api";
+import { registerApi } from "@apis/users.api";
 import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
 import { ResponseApi } from "@utils/utils.type";
+import useDocumentTitle from "@hooks/useDocumentTitle";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@components/index";
 
 export interface IRegisterForm {
   first_name: string;
@@ -69,6 +68,7 @@ type FormError =
   | null;
 
 const Register = () => {
+  useDocumentTitle({ title: "Register" });
   const navigate = useNavigate();
   const { width } = useWindowSize();
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -77,7 +77,7 @@ const Register = () => {
 
   const { mutate, error } = useMutation({
     mutationFn: (_body: Omit<IRegisterForm, "agreeToTerms">) => {
-      return register(_body);
+      return registerApi(_body);
     },
   });
 
@@ -102,6 +102,7 @@ const Register = () => {
     criteriaMode: "all",
   });
   const onSubmit: SubmitHandler<IRegisterForm> = (_data) => {
+    console.log(_data);
     mutate(_data, {
       onSuccess: () => {
         // alert("Register successfully");
@@ -141,7 +142,6 @@ const Register = () => {
 
   return (
     <>
-      <DocumentTitle title="Register" />
       <div className="flex justify-center items-center h-screen">
         <div
           className={`fixed top-10 border border-black rounded py-3 px-6 font-medium text-lg bg-blue-500 ${isOpen ? "" : "hidden"}`}
