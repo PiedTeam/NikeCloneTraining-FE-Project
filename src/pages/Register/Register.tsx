@@ -23,6 +23,7 @@ import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
 import { ResponseApi } from "@utils/utils.type";
 import useDocumentTitle from "@hooks/useDocumentTitle";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@components/index";
+import { isProduction } from "@utils/http";
 
 export interface IRegisterForm {
   first_name: string;
