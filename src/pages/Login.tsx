@@ -58,7 +58,8 @@ const Login = () => {
 
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
     mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        localStorage.setItem("access_token", data?.data.data.access_token);
         toast.success("Login successfully");
         setTimeout(() => {
           navigate("/");
