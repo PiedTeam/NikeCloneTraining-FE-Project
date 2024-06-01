@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "run:digitalocean": "npm run preview",
-    "preview": "cross-env NODE_ENV=production vite preview --host 0.0.0.0",
+    "preview": "vite preview --host 0.0.0.0",
     "prepare": "husky",
     "lint": "eslint --ext .ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .ts,.tsx src/",
