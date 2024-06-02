@@ -11,6 +11,7 @@ interface HeaderProps {
 }
 
 const Header = (props: HeaderProps) => {
+  const user = localStorage.getItem("user");
   return (
     <div className="bg-[#f5f5f5] w-full h-8 m-0 flex py-5 px-16 flex-row">
       {/* LEFT SIDE */}
@@ -25,7 +26,7 @@ const Header = (props: HeaderProps) => {
           {props.featureArray.map((feature, index) => (
             <li key={index} className="flex flex-row items-center h-full">
               <a href={feature.route} className="text-[#121212] font-medium text-sm hover:text-[#12121285]">
-                {feature.featureName}
+                {feature.featureName === "Sign in" && user ? "Sign out" : feature.featureName}
               </a>
               {feature.separator !== false && <div className={`inline-block border-r-1 border-r-black h-4 mx-2`}></div>}
             </li>

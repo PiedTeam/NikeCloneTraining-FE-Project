@@ -23,7 +23,6 @@ export interface NavbarDataFetchType {
 const Navbar = () => {
   // const dataFetched: NavbarDataFetchType = {}; // GỌI API LẤY DỮ LIỆU fetch data một cục luôn, ko phải mở mainCategory nào thì ms fetch
   // const featureArray = dataFetched.featureArray;
-  const user = localStorage.getItem("user");
 
   return (
     <div className="navbar-container">
@@ -41,7 +40,7 @@ const Navbar = () => {
                   href={mainCategory.route}
                   className="text-[#121212] border-2 cursor-pointer font-semibold text-lg border-transparent hover:border-2 hover:border-b-black hover:text-slate-500"
                 >
-                  {user ? "Log out" : mainCategory.mainCategoryName}
+                  {mainCategory.mainCategoryName}
                 </a>
               </button>
               <div
