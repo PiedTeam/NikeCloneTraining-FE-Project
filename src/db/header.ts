@@ -2,7 +2,7 @@ export const featureArray = [
   { featureName: "Find a Store", route: "/retail" },
   { featureName: "Help", route: "/help" },
   { featureName: "Join Us", route: "/membership" },
-  { featureName: "Sign In", route: "/signin", separator: false },
+  { featureName: "Sign In", route: "/login", separator: false },
 ];
 
 export const mainCategoryArray = [
