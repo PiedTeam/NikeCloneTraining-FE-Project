@@ -36,18 +36,31 @@ export interface IRegisterForm {
   subcribe?: boolean;
 }
 
-const schema: yup.ObjectSchema<Omit<IRegisterForm, "email" | "phone_number">> = yup.object().shape({
-  first_name: yup.string().required(ValidationRules.firstnameRule.required.message),
-  last_name: yup.string().required(ValidationRules.lastnameRule.required.message),
-  email_phone: yup.string().required(ValidationRules.usernameRule.required.message),
-  password: yup
-    .string()
-    .required(ValidationRules.passwordRule.required.message)
-    .min(ValidationRules.passwordRule.minLength.value, ValidationRules.passwordRule.minLength.message)
-    .matches(new RegExp(ValidationRules.passwordRule.pattern.value), ValidationRules.passwordRule.pattern.message),
-  agreeToTerms: yup.boolean().required().isTrue(),
-  subcribe: yup.boolean(),
-});
+const schema: yup.ObjectSchema<Omit<IRegisterForm, "email" | "phone_number">> =
+  yup.object().shape({
+    first_name: yup
+      .string()
+      .required(ValidationRules.firstnameRule.required.message),
+    last_name: yup
+      .string()
+      .required(ValidationRules.lastnameRule.required.message),
+    email_phone: yup
+      .string()
+      .required(ValidationRules.usernameRule.required.message),
+    password: yup
+      .string()
+      .required(ValidationRules.passwordRule.required.message)
+      .min(
+        ValidationRules.passwordRule.minLength.value,
+        ValidationRules.passwordRule.minLength.message,
+      )
+      .matches(
+        new RegExp(ValidationRules.passwordRule.pattern.value),
+        ValidationRules.passwordRule.pattern.message,
+      ),
+    agreeToTerms: yup.boolean().required().isTrue(),
+    subcribe: yup.boolean(),
+  });
 
 type FormError =
   | {
@@ -69,7 +82,10 @@ const Register = () => {
   });
 
   const errorForm: FormError = useMemo(() => {
-    if (isAxiosError<{ error: FormError }>(error) && error.response?.status === 422) {
+    if (
+      isAxiosError<{ error: FormError }>(error) &&
+      error.response?.status === 422
+    ) {
       return error.response?.data.error;
     }
     return null;
@@ -95,14 +111,27 @@ const Register = () => {
         }, 3000);
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseApi<Omit<IRegisterForm, "agreeToTerms" | "subcribe">>>(error)) {
+        if (
+          isAxiosUnprocessableEntityError<
+            ResponseApi<Omit<IRegisterForm, "agreeToTerms" | "subcribe">>
+          >(error)
+        ) {
           const formError = error.response?.data.data;
           if (formError) {
             Object.keys(formError).forEach((key) => {
-              setError(key as keyof Omit<IRegisterForm, "agreeToTerms" | "subcribe">, {
-                message: formError[key as keyof Omit<IRegisterForm, "agreeToTerms" | "subcribe">],
-                type: "Server",
-              });
+              setError(
+                key as keyof Omit<IRegisterForm, "agreeToTerms" | "subcribe">,
+                {
+                  message:
+                    formError[
+                      key as keyof Omit<
+                        IRegisterForm,
+                        "agreeToTerms" | "subcribe"
+                      >
+                    ],
+                  type: "Server",
+                },
+              );
             });
           }
         }
@@ -143,14 +172,19 @@ const Register = () => {
                           {...field}
                           // className="mt-3 w-full h-unit-20 border border-black "
                           classNames={{
-                            input: ["bg-transparent", "placeholder:text-default-700/50 placeholder:text-lg"],
+                            input: [
+                              "bg-transparent",
+                              "placeholder:text-default-700/50 placeholder:text-lg",
+                            ],
                             innerWrapper: ["bg-transparent"],
                             inputWrapper: [
                               "w-full",
                               "h-unit-13",
                               "border",
                               "border-1",
-                              errors.first_name ? "border-red-600" : "border-black",
+                              errors.first_name
+                                ? "border-red-600"
+                                : "border-black",
                               "bg-white",
                             ],
                           }}
@@ -160,7 +194,9 @@ const Register = () => {
                         />
                       )}
                     />
-                    <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">{errors.first_name?.message}</p>
+                    <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
+                      {errors.first_name?.message}
+                    </p>
                   </div>
 
                   <div className="col-span-1">
@@ -171,13 +207,18 @@ const Register = () => {
                         <Input
                           {...field}
                           classNames={{
-                            input: ["bg-transparent", "placeholder:text-default-700/50 placeholder:text-lg"],
+                            input: [
+                              "bg-transparent",
+                              "placeholder:text-default-700/50 placeholder:text-lg",
+                            ],
                             innerWrapper: ["bg-transparent"],
                             inputWrapper: [
                               "w-full",
                               "h-unit-13",
                               "border",
-                              errors.last_name ? "border-red-600" : "border-black",
+                              errors.last_name
+                                ? "border-red-600"
+                                : "border-black",
                               "bg-white",
                             ],
                           }}
@@ -187,7 +228,9 @@ const Register = () => {
                         />
                       )}
                     />
-                    <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">{errors.last_name?.message}</p>
+                    <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
+                      {errors.last_name?.message}
+                    </p>
                   </div>
                 </div>
 
@@ -199,13 +242,18 @@ const Register = () => {
                       <Input
                         {...field}
                         classNames={{
-                          input: ["bg-transparent", "placeholder:text-default-700/50 placeholder:text-lg"],
+                          input: [
+                            "bg-transparent",
+                            "placeholder:text-default-700/50 placeholder:text-lg",
+                          ],
                           innerWrapper: ["bg-transparent"],
                           inputWrapper: [
                             "w-full",
                             "h-unit-13",
                             "border",
-                            errors.email_phone ? "border-red-600" : "border-black",
+                            errors.email_phone
+                              ? "border-red-600"
+                              : "border-black",
                             "bg-white",
                           ],
                         }}
@@ -216,7 +264,9 @@ const Register = () => {
                     )}
                   />
                   <p className="fixed text-xs text-red-500 ml-2 font-medium mt-1">
-                    {errors.email_phone?.message || errors.email?.message || errors.phone_number?.message}
+                    {errors.email_phone?.message ||
+                      errors.email?.message ||
+                      errors.phone_number?.message}
                   </p>
                 </div>
 
@@ -227,7 +277,10 @@ const Register = () => {
                     <Input
                       {...field}
                       classNames={{
-                        input: ["bg-transparent", "placeholder:text-default-700/50 placeholder:text-lg"],
+                        input: [
+                          "bg-transparent",
+                          "placeholder:text-default-700/50 placeholder:text-lg",
+                        ],
                         innerWrapper: ["bg-transparent"],
                         inputWrapper: [
                           "mt-unit-8",
@@ -242,7 +295,11 @@ const Register = () => {
                       radius="sm"
                       placeholder="Password *"
                       endContent={
-                        <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                        <button
+                          className="focus:outline-none"
+                          type="button"
+                          onClick={toggleVisibility}
+                        >
                           {isVisible ? (
                             <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                           ) : (
@@ -255,7 +312,12 @@ const Register = () => {
                   )}
                 />
                 <div className="text-xs ml-2 font-medium mt-2 text-red-500">
-                  <p>{errors.password?.types?.required || errors.password?.types?.optionality ? "Required" : ""}</p>
+                  <p>
+                    {errors.password?.types?.required ||
+                    errors.password?.types?.optionality
+                      ? "Required"
+                      : ""}
+                  </p>
                   <p
                     className={`text-xs mt-2 ${errors.password?.types?.min || errors.password?.types?.optionality ? "" : "text-black"}`}
                   >
@@ -264,7 +326,8 @@ const Register = () => {
                   <p
                     className={`text-xs mt-2 ${errors.password?.types?.matches || errors.password?.types?.optionality ? "" : "text-black"}`}
                   >
-                    Uppercase, lowercase letters, one number and special characters
+                    Uppercase, lowercase letters, one number and special
+                    characters
                   </p>
                 </div>
                 <Controller
@@ -280,7 +343,8 @@ const Register = () => {
                         label: ["text-md"],
                       }}
                     >
-                      Sign up for emails to get updates from Nike on products, offers and your Member benefits
+                      Sign up for emails to get updates from Nike on products,
+                      offers and your Member benefits
                     </Checkbox>
                   )}
                 />
@@ -295,7 +359,10 @@ const Register = () => {
                       onChange={(e) => field.onChange(e.target.checked)}
                       classNames={{
                         base: ["mt-1"],
-                        label: ["text-md", errors.agreeToTerms ? "text-red-500" : "text-black"],
+                        label: [
+                          "text-md",
+                          errors.agreeToTerms ? "text-red-500" : "text-black",
+                        ],
                       }}
                     >
                       I agree to Nike{" "}
@@ -316,7 +383,11 @@ const Register = () => {
                   )}
                 />
 
-                {errorForm && <div className="mt-2 text-red-500 text-sm font-medium">{errorForm.email}</div>}
+                {errorForm && (
+                  <div className="mt-2 text-red-500 text-sm font-medium">
+                    {errorForm.email}
+                  </div>
+                )}
 
                 <Button
                   type="submit"
@@ -342,7 +413,8 @@ const Register = () => {
                   radius="full"
                   startContent={<FacebookSVG />}
                   onClick={() => {
-                    window.location.href = import.meta.env.VITE_FACEBOOK_OAUTH_URL;
+                    window.location.href =
+                      import.meta.env.VITE_FACEBOOK_OAUTH_URL;
                   }}
                 >
                   Register with Facebook
@@ -353,7 +425,8 @@ const Register = () => {
                   radius="full"
                   startContent={<GoogleSVG />}
                   onClick={() => {
-                    window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
+                    window.location.href =
+                      import.meta.env.VITE_GOOGLE_OAUTH_URL;
                   }}
                 >
                   Register with Google

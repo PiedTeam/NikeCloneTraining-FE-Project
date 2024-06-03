@@ -41,9 +41,8 @@
         "endOfLine": "auto",
         "useTabs": false,
         "singleQuote": false,
-        "printWidth": 120
+        "printWidth": 80
       }
-    ],
-    "@typescript-eslint/no-unused-vars": "warn"
+    ]
   }
 }

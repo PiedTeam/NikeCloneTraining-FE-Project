@@ -2,7 +2,11 @@ import { sendVerifyAccountOTP, verifyAccount } from "@apis/users.api";
 import DocumentTitle from "@components/DocumentTitle";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
-import { isAxiosUnprocessableEntityError, validateEmail, validatePhoneNumber } from "@utils/utils";
+import {
+  isAxiosUnprocessableEntityError,
+  validateEmail,
+  validatePhoneNumber,
+} from "@utils/utils";
 import { ResponseApi } from "@utils/utils.type";
 import { AxiosError } from "axios";
 import { useRef, useState } from "react";
@@ -28,11 +32,14 @@ const VerifyAccount = () => {
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
   const [sendOTPError, setSendOTPError] = useState<string>("");
-  const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(VerifyMethod.EMAIL);
-  const [validateOTPError, setValidateOTPError] = useState<VerifyAccountErrorProps>({
-    email_phone: "",
-    verify_account_otp: "",
-  });
+  const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(
+    VerifyMethod.EMAIL,
+  );
+  const [validateOTPError, setValidateOTPError] =
+    useState<VerifyAccountErrorProps>({
+      email_phone: "",
+      verify_account_otp: "",
+    });
 
   const { mutate } = useMutation({
     mutationFn: (_body: { email_phone: string }) => {
@@ -45,8 +52,10 @@ const VerifyAccount = () => {
 
   const checkValidation = () => {
     if (
-      (selectedMethod === VerifyMethod.EMAIL && validateEmail(receiveOTPRef.current?.value || "")) ||
-      (selectedMethod === VerifyMethod.SMS && validatePhoneNumber(receiveOTPRef.current?.value || ""))
+      (selectedMethod === VerifyMethod.EMAIL &&
+        validateEmail(receiveOTPRef.current?.value || "")) ||
+      (selectedMethod === VerifyMethod.SMS &&
+        validatePhoneNumber(receiveOTPRef.current?.value || ""))
     ) {
       return true;
     }
@@ -76,7 +85,11 @@ const VerifyAccount = () => {
           },
           onError: (error) => {
             console.log(error);
-            if (isAxiosUnprocessableEntityError<ResponseApi<SendOTPErrorProps>>(error)) {
+            if (
+              isAxiosUnprocessableEntityError<ResponseApi<SendOTPErrorProps>>(
+                error,
+              )
+            ) {
               const formError = error.response?.data.data;
               console.log(isResendAvailable);
               if (formError) {
@@ -94,7 +107,10 @@ const VerifyAccount = () => {
   };
 
   const handleVerifyOTP = async () => {
-    if (OTPRef.current?.value !== null && receiveOTPRef.current?.value !== null) {
+    if (
+      OTPRef.current?.value !== null &&
+      receiveOTPRef.current?.value !== null
+    ) {
       try {
         const result = await verifyAccount({
           email_phone: receiveOTPRef.current?.value as string,
@@ -109,9 +125,15 @@ const VerifyAccount = () => {
           alert("Account Verified Successfully");
         }
       } catch (error: unknown) {
-        if (error instanceof Error && isAxiosUnprocessableEntityError<ResponseApi<VerifyAccountErrorProps>>(error)) {
+        if (
+          error instanceof Error &&
+          isAxiosUnprocessableEntityError<ResponseApi<VerifyAccountErrorProps>>(
+            error,
+          )
+        ) {
           setValidateOTPError(
-            (error as AxiosError<ResponseApi<VerifyAccountErrorProps>>).response?.data.data as VerifyAccountErrorProps,
+            (error as AxiosError<ResponseApi<VerifyAccountErrorProps>>).response
+              ?.data.data as VerifyAccountErrorProps,
           );
         }
       }
@@ -125,23 +147,41 @@ const VerifyAccount = () => {
         <div className="bg-white w-full max-w-[600px] py-10 px-4 lg:p-[60px]">
           <h1>Verify your Account</h1>
           <p className="mt-10">
-            To help keep PIED_NIKE the <strong>most trusted design marketplace</strong>, we need to verify your Account.
+            To help keep PIED_NIKE the{" "}
+            <strong>most trusted design marketplace</strong>, we need to verify
+            your Account.
           </p>
           <p className="mt-4">
-            <strong>Verification only takes a few minutes</strong>, helps secure your account.
+            <strong>Verification only takes a few minutes</strong>, helps secure
+            your account.
           </p>
           <div className="flex justify-center items-center mt-8 gap-4">
             <div className="w-8/12">
               <Input
                 classNames={{
                   base: ["w-full"],
-                  input: ["bg-transparent", "placeholder:text-default-700/50 placeholder:text-lg"],
-                  inputWrapper: ["w-full", "h-unit-13", "border", "border-1", "bg-white"],
+                  input: [
+                    "bg-transparent",
+                    "placeholder:text-default-700/50 placeholder:text-lg",
+                  ],
+                  inputWrapper: [
+                    "w-full",
+                    "h-unit-13",
+                    "border",
+                    "border-1",
+                    "bg-white",
+                  ],
                 }}
                 ref={receiveOTPRef}
-                placeholder={selectedMethod === VerifyMethod.SMS ? "Phone Number *" : "Email *"}
+                placeholder={
+                  selectedMethod === VerifyMethod.SMS
+                    ? "Phone Number *"
+                    : "Email *"
+                }
               />
-              <p className="fixed mt-1 ml-3 text-sm text-red-500">{sendOTPError}</p>
+              <p className="fixed mt-1 ml-3 text-sm text-red-500">
+                {sendOTPError}
+              </p>
             </div>
             <Select
               label="Verify method *"
@@ -150,7 +190,9 @@ const VerifyAccount = () => {
                 base: ["w-4/12"],
               }}
               value={[VerifyMethod.EMAIL]}
-              onChange={(e) => setSelectedMethod(e.target.value as VerifyMethod)}
+              onChange={(e) =>
+                setSelectedMethod(e.target.value as VerifyMethod)
+              }
             >
               <SelectItem key={VerifyMethod.EMAIL} value={VerifyMethod.EMAIL}>
                 Email
@@ -160,13 +202,24 @@ const VerifyAccount = () => {
               </SelectItem>
             </Select>
           </div>
-          <p className="ml-3 text-red-500 fixed">{otpIsClicked && !otpIsSent ? "Invalid Input" : ""}</p>
+          <p className="ml-3 text-red-500 fixed">
+            {otpIsClicked && !otpIsSent ? "Invalid Input" : ""}
+          </p>
           <div className="flex justify-center items-center mt-8 gap-4">
             <Input
               classNames={{
                 base: ["w-8/12"],
-                input: ["bg-transparent", "placeholder:text-default-700/50 placeholder:text-lg"],
-                inputWrapper: ["w-full", "h-unit-13", "border", "border-1", "bg-white"],
+                input: [
+                  "bg-transparent",
+                  "placeholder:text-default-700/50 placeholder:text-lg",
+                ],
+                inputWrapper: [
+                  "w-full",
+                  "h-unit-13",
+                  "border",
+                  "border-1",
+                  "bg-white",
+                ],
               }}
               ref={OTPRef}
               placeholder="Code *"
@@ -196,13 +249,22 @@ const VerifyAccount = () => {
             </Button>
           </div>
           <p className="text-sm mt-2 relative ml-3 italic text-red-500">
-            {validateOTPError.email_phone || validateOTPError.verify_account_otp}
+            {validateOTPError.email_phone ||
+              validateOTPError.verify_account_otp}
           </p>
           {!isResendAvailable && (
-            <p className="text-sm mt-2 relative left-3/4 italic">Resend code in {timeRemaining}s</p>
+            <p className="text-sm mt-2 relative left-3/4 italic">
+              Resend code in {timeRemaining}s
+            </p>
           )}
 
-          <Button className="w-full mt-12 text-lg" size="lg" color="primary" variant="ghost" onClick={handleVerifyOTP}>
+          <Button
+            className="w-full mt-12 text-lg"
+            size="lg"
+            color="primary"
+            variant="ghost"
+            onClick={handleVerifyOTP}
+          >
             Submit
           </Button>
         </div>

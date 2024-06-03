@@ -115,7 +115,12 @@ export const runApi = async <T>(
   }
 };
 
-const useApi = <T>(fn: GetMeFunction<T>, accessToken: string, data?: T, method: "GET" | "POST" = "GET") => {
+const useApi = <T>(
+  fn: GetMeFunction<T>,
+  accessToken: string,
+  data?: T,
+  method: "GET" | "POST" = "GET",
+) => {
   const [state, setState] = useState<ApiState<T>>({
     data: null,
     isLoading: true,

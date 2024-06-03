@@ -24,10 +24,17 @@ const Header = (props: HeaderProps) => {
         <ul className="flex flex-row justify-end h-full w-full">
           {props.featureArray.map((feature, index) => (
             <li key={index} className="flex flex-row items-center h-full">
-              <a href={feature.route} className="text-[#121212] font-medium text-sm hover:text-[#12121285]">
+              <a
+                href={feature.route}
+                className="text-[#121212] font-medium text-sm hover:text-[#12121285]"
+              >
                 {feature.featureName}
               </a>
-              {feature.separator !== false && <div className={`inline-block border-r-1 border-r-black h-4 mx-2`}></div>}
+              {feature.separator !== false && (
+                <div
+                  className={`inline-block border-r-1 border-r-black h-4 mx-2`}
+                ></div>
+              )}
             </li>
           ))}
         </ul>

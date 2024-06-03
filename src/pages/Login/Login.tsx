@@ -30,7 +30,10 @@ export interface LoginFormData {
 
 const schema = yup.object().shape({
   email_phone: yup.string().required("Email or Phone is required"),
-  password: yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
 });
 
 const Login = () => {
@@ -73,7 +76,9 @@ const Login = () => {
         }, 2000);
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseApi<LoginFormData>>(error)) {
+        if (
+          isAxiosUnprocessableEntityError<ResponseApi<LoginFormData>>(error)
+        ) {
           const formError = error.response?.data.data;
           if (formError) {
             Object.keys(formError).forEach((key) => {
@@ -88,7 +93,9 @@ const Login = () => {
     });
   };
 
-  const handleLoginButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleLoginButtonClick: MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
     event.preventDefault();
     handleSubmit(handleLogin)();
   };
@@ -105,7 +112,11 @@ const Login = () => {
         <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
           <h1>WELCOME BACK</h1>
           <div className="flex justify-center mx-10">
-            <img src="../../src/assets/images/jordan.jpg" alt="" className="w-4/12 h-6/12 max-[600px]:hidden " />
+            <img
+              src="../../src/assets/images/jordan.jpg"
+              alt=""
+              className="w-4/12 h-6/12 max-[600px]:hidden "
+            />
             <img
               src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
               alt=""
@@ -119,9 +130,21 @@ const Login = () => {
             label="Email Or Phone"
             variant="bordered"
             placeholder="Enter your Email or Phone Number"
-            isInvalid={errors.email_phone || errors.email || errors.phone_number ? true : undefined}
-            color={errors.email_phone || errors.email || errors.phone_number ? "danger" : "success"}
-            errorMessage={errors.email_phone?.message || errors.email?.message || errors.phone_number?.message}
+            isInvalid={
+              errors.email_phone || errors.email || errors.phone_number
+                ? true
+                : undefined
+            }
+            color={
+              errors.email_phone || errors.email || errors.phone_number
+                ? "danger"
+                : "success"
+            }
+            errorMessage={
+              errors.email_phone?.message ||
+              errors.email?.message ||
+              errors.phone_number?.message
+            }
             className="max-w-xs mb-4"
           />
 
@@ -134,7 +157,11 @@ const Login = () => {
             color={errors.password ? "danger" : "success"}
             errorMessage={errors.password?.message}
             endContent={
-              <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>
+              <button
+                className="focus:outline-none mb4"
+                type="button"
+                onClick={toggleVisibility}
+              >
                 {isVisible ? (
                   <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                 ) : (
@@ -145,7 +172,13 @@ const Login = () => {
             type={isVisible ? "text" : "password"}
             className="max-w-xs"
           />
-          <Link className="mt-4 t-0" isBlock showAnchorIcon href="#" color="primary">
+          <Link
+            className="mt-4 t-0"
+            isBlock
+            showAnchorIcon
+            href="#"
+            color="primary"
+          >
             Forgot Password
           </Link>
           <Button
@@ -185,7 +218,13 @@ const Login = () => {
           </div>
           <p className="text-center">
             You just found out Nike ?
-            <Link className="mt-4 t-0" isBlock isExternal={false} href="/register" color="primary">
+            <Link
+              className="mt-4 t-0"
+              isBlock
+              isExternal={false}
+              href="/register"
+              color="primary"
+            >
               Register
             </Link>
           </p>
