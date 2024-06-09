@@ -1,5 +1,4 @@
-import { sendVerifyAccountOTP, verifyAccount } from "@apis/users.api";
-import DocumentTitle from "@components/DocumentTitle";
+import { sendVerifyAccountOTP, verifyAccount } from "services/users.api";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -142,7 +141,6 @@ const VerifyAccount = () => {
 
   return (
     <>
-      <DocumentTitle title="Verify Account" />
       <div className="flex justify-center items-center bg-slate-100 h-screen">
         <div className="bg-white w-full max-w-[600px] py-10 px-4 lg:p-[60px]">
           <h1>Verify your Account</h1>

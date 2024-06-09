@@ -5,8 +5,6 @@
     "lib": ["ES2021", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    
-    
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -26,6 +24,7 @@
       "@layout/*": ["layout/*"],
       "@pages/*": ["pages/*"],
       "@styles/*": ["styles/*"],
+      "@services/*": ["services/*"],
       "@utils/*": ["utils/*"]
     },
     /* Linting */
@@ -34,6 +33,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "public/assets/logo"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

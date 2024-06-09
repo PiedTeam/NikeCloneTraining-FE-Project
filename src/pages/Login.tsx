@@ -1,19 +1,32 @@
-import React, { MouseEventHandler, useState } from "react";
-import { Input, Link, Button } from "@nextui-org/react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import EyeFilledIcon from "../../components/EyeFilledIcon.tsx";
-import EyeSlashFilledIcon from "../../components/EyeSlashFilledIcon.tsx";
-import { FaFacebook } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+//utils
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import DocumentTitle from "@components/DocumentTitle.tsx";
-import { useMutation } from "@tanstack/react-query";
-// import { isAxiosError } from "@utils/utils.ts";
-import { useNavigate } from "react-router-dom";
-import { login } from "@apis/users.api.ts";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
+
+// assets
+import Jordan from "../../public/assets/images/Jordan.jpg";
+
+// hooks
+import useDocumentTitle from "@hooks/useDocumentTitle.tsx";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { MouseEventHandler, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
+// apis
+import { login } from "@services/users.api";
 import { ResponseApi } from "@utils/utils.type.ts";
+
+// components
+import {
+  ButtonPreviewPassword,
+  InputControl,
+  BrandLogo,
+} from "@components/index";
+import { FaFacebook } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { Link, Button } from "@nextui-org/react";
+import { toast } from "react-toastify";
 
 export interface LoginFormData {
   email_phone: string;
@@ -21,12 +34,6 @@ export interface LoginFormData {
   email?: string;
   phone_number?: string;
 }
-
-// type FormError =
-//   | {
-//       [key in keyof FormData]?: string;
-//     }
-//   | null;
 
 const schema = yup.object().shape({
   email_phone: yup.string().required("Email or Phone is required"),
@@ -38,9 +45,8 @@ const schema = yup.object().shape({
 
 const Login = () => {
   const navigate = useNavigate();
-  const [isVisible, setIsVisible] = React.useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  useDocumentTitle({ title: "Login" });
   const {
     register,
     handleSubmit,
@@ -56,21 +62,10 @@ const Login = () => {
     },
   });
 
-  // const errorForm: FormError = useMemo(() => {
-  //   if (
-  //     isAxiosError<{ error: FormError }>(error) &&
-  //     error.response?.status === 422
-  //   ) {
-  //     return error.response?.data.error;
-  //   }
-  //   return null;
-  // }, [error]);
-
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
-    console.log(data);
     mutate(data, {
       onSuccess: () => {
-        setIsOpen(true);
+        toast.success("Login successfully");
         setTimeout(() => {
           navigate("/");
         }, 2000);
@@ -97,49 +92,26 @@ const Login = () => {
     event,
   ) => {
     event.preventDefault();
+    console.log(errors);
     handleSubmit(handleLogin)();
   };
 
   return (
     <>
-      <DocumentTitle title="Login" />
       <div className="flex justify-center h-full">
-        <div
-          className={`fixed top-10 border border-black rounded py-3 px-6 font-medium text-lg bg-blue-500 ${isOpen ? "" : "hidden"}`}
-        >
-          <p>Login Successfully</p>
-        </div>
         <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
           <h1>WELCOME BACK</h1>
-          <div className="flex justify-center mx-10">
-            <img
-              src="../../src/assets/images/jordan.jpg"
-              alt=""
-              className="w-4/12 h-6/12 max-[600px]:hidden "
-            />
-            <img
-              src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
-              alt=""
-              className="w-4/12 h-6/12 max-[600px]:hidden"
-            />
-          </div>
-          <Input
-            {...register("email_phone")}
+          <BrandLogo image_url={Jordan} showNikeLogo />
+          <InputControl<LoginFormData>
             isRequired
+            isError={
+              !!errors.email_phone || !!errors.email || !!errors.phone_number
+            }
+            register={register}
+            name="email_phone"
             type="email_phone"
             label="Email Or Phone"
-            variant="bordered"
             placeholder="Enter your Email or Phone Number"
-            isInvalid={
-              errors.email_phone || errors.email || errors.phone_number
-                ? true
-                : undefined
-            }
-            color={
-              errors.email_phone || errors.email || errors.phone_number
-                ? "danger"
-                : "success"
-            }
             errorMessage={
               errors.email_phone?.message ||
               errors.email?.message ||
@@ -148,26 +120,19 @@ const Login = () => {
             className="max-w-xs mb-4"
           />
 
-          <Input
-            {...register("password")}
+          <InputControl<LoginFormData>
+            register={register}
             isRequired
+            isError={!!errors.password}
+            name="password"
             label="Password"
-            variant="bordered"
             placeholder="Enter your password"
-            color={errors.password ? "danger" : "success"}
             errorMessage={errors.password?.message}
             endContent={
-              <button
-                className="focus:outline-none mb4"
-                type="button"
-                onClick={toggleVisibility}
-              >
-                {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                )}
-              </button>
+              <ButtonPreviewPassword
+                isVisible={isVisible}
+                toggleVisibility={() => setIsVisible(!isVisible)}
+              />
             }
             type={isVisible ? "text" : "password"}
             className="max-w-xs"
@@ -201,9 +166,9 @@ const Login = () => {
               onClick={() => {
                 window.location.href = import.meta.env.VITE_FACEBOOK_OAUTH_URL;
               }}
+              endContent={<FaFacebook className="text-blue-800 text-5xl " />}
             >
               Login With Facebook
-              <FaFacebook className="text-blue-800 text-5xl " />
             </Button>
             <Button
               className="ml-4 border-4 w-2/4 max-[900px]:w-32 max-[900px]:text-[0] max-[600px]:w-16   "
@@ -211,9 +176,9 @@ const Login = () => {
               onClick={() => {
                 window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
               }}
+              endContent={<FcGoogle className="text-4xl" />}
             >
               Login With Google
-              <FcGoogle className="text-4xl" />
             </Button>
           </div>
           <p className="text-center">
