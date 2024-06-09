@@ -24,6 +24,7 @@
       "@layout/*": ["layout/*"],
       "@pages/*": ["pages/*"],
       "@styles/*": ["styles/*"],
+      "@services/*": ["services/*"],
       "@utils/*": ["utils/*"]
     },
     /* Linting */

@@ -6,7 +6,7 @@ import EyeSlashFilledIcon from "../../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useApi, { ApiResponse, runApi } from "@hooks/useApi.ts";
-import { getMe, updatePassword } from "@apis/users.api.ts";
+import { getMe, updatePassword } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

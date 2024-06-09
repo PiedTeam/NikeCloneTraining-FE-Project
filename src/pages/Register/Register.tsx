@@ -18,7 +18,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import FacebookSVG from "../../../public/assets/logo/FacebookSVG";
 import GoogleSVG from "../../../public/assets/logo/GoogleSVG";
 import { useMutation } from "@tanstack/react-query";
-import { registerApi } from "@apis/users.api";
+import { registerApi } from "@services/users.api";
 import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
 import { ResponseApi } from "@utils/utils.type";
 import useDocumentTitle from "@hooks/useDocumentTitle";

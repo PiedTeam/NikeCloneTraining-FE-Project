@@ -14,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 // apis
-import { login } from "@apis/users.api.ts";
+import { login } from "@services/users.api";
 import { ResponseApi } from "@utils/utils.type.ts";
 
 // components

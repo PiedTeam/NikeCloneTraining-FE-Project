@@ -1,4 +1,4 @@
-import { compareOtp, getOtp } from "@apis/users.api";
+import { compareOtp, getOtp } from "@services/users.api";
 import { runApi } from "@hooks/useApi";
 import { Button, Link } from "@nextui-org/react";
 import { useEffect, useState } from "react";

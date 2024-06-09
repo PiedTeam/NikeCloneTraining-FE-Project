@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, Select, SelectItem, Button } from "@nextui-org/react"; // Import Select and SelectItem
-import { recovery } from "@apis/users.api";
+import { recovery } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";

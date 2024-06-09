@@ -1,4 +1,4 @@
-import { sendVerifyAccountOTP, verifyAccount } from "@apis/users.api";
+import { sendVerifyAccountOTP, verifyAccount } from "services/users.api";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 import {
