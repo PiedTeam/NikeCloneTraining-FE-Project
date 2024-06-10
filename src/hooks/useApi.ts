@@ -28,7 +28,7 @@ export type GetMeFunction<T> = (
   data?: T,
 ) => Promise<AxiosResponse<ApiResponse> | AxiosResponse<ErrorForm>>;
 
-interface ApiState<T> {
+export interface ApiState<T> {
   data: T | null;
   isLoading: boolean;
   isSuccess: boolean;
@@ -37,7 +37,7 @@ interface ApiState<T> {
   error: ErrorForm | string;
 }
 
-const isApiResponse = (
+export const isApiResponse = (
   res: AxiosResponse<ApiResponse> | AxiosResponse<ErrorForm>,
 ): res is AxiosResponse<ApiResponse> => {
   return (res.data as ApiResponse).message !== undefined;

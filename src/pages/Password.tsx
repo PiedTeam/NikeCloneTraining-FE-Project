@@ -1,12 +1,12 @@
 import React, { MouseEventHandler } from "react";
 import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import EyeFilledIcon from "../../components/icons/EyeFilledIcon.tsx";
-import EyeSlashFilledIcon from "../../components/icons/EyeSlashFilledIcon.tsx";
+import EyeFilledIcon from "../components/icons/EyeFilledIcon.tsx";
+import EyeSlashFilledIcon from "../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useApi, { ApiResponse, runApi } from "@hooks/useApi.ts";
-import { getMe, updatePassword } from "@services/users.api";
+import { passwordInterfaceApi } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -15,14 +15,12 @@ export interface UserInfoForm {
     email: string;
   };
 }
-export interface passwordInterfaceApi {
-  email: string;
-  password: string;
-}
+
 export interface passwordInterface {
   password: string;
   confirmPassword: string;
 }
+
 const Password = () => {
   const userObject = localStorage.getItem("user");
   const access_token: string = JSON.parse(userObject!).access_token;
@@ -80,19 +78,19 @@ const Password = () => {
   };
 
   return (
-    <div className="flex justify-center  h-full  ">
-      <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
+    <div className="flex h-full  justify-center  ">
+      <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
         <h1> Your Password </h1>
-        <div className="flex justify-center mx-10">
+        <div className="mx-10 flex justify-center">
           <img
             src="../../src/assets/images/jordan.jpg"
             alt=""
-            className="w-4/12 h-4/12 max-[600px]:hidden "
+            className="h-4/12 w-4/12 max-[600px]:hidden "
           />
           <img
             src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
             alt=""
-            className="w-4/12 h-4/12 max-[600px]:hidden"
+            className="h-4/12 w-4/12 max-[600px]:hidden"
           />
         </div>
 
@@ -106,14 +104,14 @@ const Password = () => {
           errorMessage={errors.password?.message}
           endContent={
             <button
-              className="focus:outline-none mb4"
+              className="mb4 focus:outline-none"
               type="button"
               onClick={toggleVisibility}
             >
               {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
               ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
               )}
             </button>
           }
@@ -130,22 +128,22 @@ const Password = () => {
           errorMessage={errors.confirmPassword?.message}
           endContent={
             <button
-              className="focus:outline-none mb4"
+              className="mb4 focus:outline-none"
               type="button"
               onClick={toggleVisibility}
             >
               {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
               ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
               )}
             </button>
           }
           type={isVisible ? "text" : "password"}
-          className="max-w-xs mt-4"
+          className="mt-4 max-w-xs"
         />
         <Link
-          className="mt-4 t-0"
+          className="t-0 mt-4"
           isBlock
           showAnchorIcon
           href="#"
@@ -156,7 +154,7 @@ const Password = () => {
         <Button
           disableRipple
           size="lg"
-          className="relative mt-4 mb-4 overflow-visible rounded-full hover:-translate-y-1 px-12 shadow-xl bg-black  text-white"
+          className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl  hover:-translate-y-1"
           onClick={handleUpdateButtonClick}
         >
           Next
