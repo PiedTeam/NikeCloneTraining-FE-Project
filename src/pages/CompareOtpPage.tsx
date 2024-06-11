@@ -1,5 +1,5 @@
-import { runApi } from "@hooks/useApi";
 import { Button, Link } from "@nextui-org/react";
+import usersService from "@services/users.service";
 import { useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,12 +20,10 @@ const CompareOtpPage = () => {
 
   const sendOtp = async () => {
     try {
-      const data = await runApi<sendOtp>(
-        getOtp,
-        accessToken,
-        { email_phone: location.state.email_phone },
-        "POST",
-      );
+      const data = await usersService.getOtp({
+        access_token: accessToken,
+        _data: { email_phone: location.state.email_phone },
+      });
       if (data) {
         toast.success("Otp is being sent");
       }
@@ -52,15 +50,14 @@ const CompareOtpPage = () => {
     };
     console.log(dataIs);
 
-    const { message, error } = await runApi<compareOtpApi>(
-      compareOtp,
-      accessToken,
-      {
+    const { message, error } = await usersService.compareOtp({
+      access_token: accessToken,
+      _data: {
         email_phone: location.state.email_phone,
         forgot_password_otp: otp.toString(),
       },
-      "POST",
-    );
+    });
+
     if (typeof error === "object" && error !== null && "response" in error) {
       toast.error(error.response.data.data.forgot_password_otp);
     } else {

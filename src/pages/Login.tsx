@@ -76,9 +76,11 @@ const Login = () => {
   });
 
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
+    console.log("data", data);
     mutate(data, {
-      onSuccess: () => {
+      onSuccess: (response) => {
         toast.success("Login successfully");
+        localStorage.setItem("user", JSON.stringify(response.data.data));
         setTimeout(() => {
           navigate("/");
         }, 2000);
@@ -94,6 +96,7 @@ const Login = () => {
                 message: formError[key as keyof LoginFormData],
                 type: "Server",
               });
+              toast.error("Login failed");
             });
           }
         }

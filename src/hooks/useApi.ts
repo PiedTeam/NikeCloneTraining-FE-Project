@@ -9,7 +9,7 @@ export interface ApiResponse {
   };
 }
 
-interface ErrorData {
+export interface ErrorData {
   password: string;
   forgot_password_otp: string;
   old_password: string;

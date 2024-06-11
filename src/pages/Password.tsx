@@ -5,10 +5,10 @@ import EyeFilledIcon from "../components/icons/EyeFilledIcon.tsx";
 import EyeSlashFilledIcon from "../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useApi, { ApiResponse, runApi } from "@hooks/useApi.ts";
 import { passwordInterfaceApi } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import usersService from "@services/users.service.ts";
 
 export interface UserInfoForm {
   data: {
@@ -26,7 +26,6 @@ const Password = () => {
   const access_token: string = JSON.parse(userObject!).access_token;
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
-  const { data: userInfo } = useApi<ApiResponse>(getMe, access_token);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const schema = yup.object().shape({
@@ -50,20 +49,18 @@ const Password = () => {
   const handleUpdatePassword: SubmitHandler<passwordInterface> = async (
     dataForm,
   ) => {
+    const { data: userInfo } = await usersService.getMe(access_token);
     const patchData: passwordInterfaceApi = {
       email: userInfo!.data.email,
       password: dataForm.password,
     };
-
-    const { message, error } = await runApi<passwordInterfaceApi>(
-      updatePassword,
+    const { message, error } = await usersService.updatePassword({
       access_token,
-      patchData,
-      "POST",
-    );
+      _data: patchData,
+    });
 
     if (typeof error === "object" && error !== null && "response" in error) {
-      toast.error(error.response.data.data.password);
+      toast.error(error.response.data.data.data.password);
     } else {
       toast.success(message as string);
       setTimeout(() => navigate("/"), 3000);

@@ -13,9 +13,12 @@ export interface compareOtpApi {
   forgot_password_otp: string;
 }
 
-type TokenResponse = {
-  access_token: string;
-  refresh_token: string;
+export type TokenResponse = {
+  message: string;
+  data: {
+    access_token: string;
+    refresh_token: string;
+  };
 };
 
 export interface LoginFormData {
@@ -53,17 +56,19 @@ export type RegisterForm = {
   subcribe?: boolean;
 };
 
-type RecoveryResponse = {
+export type RecoveryResponse = {
   details: {
     otp: string;
   };
 };
-interface ApiResponse {
+export interface ApiResponse {
   message: string;
-  data: object;
+  data: {
+    email: string;
+  };
 }
 
-type SendVerifyAccountOtpResponse = {
+export type SendVerifyAccountOtpResponse = {
   message: string;
   details: {
     otp_id: string;
@@ -71,21 +76,35 @@ type SendVerifyAccountOtpResponse = {
   };
 };
 
-type UpdatePasswordResponse = {
+export type UpdatePasswordResponse = {
   message: string;
-  // data: {};
+  data: {
+    _id: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    password: string;
+    email: string;
+    role: number;
+    created_at: Date;
+    updated_at: Date;
+    status: number;
+    notice: number;
+    avatar_url: string;
+    subscription: number;
+  };
 };
 
-type CompareOTPResponse = {
+export type CompareOTPResponse = {
   message: string;
 };
 
-type ChangePasswordResponse = {
+export type ChangePasswordResponse = {
   message: string;
   detail: boolean;
 };
 
-type VerifyAccountResponse = {
+export type VerifyAccountResponse = {
   message: string;
   detail: boolean;
 };
@@ -111,12 +130,18 @@ export const callSendVerifyAccountOTP = (_data: { email_phone: string }) =>
     method: "post",
   });
 
-export const getOtp = (accessToken: string, _data: sendOtp | undefined) =>
+export const getOtp = ({
+  access_token,
+  _data,
+}: {
+  access_token: string;
+  _data: sendOtp | undefined;
+}) =>
   http<SendVerifyAccountOtpResponse, typeof _data>({
     url: "user/send-verify-account-otp",
     data: _data,
     method: "post",
-    token: accessToken,
+    token: access_token,
   });
 
 export const recovery = (_data: RecoveryForm) =>
@@ -129,32 +154,41 @@ export const recovery = (_data: RecoveryForm) =>
 export const getMe = (accessToken: string) =>
   http<ApiResponse>({ url: "user/me", method: "get", token: accessToken });
 
-export const updatePassword = (
-  accessToken: string,
-  _data: passwordInterfaceApi | undefined,
-) =>
+export const updatePassword = ({
+  access_token,
+  _data,
+}: {
+  access_token: string;
+  _data: passwordInterfaceApi | undefined;
+}) =>
   http<UpdatePasswordResponse, typeof _data>({
     url: "pass/updatePass",
     data: _data,
     method: "post",
-    token: accessToken,
+    token: access_token,
   });
 
-export const compareOtp = (
-  accessToken: string,
-  _data: compareOtpApi | undefined,
-) =>
+export const compareOtp = ({
+  access_token,
+  _data,
+}: {
+  access_token: string;
+  _data: compareOtpApi | undefined;
+}) =>
   http<CompareOTPResponse, typeof _data>({
     url: "user/verify-otp",
     data: _data,
     method: "post",
-    token: accessToken,
+    token: access_token,
   });
 
-export const changePassword = (
-  accessToken: string,
-  _data: FormDataChangePasswordApi | undefined,
-) =>
+export const changePassword = ({
+  accessToken,
+  _data,
+}: {
+  accessToken: string;
+  _data: FormDataChangePasswordApi | undefined;
+}) =>
   http<ChangePasswordResponse, typeof _data>({
     url: "user/change-password",
     data: _data,

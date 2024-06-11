@@ -7,11 +7,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
-import { runApi } from "@hooks/useApi.ts";
-import {
-  FormDataChangePasswordApi,
-  changePassword,
-} from "@services/users.api.ts";
+import { FormDataChangePasswordApi } from "@services/users.api.ts";
+import usersService from "@services/users.service.ts";
 
 export interface FormDataChangePassword {
   oldPassword: string;
@@ -61,12 +58,10 @@ const ChangePassword = () => {
     };
     console.log(updateData);
 
-    const { message, error } = await runApi<FormDataChangePasswordApi>(
-      changePassword,
+    const { message, error } = await usersService.changePassword({
       accessToken,
-      updateData,
-      "POST",
-    );
+      _data: updateData,
+    });
 
     if (typeof error === "object" && error !== null && "response" in error) {
       console.log(error);
