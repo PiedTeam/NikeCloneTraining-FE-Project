@@ -1,8 +1,6 @@
-interface EyeFilledIconProps {
-  className?: string;
-}
+import { SVGProps } from "react";
 
-const EyeFilledIcon = (props: EyeFilledIconProps) => (
+const EyeFilledIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     aria-hidden="true"
     fill="none"
