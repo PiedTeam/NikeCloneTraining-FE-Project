@@ -23,6 +23,7 @@ const viteConfig: UserConfig = {
       "@layout": "/src/layout",
       "@pages": "/src/pages",
       "@styles": "/src/styles",
+      "@services": "/src/services",
       "@utils": "/src/utils",
     },
   },
