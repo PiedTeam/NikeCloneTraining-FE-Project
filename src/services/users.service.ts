@@ -2,6 +2,7 @@ import { ApiState } from "types/api";
 import {
   ChangePasswordResponse,
   CompareOTPResponse,
+  ErrorData,
   FormDataChangePasswordApi,
   LoginFormData,
   RecoveryForm,
@@ -23,7 +24,6 @@ import {
 } from "./users.api";
 import { AxiosResponse } from "axios";
 import { isAxiosUnprocessableEntityError } from "@utils/utils";
-import { ErrorData } from "@hooks/useApi";
 
 const wrapApi = async <TInput, TResponse extends { message: string }, TError>(
   func: (

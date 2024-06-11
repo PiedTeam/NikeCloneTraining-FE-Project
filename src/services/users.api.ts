@@ -1,5 +1,11 @@
 import http from "@utils/http";
 
+export interface ErrorData {
+  password: string;
+  forgot_password_otp: string;
+  old_password: string;
+}
+
 export interface passwordInterfaceApi {
   email: string;
   password: string;
