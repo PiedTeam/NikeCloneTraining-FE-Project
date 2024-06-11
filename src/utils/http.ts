@@ -19,7 +19,7 @@ const http = <T extends object, U = unknown>({
   token?: string;
 }): Promise<AxiosResponse<T>> =>
   axios<T>({
-    baseURL: "http://localhost:4000/",
+    baseURL: "https://nikeclonetraining-be-project-hoang.onrender.com/",
     timeout: 10000,
     headers: {
       "Content-Type": "application/json",

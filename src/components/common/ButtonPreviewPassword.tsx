@@ -11,14 +11,14 @@ const ButtonPreviewPassword = ({
 }: ButtonPreviewPasswordProps) => {
   return (
     <button
-      className="focus:outline-none mb4"
+      className="mb4 focus:outline-none"
       type="button"
       onClick={toggleVisibility}
     >
       {isVisible ? (
-        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+        <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
       ) : (
-        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+        <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
       )}
     </button>
   );
