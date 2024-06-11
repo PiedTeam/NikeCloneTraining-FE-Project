@@ -34,6 +34,7 @@
       "error",
       {
         "$schema": "https://json.schemastore.org/prettierrc.json",
+        "plugins": ["prettier-plugin-tailwindcss"],
         "arrowParens": "always",
         "semi": true,
         "trailingComma": "all",
