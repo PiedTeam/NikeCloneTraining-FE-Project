@@ -21,8 +21,6 @@ const OAuth = () => {
         new_user: stringToBool(user_infor.new_user),
       };
       localStorage.setItem("user", JSON.stringify(user));
-      console.log("User Info:", user_infor);
-      console.log("Converted new_user:", user.new_user);
 
       setNewUser(user.new_user);
     }
@@ -30,7 +28,6 @@ const OAuth = () => {
 
   useEffect(() => {
     if (newUser !== null) {
-      console.log("New User State:", newUser);
       if (newUser) {
         navigate("/password");
       } else {

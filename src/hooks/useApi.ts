@@ -105,7 +105,6 @@ export const runApi = async <T>(
         error: errorResponse,
       };
     } else {
-      console.error("Unknown error:", err);
       return {
         ...initialState,
         isError: true,

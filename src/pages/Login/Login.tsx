@@ -67,7 +67,6 @@ const Login = () => {
   // }, [error]);
 
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
-    console.log(data);
     mutate(data, {
       onSuccess: () => {
         setIsOpen(true);

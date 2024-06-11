@@ -63,7 +63,6 @@ const VerifyAccount = () => {
   };
 
   const handleSendOtp = () => {
-    console.log(receiveOTPRef.current?.value);
     setOtpIsClicked(true);
     if (checkValidation()) {
       setOtpIsSent(true);
@@ -84,14 +83,12 @@ const VerifyAccount = () => {
             }, 30 * 1000);
           },
           onError: (error) => {
-            console.log(error);
             if (
               isAxiosUnprocessableEntityError<ResponseApi<SendOTPErrorProps>>(
                 error,
               )
             ) {
               const formError = error.response?.data.data;
-              console.log(isResendAvailable);
               if (formError) {
                 if (formError.email) {
                   setSendOTPError(formError.email);
