@@ -28,9 +28,10 @@ import VerifyAccount from "@pages/VerifyAccount";
 import OAuth from "@pages/OAuth";
 import PageNotFound from "@pages/PageNotFound";
 
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 function App() {
+  const queryClient = new QueryClient();
   const navigate = useNavigate();
   const path = useLocation().pathname;
 

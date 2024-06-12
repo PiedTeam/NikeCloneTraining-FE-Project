@@ -55,7 +55,7 @@ const Recovery = () => {
     mutate(data, {
       onSuccess: (dataRes) => {
         toast.success("Recovery successful!", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
         });
         const otp = dataRes.data.details.otp;
@@ -72,7 +72,7 @@ const Recovery = () => {
           const formError = error.response?.data.data;
 
           if (formError) {
-            toast.success(
+            toast.error(
               formError.email ? formError.email : formError.phone_number,
               {
                 autoClose: 2000,
