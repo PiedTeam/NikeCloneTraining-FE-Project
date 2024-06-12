@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "pied_nike",
   "private": true,
   "version": "0.0.1",
@@ -6,13 +7,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
+    "run:digitalocean": "npm run preview",
+    "preview": "vite preview --host 0.0.0.0",
     "prepare": "husky",
     "lint": "eslint --ext .ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .ts,.tsx src/",
     "format:write": "prettier --write src --cache",
-    "postinstall": "husky install",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "build:digitalocean": "yarn install --production=false && yarn run build && rm -rf node_modules && yarn install --production"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -24,9 +26,9 @@
     "@hookform/resolvers": "^3.3.4",
     "@nextui-org/react": "^2.2.10",
     "@tanstack/react-query": "^5.36.0",
-    "@types/axios": "^0.14.0",
     "@types/lint-staged": "^13.3.0",
     "axios": "^1.6.8",
+    "cross-env": "^7.0.3",
     "framer-motion": "^11.0.25",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
@@ -40,11 +42,12 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/node": "^20.13.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
-    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitejs/plugin-react-swc": "^3.6.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -63,6 +66,6 @@
     "sass": "^1.74.1",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.0.10"
   }
 }

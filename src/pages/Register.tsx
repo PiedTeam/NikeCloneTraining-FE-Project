@@ -28,6 +28,7 @@ import {
 import usersService from "@services/users.service";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { isProduction } from "@utils/http";
 
 const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
@@ -399,7 +400,7 @@ const Register = () => {
 
                 <Button
                   type="submit"
-                  className="mt-6 block h-unit-13 w-full justify-end bg-black px-8 text-lg font-bold text-white"
+                  className="h-unit-13 mt-6 block w-full justify-end bg-black px-8 text-lg font-bold text-white"
                   radius="full"
                   // isLoading={true}
                 >
@@ -418,8 +419,11 @@ const Register = () => {
                 <ThirdParyButton
                   radius="full"
                   onClick={() => {
-                    window.location.href =
-                      import.meta.env.VITE_FACEBOOK_OAUTH_URL;
+                    window.location.href = isProduction
+                      ? (import.meta.env
+                          .VITE_PRODUCTION_FACEBOOK_OAUTH_URL as string)
+                      : (import.meta.env
+                          .VITE_DEVELOPEMENT_FACEBOOK_OAUTH_URL as string);
                   }}
                   startContent={
                     <FaFacebook className="text-5xl text-blue-800 " />
@@ -430,8 +434,11 @@ const Register = () => {
                 <ThirdParyButton
                   radius="full"
                   onClick={() => {
-                    window.location.href =
-                      import.meta.env.VITE_GOOGLE_OAUTH_URL;
+                    window.location.href = isProduction
+                      ? (import.meta.env
+                          .VITE_PRODUCTION_GOOGLE_OAUTH_URL as string)
+                      : (import.meta.env
+                          .VITE_DEVELOPEMENT_GOOGLE_OAUTH_URL as string);
                   }}
                   startContent={<FcGoogle className="text-3xl" />}
                   content="Register with Google"

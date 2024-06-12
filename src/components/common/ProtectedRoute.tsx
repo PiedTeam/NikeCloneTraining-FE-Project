@@ -16,24 +16,15 @@ const ProtectedRoute = ({
   const { auth } = useAuthStore();
   const location = useLocation();
   const origin = location.state?.from;
-  if (origin !== redirectFromURL) {
+  if (redirectFromURL && origin !== redirectFromURL) {
     return <Navigate to={redirectPath} replace />;
   }
-  switch (isAllowed) {
-    case "user": {
-      if (!auth?.user) {
-        return <Navigate to={redirectPath} replace />;
-      }
-      break;
-    }
-    case "admin": {
-      // check if user is admin
-      break;
-    }
-    default: {
-      return children ? children : <Outlet />;
-    }
+
+  if (isAllowed === "user" && !auth?.user) {
+    return <Navigate to={redirectPath} replace />;
   }
+
+  return children ? children : <Outlet />;
 };
 
 export default ProtectedRoute;
