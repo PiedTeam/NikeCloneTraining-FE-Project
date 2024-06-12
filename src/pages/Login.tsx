@@ -8,7 +8,13 @@ import Jordan from "../../public/assets/images/Jordan.jpg";
 
 // hooks
 import useDocumentTitle from "@hooks/useDocumentTitle.ts";
-import { useForm, SubmitHandler, FieldValues, Path } from "react-hook-form";
+import {
+  useForm,
+  SubmitHandler,
+  FieldValues,
+  Path,
+  set,
+} from "react-hook-form";
 import { MouseEventHandler, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -61,6 +67,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const setAuth = useAuthStore((state) => state.setAuth);
+  const [errorMsg, setErrorMsg] = useState<string>("");
   useDocumentTitle({ title: "Login" });
   const {
     register,
@@ -81,6 +88,7 @@ const Login = () => {
     mutate(data, {
       onSuccess: (response) => {
         toast.success("Login successfully");
+        setErrorMsg("");
         localStorage.setItem("user", JSON.stringify(response.data.data));
         setAuth({
           user: {
@@ -100,6 +108,7 @@ const Login = () => {
         if (
           isAxiosUnprocessableEntityError<ResponseApi<LoginFormData>>(error)
         ) {
+          setErrorMsg("Email or Password is incorrect");
           const formError = error.response?.data.data;
           if (formError) {
             Object.keys(formError).forEach((key) => {
@@ -107,9 +116,11 @@ const Login = () => {
                 message: formError[key as keyof LoginFormData],
                 type: "Server",
               });
-              toast.error("Login failed");
+              toast.error("Invalid email or password");
             });
           }
+        } else {
+          toast.error("Please try again later");
         }
       },
     });
@@ -130,24 +141,18 @@ const Login = () => {
           <BrandLogo image_url={Jordan} showNikeLogo />
           <InputControl<LoginFormData>
             isRequired
-            isError={
-              !!errors.email_phone || !!errors.email || !!errors.phone_number
-            }
+            isError={!!errorMsg}
             register={register}
             className="mb-4 max-w-xs"
-            errorMessage={
-              errors.email_phone?.message ||
-              errors.email?.message ||
-              errors.phone_number?.message
-            }
+            errorMessage={errorMsg}
             {...EmailPhoneSchema}
           />
 
           <InputControl<LoginFormData>
             register={register}
             isRequired
-            isError={!!errors.password}
-            errorMessage={errors.password?.message}
+            isError={!!errorMsg}
+            errorMessage={errorMsg}
             endContent={
               <ButtonPreviewPassword
                 isVisible={isVisible}
