@@ -1,8 +1,17 @@
-import useDocumentTitle from "@hooks/useDocumentTitle";
+import AdvertiseBar from "@components/AdvertiseBar";
+import Header from "../layout/Header";
+import Navbar from "@components/Navbar";
+import { featureArray } from "../db/header";
 
 const Homepage = () => {
-  useDocumentTitle({ title: "Homepage" });
-  return <div>Homepage</div>;
+  return (
+    <div className="">
+      {/* tý thêm px-2 vô */}
+      <Header featureArray={featureArray} />
+      <Navbar />
+      <AdvertiseBar />
+    </div>
+  );
 };
 
 export default Homepage;
