@@ -56,7 +56,6 @@ const ChangePassword = () => {
       old_password: dataPassChange.oldPassword,
       new_password: dataPassChange.password,
     };
-    console.log(updateData);
 
     const { message, error } = await usersService.changePassword({
       accessToken,
@@ -64,10 +63,8 @@ const ChangePassword = () => {
     });
 
     if (typeof error === "object" && error !== null && "response" in error) {
-      console.log(error);
       toast.error(error.response.data.data.old_password);
     } else {
-      console.log(error);
       toast.success(message as string);
       // setTimeout(() => navigate("/"), 3000);
     }
@@ -146,7 +143,7 @@ const ChangePassword = () => {
           <Input
             {...register("confirmPassword")}
             isRequired
-            label="Password"
+            label="Confirm Password"
             variant="bordered"
             placeholder="Enter confirm new password"
             color={errors.confirmPassword ? "danger" : "success"}

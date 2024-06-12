@@ -18,22 +18,22 @@ import ChangePassword from "@pages/ChangePassword";
 import Login from "@pages/Login";
 import CompareOtpPage from "@pages/CompareOtpPage";
 const Register = lazy(() => import("@pages/Register"));
+
 const Homepage = lazy(() => import("@pages/Homepage"));
 // const Login = lazy(() => import("@pages/Login"));
 const VerifyAccount = lazy(() => import("@pages/VerifyAccount"));
 const OAuth = lazy(() => import("@pages/OAuth"));
 
-const queryClient = new QueryClient();
-
 function App() {
+  const queryClient = new QueryClient();
   const navigate = useNavigate();
 
   return (
     <QueryClientProvider client={queryClient}>
       <NextUIProvider navigate={navigate}>
         <Routes>
-          <Route path="/register" element={<Register />} />
           <Route path="/" element={<Homepage />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/recovery" element={<Recovery />} />

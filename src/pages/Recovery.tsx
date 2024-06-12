@@ -53,10 +53,8 @@ const Recovery = () => {
   const handleRecovery: SubmitHandler<RecoveryForm> = (data) => {
     mutate(data, {
       onSuccess: (dataRes) => {
-        console.log();
-
         toast.success("Recovery successful!", {
-          position: "top-left",
+          position: "top-right",
           autoClose: 2000,
         });
         const otp = dataRes.data.details.otp;
@@ -71,10 +69,9 @@ const Recovery = () => {
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ResponseApi<RecoveryForm>>(error)) {
           const formError = error.response?.data.data;
-          console.log(formError);
 
           if (formError) {
-            toast.success(
+            toast.error(
               formError.email ? formError.email : formError.phone_number,
               {
                 autoClose: 2000,
@@ -102,10 +99,6 @@ const Recovery = () => {
 
   const handleSelectionChange = (selectedValue: ChangeEvent) => {
     setSelectedKey((selectedValue.target as HTMLSelectElement).value);
-    console.log(
-      "Selected Method",
-      (selectedValue.target as HTMLSelectElement).value,
-    );
   };
   return (
     <div>

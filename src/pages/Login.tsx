@@ -76,7 +76,6 @@ const Login = () => {
   });
 
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
-    console.log("data", data);
     mutate(data, {
       onSuccess: (response) => {
         toast.success("Login successfully");
@@ -108,7 +107,6 @@ const Login = () => {
     event,
   ) => {
     event.preventDefault();
-    console.log(errors);
     handleSubmit(handleLogin)();
   };
 
