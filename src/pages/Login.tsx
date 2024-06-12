@@ -29,6 +29,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, Button } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import usersService from "@services/users.service";
+import { useAuthStore } from "@stores/AuthStore";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -59,6 +60,7 @@ const schema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const setAuth = useAuthStore((state) => state.setAuth);
   useDocumentTitle({ title: "Login" });
   const {
     register,
@@ -76,11 +78,20 @@ const Login = () => {
   });
 
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
-    console.log("data", data);
     mutate(data, {
       onSuccess: (response) => {
         toast.success("Login successfully");
         localStorage.setItem("user", JSON.stringify(response.data.data));
+        setAuth({
+          user: {
+            access_token: response.data.data.access_token,
+            exp: "",
+            iat: "",
+            new_user: false,
+          },
+          isAuthenticated: true,
+          isInitialized: true,
+        });
         setTimeout(() => {
           navigate("/");
         }, 2000);
@@ -108,7 +119,6 @@ const Login = () => {
     event,
   ) => {
     event.preventDefault();
-    console.log(errors);
     handleSubmit(handleLogin)();
   };
 

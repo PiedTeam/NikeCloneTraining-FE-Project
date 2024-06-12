@@ -6,7 +6,6 @@ import EyeSlashFilledIcon from "../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-// import { useNavigate } from "react-router-dom";
 import { FormDataChangePasswordApi } from "@services/users.api.ts";
 import usersService from "@services/users.service.ts";
 
@@ -56,7 +55,6 @@ const ChangePassword = () => {
       old_password: dataPassChange.oldPassword,
       new_password: dataPassChange.password,
     };
-    console.log(updateData);
 
     const { message, error } = await usersService.changePassword({
       accessToken,
@@ -64,10 +62,8 @@ const ChangePassword = () => {
     });
 
     if (typeof error === "object" && error !== null && "response" in error) {
-      console.log(error);
       toast.error(error.response.data.data.old_password);
     } else {
-      console.log(error);
       toast.success(message as string);
       // setTimeout(() => navigate("/"), 3000);
     }

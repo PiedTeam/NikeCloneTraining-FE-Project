@@ -110,7 +110,6 @@ const Register = () => {
     criteriaMode: "all",
   });
   const onSubmit: SubmitHandler<RegisterForm> = (_data) => {
-    console.log(_data);
     mutate(_data, {
       onSuccess: () => {
         // alert("Register successfully");
