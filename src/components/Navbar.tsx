@@ -26,39 +26,39 @@ const Navbar = () => {
 
   return (
     <div className="navbar-container">
-      <div className="grid grid-cols-10 w-full h-16 px-16 gap-10">
+      <div className="grid h-16 w-full grid-cols-10 gap-10 px-16">
         {/* LEFT SIDE */}
-        <div className="col-span-1 h-16 flex justify-start items-center">
+        <div className="col-span-1 flex h-16 items-center justify-start">
           <SiNike className="text-6xl" />
         </div>
         {/* CENTER */}
-        <div className="col-span-6 flex flex-row justify-between items-center px-5">
+        <div className="col-span-6 flex flex-row items-center justify-between px-5">
           {mainCategoryArray.map((mainCategory) => (
             <div className="group h-full" key={mainCategory.id}>
               <button
                 key={mainCategory.id}
-                className="h-full flex flex-row items-center justify-around px-2"
+                className="flex h-full flex-row items-center justify-around px-2"
               >
                 <a
                   href={mainCategory.route}
-                  className="text-[#121212] border-2 cursor-pointer font-semibold text-lg border-transparent hover:border-2 hover:border-b-black hover:text-slate-500"
+                  className="cursor-pointer border-2 border-transparent text-lg font-semibold text-[#121212] hover:border-2 hover:border-b-black hover:text-slate-500"
                 >
                   {mainCategory.mainCategoryName}
                 </a>
               </button>
               <div
-                className={`invisible bg-white fixed z-50 grid grid-auto-rows ${mainCategory.subCategory && "pb-5"} gap-3 ${mainCategory.subCategory?.length === 5 ? "grid-cols-5" : "grid-cols-4"} w-full left-0 py-0 px-44 min-w-48 text-gray-800 shadow-xl group-hover:visible`}
+                className={`grid-auto-rows invisible fixed z-50 grid bg-white ${mainCategory.subCategory && "pb-5"} gap-3 ${mainCategory.subCategory?.length === 5 ? "grid-cols-5" : "grid-cols-4"} left-0 w-full min-w-48 px-44 py-0 text-gray-800 shadow-xl group-hover:visible`}
               >
                 {mainCategory.subCategory?.map(
                   ({ id, subCategoryName, tags }) => (
                     <div key={id}>
-                      <li className="block text-black px-3 py-2 cursor-pointer font-semibold hover:text-black">
+                      <li className="block cursor-pointer px-3 py-2 font-semibold text-black hover:text-black">
                         {subCategoryName}
                       </li>
                       {tags.map((tag) => (
                         <li
                           key={tag.id}
-                          className="block px-3 mb-1 cursor-pointer text-sm font-semibold text-gray-500 hover:text-black"
+                          className="mb-1 block cursor-pointer px-3 text-sm font-semibold text-gray-500 hover:text-black"
                         >
                           {tag.name}
                         </li>
