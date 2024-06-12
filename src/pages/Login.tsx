@@ -69,12 +69,7 @@ const Login = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
   const [errorMsg, setErrorMsg] = useState<string>("");
   useDocumentTitle({ title: "Login" });
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<LoginFormData>({
+  const { register, handleSubmit, setError } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   });
 
