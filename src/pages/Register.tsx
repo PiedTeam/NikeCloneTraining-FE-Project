@@ -28,6 +28,7 @@ import {
 import usersService from "@services/users.service";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { isProduction } from "@utils/http";
 
 const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
