@@ -42,8 +42,15 @@ function App() {
           <Route index element={<Homepage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/recovery" element={<Recovery />} />
-          <Route path="/verify-account" element={<VerifyAccount />} />
+          <Route path="/recovery" element={<Recovery />} />\
+          <Route
+            path="/verify-account"
+            element={
+              <ProtectedRoute isAllowed="user">
+                <VerifyAccount />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/otp"
             element={
