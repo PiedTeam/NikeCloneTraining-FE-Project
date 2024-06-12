@@ -162,7 +162,7 @@ const Login = () => {
             className="t-0 mt-4"
             isBlock
             showAnchorIcon
-            href="#"
+            href="/recovery"
             color="primary"
           >
             Forgot Password
