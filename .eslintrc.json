@@ -30,10 +30,12 @@
     "eqeqeq": "error",
     "no-nested-ternary": "error",
     "require-await": "error",
+    "no-console": "error",
     "prettier/prettier": [
       "error",
       {
         "$schema": "https://json.schemastore.org/prettierrc.json",
+        "plugins": ["prettier-plugin-tailwindcss"],
         "arrowParens": "always",
         "semi": true,
         "trailingComma": "all",
@@ -41,7 +43,7 @@
         "endOfLine": "auto",
         "useTabs": false,
         "singleQuote": false,
-        "printWidth": 120
+        "printWidth": 80
       }
     ],
     "@typescript-eslint/no-unused-vars": "warn"

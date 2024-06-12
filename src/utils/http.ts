@@ -1,25 +1,34 @@
-import axios, { AxiosInstance } from "axios";
+import { USER_API } from "@constants/user/api";
+import axios, { AxiosResponse, Method } from "axios";
 
 export const isProduction = process.env.NODE_ENV === "production";
-console.log("ahihi");
-console.log("isProduction", isProduction);
+// console.log("ahihi");
+// console.log("isProduction", isProduction);
 const backendURL = isProduction
   ? (import.meta.env.VITE_PRODUCTION_BACKEND_URL as string)
   : (import.meta.env.VITE_DEVELOPMENT_BACKEND_URL as string);
 
-class Http {
-  instance: AxiosInstance;
-  constructor() {
-    this.instance = axios.create({
-      baseURL: `${backendURL}`,
-      timeout: 10000,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-}
-
-const http = new Http().instance;
+const http = <T extends object, U = unknown>({
+  method = "get",
+  url,
+  data,
+  token,
+}: {
+  method?: Method;
+  url: USER_API;
+  data?: U;
+  token?: string;
+}): Promise<AxiosResponse<T>> =>
+  axios<T>({
+    baseURL: backendURL,
+    timeout: 10000,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token || ""}`,
+    },
+    method: method,
+    url: url,
+    data: data,
+  });
 
 export default http;

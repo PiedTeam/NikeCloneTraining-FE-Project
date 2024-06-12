@@ -2,22 +2,19 @@ import React, { ChangeEvent, MouseEventHandler } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Input, Select, SelectItem, Button } from "@nextui-org/react"; // Import Select and SelectItem
-import { recovery } from "@apis/users.api";
+import { Input, Select, SelectItem, Button } from "@nextui-org/react";
+import { RecoveryForm } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
-export interface RecoveryForm {
-  email_phone: string;
-  phone_number?: string;
-  email?: string;
-}
+import usersService from "@services/users.service";
 
 const Recovery = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email");
+  const location = useLocation();
 
   const recoveryMethods = [
     { label: "Email", value: "email" },
@@ -31,13 +28,17 @@ const Recovery = () => {
         : yup
             .string()
             .matches(/^[0-9]+$/, "Invalid phone number")
-            .test("len", "Phone number must be exactly 10 digits", (val: string | undefined) => val!.length === 10)
+            .test(
+              "len",
+              "Phone number must be exactly 10 digits",
+              (val: string | undefined) => val!.length === 10,
+            )
             .required("Phone number is required"),
   });
 
   const { mutate } = useMutation({
     mutationFn: (body: RecoveryForm) => {
-      return recovery(body);
+      return usersService.recovery(body);
     },
   });
 
@@ -53,8 +54,6 @@ const Recovery = () => {
   const handleRecovery: SubmitHandler<RecoveryForm> = (data) => {
     mutate(data, {
       onSuccess: (dataRes) => {
-        console.log();
-
         toast.success("Recovery successful!", {
           position: "top-right",
           autoClose: 2000,
@@ -65,18 +64,20 @@ const Recovery = () => {
         const newData = { otp, email_phone };
 
         setTimeout(() => {
-          navigate("/otp", { state: newData });
+          navigate("/otp", { state: { ...newData, from: location.pathname } });
         }, 2000);
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ResponseApi<RecoveryForm>>(error)) {
           const formError = error.response?.data.data;
-          console.log(formError);
 
           if (formError) {
-            toast.error(formError.email ? formError.email : formError.phone_number, {
-              autoClose: 2000,
-            });
+            toast.error(
+              formError.email ? formError.email : formError.phone_number,
+              {
+                autoClose: 2000,
+              },
+            );
             Object.keys(formError).forEach((key) => {
               const errorMessage = formError[key as keyof RecoveryForm];
               setError(key as keyof RecoveryForm, {
@@ -90,19 +91,20 @@ const Recovery = () => {
     });
   };
 
-  const handleRecoveryButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleRecoveryButtonClick: MouseEventHandler<HTMLButtonElement> = (
+    event,
+  ) => {
     event.preventDefault();
     handleSubmit(handleRecovery)();
   };
 
   const handleSelectionChange = (selectedValue: ChangeEvent) => {
     setSelectedKey((selectedValue.target as HTMLSelectElement).value);
-    console.log("Selected Method", (selectedValue.target as HTMLSelectElement).value);
   };
   return (
     <div>
-      <div className="flex justify-center h-full  ">
-        <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px] max-[600px]:p-4   p-12 transform -translate-y-5 shadow-2xl ">
+      <div className="flex h-full justify-center  ">
+        <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform flex-col   items-center p-12 shadow-2xl max-[600px]:p-4 ">
           <h1 className="text-center">RECOVERY PASSWORD</h1>
           <Input
             {...register("email_phone")}
@@ -113,11 +115,11 @@ const Recovery = () => {
             isInvalid={errors.email_phone ? true : undefined}
             color={errors.email_phone ? "danger" : "success"}
             errorMessage={errors.email_phone && errors.email_phone.message}
-            className="max-w-xs mb-4 mt-4"
+            className="mb-4 mt-4 max-w-xs"
             isRequired
           />
           <div className="">
-            <p className="mr-2 mb-4 font-bold ">CHOICE YOUR METHOD:</p>
+            <p className="mb-4 mr-2 font-bold ">CHOICE YOUR METHOD:</p>
             <Select
               isRequired
               label="Recovery Method"
@@ -132,7 +134,12 @@ const Recovery = () => {
               ))}
             </Select>
           </div>
-          <Button className="mt-4" size="lg" color="danger" onClick={handleRecoveryButtonClick}>
+          <Button
+            className="mt-4"
+            size="lg"
+            color="danger"
+            onClick={handleRecoveryButtonClick}
+          >
             Recovery
           </Button>
         </div>

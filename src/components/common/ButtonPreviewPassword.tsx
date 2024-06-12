@@ -5,13 +5,20 @@ type ButtonPreviewPasswordProps = {
   toggleVisibility: () => void;
 };
 
-const ButtonPreviewPassword = ({ isVisible, toggleVisibility }: ButtonPreviewPasswordProps) => {
+const ButtonPreviewPassword = ({
+  isVisible,
+  toggleVisibility,
+}: ButtonPreviewPasswordProps) => {
   return (
-    <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>
+    <button
+      className="mb4 focus:outline-none"
+      type="button"
+      onClick={toggleVisibility}
+    >
       {isVisible ? (
-        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+        <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
       ) : (
-        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+        <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
       )}
     </button>
   );

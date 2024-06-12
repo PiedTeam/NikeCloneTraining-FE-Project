@@ -1,24 +1,20 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import EyeFilledIcon from "../../components/icons/EyeFilledIcon.tsx";
-import EyeSlashFilledIcon from "../../components/icons/EyeSlashFilledIcon.tsx";
+import EyeFilledIcon from "../components/icons/EyeFilledIcon.tsx";
+import EyeSlashFilledIcon from "../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { changePassword } from "@apis/users.api.ts";
 import { toast } from "react-toastify";
-// import { useNavigate } from "react-router-dom";
-import { runApi } from "@hooks/useApi.ts";
+import { FormDataChangePasswordApi } from "@services/users.api.ts";
+import usersService from "@services/users.service.ts";
 
 export interface FormDataChangePassword {
   oldPassword: string;
   confirmPassword: string;
   password: string;
 }
-export interface FormDataChangePasswordApi {
-  old_password: string;
-  new_password: string;
-}
+
 const schema = yup.object().shape({
   oldPassword: yup.string().required(),
   password: yup
@@ -52,41 +48,49 @@ const ChangePassword = () => {
     setAccessToken(access_token);
   }, []);
 
-  const handleChangePassword: SubmitHandler<FormDataChangePassword> = async (dataPassChange) => {
+  const handleChangePassword: SubmitHandler<FormDataChangePassword> = async (
+    dataPassChange,
+  ) => {
     const updateData: FormDataChangePasswordApi = {
       old_password: dataPassChange.oldPassword,
       new_password: dataPassChange.password,
     };
-    console.log(updateData);
 
-    const { message, error } = await runApi<FormDataChangePasswordApi>(changePassword, accessToken, updateData, "POST");
+    const { message, error } = await usersService.changePassword({
+      accessToken,
+      _data: updateData,
+    });
 
     if (typeof error === "object" && error !== null && "response" in error) {
-      console.log(error);
       toast.error(error.response.data.data.old_password);
     } else {
-      console.log(error);
       toast.success(message as string);
       // setTimeout(() => navigate("/"), 3000);
     }
   };
 
-  const handleChangePasswordButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleChangePasswordButtonClick: MouseEventHandler<
+    HTMLButtonElement
+  > = (event) => {
     event.preventDefault();
     handleSubmit(handleChangePassword)();
   };
 
   return (
     <div>
-      <div className="flex justify-center  h-full  ">
-        <div className="flex flex-col mt-24  items-center w-1/2 h-3/4 max-[900px]:text-[14 px]  p-12 transform -translate-y-5 shadow-2xl ">
+      <div className="flex h-full  justify-center  ">
+        <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
           <h1> Change Password </h1>
-          <div className="flex justify-center mx-10">
-            <img src="../../src/assets/images/jordan.jpg" alt="" className="w-4/12 h-4/12 max-[600px]:hidden " />
+          <div className="mx-10 flex justify-center">
+            <img
+              src="../../src/assets/images/jordan.jpg"
+              alt=""
+              className="h-4/12 w-4/12 max-[600px]:hidden "
+            />
             <img
               src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
               alt=""
-              className="w-4/12 h-4/12 max-[600px]:hidden"
+              className="h-4/12 w-4/12 max-[600px]:hidden"
             />
           </div>
           <Input
@@ -96,16 +100,20 @@ const ChangePassword = () => {
             variant="bordered"
             placeholder="Enter your old password"
             endContent={
-              <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>
+              <button
+                className="mb4 focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
                 {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 )}
               </button>
             }
             type={isVisible ? "text" : "password"}
-            className="max-w-xs mb-4"
+            className="mb-4 max-w-xs"
           />
           <Input
             {...register("password")}
@@ -116,11 +124,15 @@ const ChangePassword = () => {
             color={errors.password ? "danger" : "success"}
             errorMessage={errors.password?.message}
             endContent={
-              <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>
+              <button
+                className="mb4 focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
                 {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 )}
               </button>
             }
@@ -136,24 +148,34 @@ const ChangePassword = () => {
             color={errors.confirmPassword ? "danger" : "success"}
             errorMessage={errors.confirmPassword?.message}
             endContent={
-              <button className="focus:outline-none mb4" type="button" onClick={toggleVisibility}>
+              <button
+                className="mb4 focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
                 {isVisible ? (
-                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 ) : (
-                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 )}
               </button>
             }
             type={isVisible ? "text" : "password"}
-            className="max-w-xs mt-4"
+            className="mt-4 max-w-xs"
           />
-          <Link className="mt-4 t-0" isBlock showAnchorIcon href="#" color="primary">
+          <Link
+            className="t-0 mt-4"
+            isBlock
+            showAnchorIcon
+            href="#"
+            color="primary"
+          >
             Back
           </Link>
           <Button
             disableRipple
             size="lg"
-            className="relative mt-4 mb-4 overflow-visible rounded-full hover:-translate-y-1 px-12 shadow-xl bg-black  text-white"
+            className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl  hover:-translate-y-1"
             onClick={handleChangePasswordButtonClick}
           >
             Change

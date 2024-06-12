@@ -27,28 +27,38 @@ const SideBar = () => {
   ];
   return (
     <div className="flex">
-      <div className={`bg-zinc-200 h-screen p-5 pt-8 ${open ? "w-72" : "w-20"} duration-300 relative`}>
+      <div
+        className={`h-screen bg-zinc-200 p-5 pt-8 ${open ? "w-72" : "w-20"} relative duration-300`}
+      >
         <BsArrowLeftShort
-          className={`bg-white text-dark-purple text-5xl rounded-full absolute -right-8 top-9 border border-dark-purple cursor-pointer ${!open && "rotate-180"}`}
+          className={`text-dark-purple border-dark-purple absolute -right-8 top-9 cursor-pointer rounded-full border bg-white text-5xl ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
         <div className="inline-flex">
           <BiSolidUser
-            className={`text-4xl rounded cursor-pointer block float-left mr-2 duration-500 ${open && "rotate-[360deg]"}`}
+            className={`float-left mr-2 block cursor-pointer rounded text-4xl duration-500 ${open && "rotate-[360deg]"}`}
           ></BiSolidUser>
-          <h1 className={`text-white origin-left font-medium text-2xl duration-500 ${!open && "scale-0"}`}>haha</h1>
+          <h1
+            className={`origin-left text-2xl font-medium text-white duration-500 ${!open && "scale-0"}`}
+          >
+            haha
+          </h1>
         </div>
         <ul className="pt-2">
           {Menu.map((i, index) => (
             <>
               <li
                 key={index}
-                className={`text-gray text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:bg-white rounded-md ${i.spacing ? "mt-9" : "mt-2"}`}
+                className={`text-gray flex cursor-pointer items-center gap-x-4 rounded-md p-2 px-5 text-sm hover:bg-white ${i.spacing ? "mt-9" : "mt-2"}`}
               >
-                <span className="text-2xl block float-left">
+                <span className="float-left block text-2xl">
                   <RiDashboardFill />
                 </span>
-                <span className={`text-base font-medium flex-1 ${!open && "hidden"} `}>{i.title}</span>
+                <span
+                  className={`flex-1 text-base font-medium ${!open && "hidden"} `}
+                >
+                  {i.title}
+                </span>
                 {i.submenu && open && (
                   <BsChevronDown
                     className={`${subMenuOpen && "rotate-180"}`}

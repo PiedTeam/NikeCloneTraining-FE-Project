@@ -1,4 +1,5 @@
 {
+  "plugins": ["prettier-plugin-tailwindcss"],
   "$schema": "https://json.schemastore.org/prettierrc.json",
   "arrowParens": "always",
   "semi": true,
@@ -7,5 +8,5 @@
   "endOfLine": "auto",
   "useTabs": false,
   "singleQuote": false,
-  "printWidth": 120
+  "printWidth": 80
 }
