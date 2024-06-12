@@ -1,6 +1,3 @@
-//utils
-import { lazy } from "react";
-
 // providers
 import { NextUIProvider } from "@nextui-org/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -8,21 +5,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // hooks
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Recovery from "@pages/Recovery";
-import Password from "@pages/Password";
-import ChangePassword from "@pages/ChangePassword";
 
 // components
 
 // pages
 import Login from "@pages/Login";
 import CompareOtpPage from "@pages/CompareOtpPage";
-const Register = lazy(() => import("@pages/Register"));
-
-const Homepage = lazy(() => import("@pages/Homepage"));
-// const Login = lazy(() => import("@pages/Login"));
-const VerifyAccount = lazy(() => import("@pages/VerifyAccount"));
-const OAuth = lazy(() => import("@pages/OAuth"));
+import Homepage from "@pages/Homepage";
+import Register from "@pages/Register";
+import VerifyAccount from "@pages/VerifyAccount";
+import OAuth from "@pages/OAuth";
+import Recovery from "@pages/Recovery";
+import Password from "@pages/Password";
+import ChangePassword from "@pages/ChangePassword";
 
 function App() {
   const queryClient = new QueryClient();

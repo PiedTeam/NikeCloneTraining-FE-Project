@@ -12,27 +12,27 @@ interface HeaderProps {
 
 const Header = (props: HeaderProps) => {
   return (
-    <div className="bg-[#f5f5f5] w-full h-8 m-0 flex py-5 px-16 flex-row">
+    <div className="m-0 flex h-8 w-full flex-row bg-[#f5f5f5] px-16 py-5">
       {/* LEFT SIDE */}
-      <div className="basis-1/2 w-full flex h-full items-center">
+      <div className="flex h-full w-full basis-1/2 items-center">
         <div className="inline-block items-start py-1">
           <SiJordan className="text-2xl" />
         </div>
       </div>
       {/* RIGHT SIDE */}
-      <div className="basis-1/2 w-full">
-        <ul className="flex flex-row justify-end h-full w-full">
+      <div className="w-full basis-1/2">
+        <ul className="flex h-full w-full flex-row justify-end">
           {props.featureArray.map((feature, index) => (
-            <li key={index} className="flex flex-row items-center h-full">
+            <li key={index} className="flex h-full flex-row items-center">
               <a
                 href={feature.route}
-                className="text-[#121212] font-medium text-sm hover:text-[#12121285]"
+                className="text-sm font-medium text-[#121212] hover:text-[#12121285]"
               >
                 {feature.featureName}
               </a>
               {feature.separator !== false && (
                 <div
-                  className={`inline-block border-r-1 border-r-black h-4 mx-2`}
+                  className={`mx-2 inline-block h-4 border-r-1 border-r-black`}
                 ></div>
               )}
             </li>

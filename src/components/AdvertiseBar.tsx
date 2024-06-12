@@ -1,6 +1,6 @@
 const AdvertiseBar = () => {
   return (
-    <div className="bg-[#f5f5f5] w-full h-20 flex flex-row">
+    <div className="flex h-20 w-full flex-row bg-[#f5f5f5]">
       <div>Advertise</div>
     </div>
   );
