@@ -39,16 +39,14 @@ const CompareOtpPage = () => {
       }, 30000);
     } catch (error) {
       toast.error("Error occurred while sending OTP. Please try again later.");
-      console.error("Error occurred while sending OTP:", error);
     }
   };
 
   const handleCompareOtp = async () => {
-    const dataIs = {
-      email_phone: location.state.email_phone,
-      forgot_password_otp: otp,
-    };
-    console.log(dataIs);
+    // const dataIs = {
+    //   email_phone: location.state.email_phone,
+    //   forgot_password_otp: otp,
+    // };
 
     const { message, error } = await usersService.compareOtp({
       access_token: accessToken,

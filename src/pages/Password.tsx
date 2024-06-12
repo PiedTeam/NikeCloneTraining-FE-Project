@@ -70,7 +70,6 @@ const Password = () => {
     event,
   ) => {
     event.preventDefault();
-    console.log("Button Clicked, preparing to submit the form");
     handleSubmit(handleUpdatePassword)();
   };
 

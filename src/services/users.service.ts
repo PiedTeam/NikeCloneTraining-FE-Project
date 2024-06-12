@@ -76,7 +76,6 @@ const wrapApi = async <TInput, TResponse extends { message: string }, TError>(
         error: errorResponse,
       };
     } else {
-      console.error("Unknown error:", err);
       return {
         ...initialState,
         isError: true,
