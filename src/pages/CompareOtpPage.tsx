@@ -60,7 +60,10 @@ const CompareOtpPage = () => {
       toast.error(error.response.data.data.forgot_password_otp);
     } else {
       toast.success(message as string);
-      setTimeout(() => navigate("/password"), 3000);
+      setTimeout(
+        () => navigate("/password", { state: { from: location.pathname } }),
+        3000,
+      );
     }
   };
 
