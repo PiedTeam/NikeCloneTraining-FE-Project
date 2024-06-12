@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import usersService from "@services/users.service";
+import { isAxiosError } from "axios";
 
 const Recovery = () => {
   const navigate = useNavigate();
@@ -86,6 +87,10 @@ const Recovery = () => {
               });
             });
           }
+        } else if (isAxiosError(error) && error.response?.status === 406) {
+          toast.error(
+            "Send otp over 3 time, Please wait 24 hours to try again",
+          );
         }
       },
     });

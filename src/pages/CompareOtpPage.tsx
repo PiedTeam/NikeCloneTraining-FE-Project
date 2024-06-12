@@ -43,17 +43,14 @@ const CompareOtpPage = () => {
   };
 
   const handleCompareOtp = async () => {
-    // const dataIs = {
-    //   email_phone: location.state.email_phone,
-    //   forgot_password_otp: otp,
-    // };
+    const dataIs = {
+      email_phone: location.state.email_phone,
+      forgot_password_otp: otp,
+    };
 
     const { message, error } = await usersService.compareOtp({
       access_token: accessToken,
-      _data: {
-        email_phone: location.state.email_phone,
-        forgot_password_otp: otp.toString(),
-      },
+      _data: dataIs,
     });
 
     if (typeof error === "object" && error !== null && "response" in error) {
