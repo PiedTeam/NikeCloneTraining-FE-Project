@@ -9,17 +9,36 @@ const Homepage = () => {
   const nav = useNavigate();
   useDocumentTitle({ title: "Homepage" });
   return (
-    <div className="">
-      {/* tý thêm px-2 vô */}
+    <div className="px-2">
       <Header featureArray={featureArray} />
       <Navbar />
       <AdvertiseBar />
 
-      <div>
-        <button onClick={() => nav("/verify-account")}>VerifyAccount</button>
-        <button onClick={() => nav("/password")}>Password</button>
-        <button onClick={() => nav("/otp")}>OTP</button>
-        <button onClick={() => nav("/change-password")}>CHangePassword</button>
+      <div className="flex justify-between ">
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() => nav("/verify-account")}
+        >
+          VerifyAccount
+        </button>
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() => nav("/password")}
+        >
+          Password
+        </button>
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() => nav("/otp")}
+        >
+          OTP
+        </button>
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() => nav("/change-password")}
+        >
+          CHangePassword
+        </button>
       </div>
     </div>
   );
