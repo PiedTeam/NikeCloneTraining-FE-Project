@@ -5,6 +5,7 @@ export interface AuthState {
   isAuthenticated?: boolean;
   isInitialized?: boolean;
   user: UserInfo | null;
+  status: "UNVERIFIED" | "VERIFIED" | "BLOCKED" | null;
 }
 
 type AuthStore = {
@@ -18,8 +19,16 @@ export const useAuthStore = create<AuthStore>((set) => ({
     isAuthenticated: false,
     isInitialized: false,
     user: null,
+    status: null,
   },
   setAuth: (auth) => set({ auth }),
   logOut: () =>
-    set({ auth: { isAuthenticated: false, isInitialized: false, user: null } }),
+    set({
+      auth: {
+        isAuthenticated: false,
+        isInitialized: false,
+        user: null,
+        status: null,
+      },
+    }),
 }));
