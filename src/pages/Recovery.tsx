@@ -6,7 +6,7 @@ import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { RecoveryForm } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import usersService from "@services/users.service";
@@ -14,6 +14,7 @@ import usersService from "@services/users.service";
 const Recovery = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email");
+  const location = useLocation();
 
   const recoveryMethods = [
     { label: "Email", value: "email" },
@@ -63,7 +64,7 @@ const Recovery = () => {
         const newData = { otp, email_phone };
 
         setTimeout(() => {
-          navigate("/otp", { state: newData });
+          navigate("/otp", { state: { ...newData, from: location.pathname } });
         }, 2000);
       },
       onError: (error) => {
