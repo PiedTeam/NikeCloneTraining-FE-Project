@@ -115,6 +115,17 @@ export type VerifyAccountResponse = {
   detail: boolean;
 };
 
+export type ResetPasswordResponse = {
+  message: string;
+  detail?: boolean;
+  data?: {
+    otp?: string;
+    email_phone?: string;
+    password?: string;
+    confirm_password?: string;
+  };
+};
+
 export const callRegister = (_data: Omit<RegisterForm, "agreeToTerms">) =>
   http<TokenResponse, typeof _data>({
     method: "post",
@@ -138,20 +149,6 @@ export const callSendVerifyAccountOTP = (_data: {
     data: _data,
     method: "post",
     token: _data.token,
-  });
-
-export const getOtp = ({
-  access_token,
-  _data,
-}: {
-  access_token: string;
-  _data: sendOtp | undefined;
-}) =>
-  http<SendVerifyAccountOtpResponse, typeof _data>({
-    url: "user/send-verify-account-otp",
-    data: _data,
-    method: "post",
-    token: access_token,
   });
 
 export const recovery = (_data: RecoveryForm) =>
@@ -178,18 +175,11 @@ export const updatePassword = ({
     token: access_token,
   });
 
-export const compareOtp = ({
-  access_token,
-  _data,
-}: {
-  access_token: string;
-  _data: compareOtpApi | undefined;
-}) =>
+export const compareOtp = ({ _data }: { _data: compareOtpApi | undefined }) =>
   http<CompareOTPResponse, typeof _data>({
     url: "user/verify-otp",
     data: _data,
     method: "post",
-    token: access_token,
   });
 
 export const changePassword = ({
@@ -217,3 +207,16 @@ export const verifyAccount = (_data: {
     method: "post",
     token: _data.token,
   });
+
+export const resetPassword = (_data: {
+  email_phone: string;
+  password: string;
+  confirm_password: string;
+  otp: string;
+}) => {
+  return http<ResetPasswordResponse, typeof _data>({
+    url: "user/reset-password",
+    data: _data,
+    method: "post",
+  });
+};

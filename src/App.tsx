@@ -6,13 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // hooks
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Recovery from "@pages/Recovery";
 import Password from "@pages/Password";
 import ChangePassword from "@pages/ChangePassword";
@@ -43,11 +37,11 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/recovery" element={<Recovery />} />
-          <Route path="/verify-account" element={<VerifyAccount />} />
+          {/* <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/otp" element={<CompareOtpPage />} />
           <Route path="/password" element={<Password />} />
-          <Route path="/change-password" element={<ChangePassword />} />
-          {/* <Route
+          <Route path="/change-password" element={<ChangePassword />} /> */}
+          <Route
             path="/verify-account"
             element={
               <ProtectedRoute isAllowed="user">
@@ -78,10 +72,10 @@ function App() {
                 <ChangePassword />
               </ProtectedRoute>
             }
-          /> */}
+          />
           <Route path="/oauth" element={<OAuth />} />
           <Route path="/404" element={<PageNotFound />} />
-          <Route path="*" element={<Navigate to="/404" />} />
+          {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>
       <ToastContainer />

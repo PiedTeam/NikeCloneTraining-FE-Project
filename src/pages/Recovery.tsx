@@ -62,7 +62,7 @@ const Recovery = () => {
 
         setTimeout(() => {
           navigate("/otp", {
-            state: { email: data.email_phone, from: location.pathname },
+            state: { email_phone: data.email_phone, from: location.pathname },
           });
         }, 2000);
       },

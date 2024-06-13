@@ -36,7 +36,7 @@ const OAuth = () => {
   useEffect(() => {
     if (newUser !== null) {
       if (newUser) {
-        navigate("/password");
+        navigate("/password", { state: { from: "/oauth" } });
       } else {
         navigate("/");
       }
