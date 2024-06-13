@@ -37,6 +37,7 @@ const VerifyAccount = () => {
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
   const isVerify = useAuthStore((state) => state.auth);
+  const token = useAuthStore((state) => state.auth?.user?.access_token);
   const [sendOTPError, setSendOTPError] = useState<string>("");
   const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(
@@ -49,7 +50,7 @@ const VerifyAccount = () => {
     });
 
   const { mutate } = useMutation({
-    mutationFn: (_body: { email_phone: string }) => {
+    mutationFn: (_body: { email_phone: string; token: string }) => {
       return usersService.sendVerifyAccountOTP(_body);
     },
   });
@@ -74,7 +75,10 @@ const VerifyAccount = () => {
     if (checkValidation()) {
       setOtpIsSent(true);
       mutate(
-        { email_phone: receiveOTPRef.current?.value || "" },
+        {
+          email_phone: receiveOTPRef.current?.value || "",
+          token: token as string,
+        },
         {
           onSuccess: () => {
             toast.success("OTP sent successfully");
@@ -124,7 +128,8 @@ const VerifyAccount = () => {
         try {
           const result = await usersService.verifyAccount({
             email_phone: receiveOTPRef.current?.value as string,
-            verify_account_otp: OTPRef.current?.value as string,
+            otp: OTPRef.current?.value as string,
+            token: token as string,
           });
           if (result) {
             setValidateOTPError({

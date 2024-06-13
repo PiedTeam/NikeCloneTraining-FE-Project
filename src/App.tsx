@@ -42,8 +42,12 @@ function App() {
           <Route index element={<Homepage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/recovery" element={<Recovery />} />\
-          <Route
+          <Route path="/recovery" element={<Recovery />} />
+          <Route path="/verify-account" element={<VerifyAccount />} />
+          <Route path="/otp" element={<CompareOtpPage />} />
+          <Route path="/password" element={<Password />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          {/* <Route
             path="/verify-account"
             element={
               <ProtectedRoute isAllowed="user">
@@ -74,7 +78,7 @@ function App() {
                 <ChangePassword />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route path="/oauth" element={<OAuth />} />
           <Route path="/404" element={<PageNotFound />} />
           <Route path="*" element={<Navigate to="/404" />} />

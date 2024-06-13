@@ -90,7 +90,7 @@ class UsersService {
 
   login = (data: LoginFormData) => callLogin(data);
 
-  sendVerifyAccountOTP = (data: { email_phone: string }) =>
+  sendVerifyAccountOTP = (data: { email_phone: string; token: string }) =>
     callSendVerifyAccountOTP(data);
 
   recovery = (data: RecoveryForm) => recovery(data);
@@ -158,7 +158,8 @@ class UsersService {
 
   verifyAccount = (_data: {
     email_phone: string;
-    verify_account_otp: string;
+    otp: string;
+    token: string;
   }) => verifyAccount(_data);
 }
 

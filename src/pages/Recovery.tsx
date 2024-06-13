@@ -54,18 +54,16 @@ const Recovery = () => {
 
   const handleRecovery: SubmitHandler<RecoveryForm> = (data) => {
     mutate(data, {
-      onSuccess: (dataRes) => {
+      onSuccess: () => {
         toast.success("Recovery successful!", {
           position: "top-right",
           autoClose: 2000,
         });
-        const otp = dataRes.data.details.otp;
-        const email_phone = data.email_phone;
-
-        const newData = { otp, email_phone };
 
         setTimeout(() => {
-          navigate("/otp", { state: { ...newData, from: location.pathname } });
+          navigate("/otp", {
+            state: { email: data.email_phone, from: location.pathname },
+          });
         }, 2000);
       },
       onError: (error) => {
