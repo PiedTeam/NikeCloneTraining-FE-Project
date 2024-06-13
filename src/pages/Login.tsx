@@ -36,6 +36,7 @@ import { Link, Button } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import usersService from "@services/users.service";
 import { useAuthStore } from "@stores/AuthStore";
+import { jwtDecode } from "jwt-decode";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -94,6 +95,16 @@ const Login = () => {
           },
           isAuthenticated: true,
           isInitialized: true,
+          status:
+            jwtDecode<{
+              exp: number;
+              iat: number;
+              status: number;
+              token_type: number;
+              user_id: string;
+            }>(response.data.data.access_token).status === 1
+              ? "VERIFIED"
+              : "UNVERIFIED",
         });
         setTimeout(() => {
           navigate("/");

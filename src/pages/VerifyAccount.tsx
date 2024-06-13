@@ -10,9 +10,10 @@ import {
 } from "@utils/utils";
 import { ResponseApi } from "@utils/utils.type";
 import { AxiosError } from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import usersService from "@services/users.service";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@stores/AuthStore";
 
 enum VerifyMethod {
   EMAIL = "email",
@@ -35,6 +36,7 @@ const VerifyAccount = () => {
   const [otpError, setOtpError] = useState<string>("");
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
+  const isVerify = useAuthStore((state) => state.auth);
   const [sendOTPError, setSendOTPError] = useState<string>("");
   const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(
@@ -149,6 +151,13 @@ const VerifyAccount = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isVerify?.status === "VERIFIED") {
+      toast.success("Account already verified");
+      navigate("/");
+    }
+  }, [isVerify, navigate]);
 
   return (
     <>
