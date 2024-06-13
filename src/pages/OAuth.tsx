@@ -1,13 +1,11 @@
 import { useQueryString } from "@utils/utils";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@stores/AuthStore";
 import { UserInfo } from "types/user.types";
 
 const OAuth = () => {
   const navigate = useNavigate();
   const user_infor = useQueryString();
-  const setAuth = useAuthStore((state) => state.setAuth);
   const [newUser, setNewUser] = useState<boolean | null>(null);
 
   function stringToBool(stringValue: string) {
@@ -23,14 +21,10 @@ const OAuth = () => {
         new_user: stringToBool(user_infor.new_user),
       };
       localStorage.setItem("user", JSON.stringify(user));
+
       setNewUser(user.new_user);
-      setAuth({
-        isAuthenticated: true,
-        isInitialized: true,
-        user: user,
-      });
     }
-  }, [user_infor, setAuth]);
+  }, [user_infor]);
 
   useEffect(() => {
     if (newUser !== null) {
