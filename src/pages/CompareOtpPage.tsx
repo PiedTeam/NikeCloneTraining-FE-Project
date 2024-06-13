@@ -1,29 +1,22 @@
 import { Button, Link } from "@nextui-org/react";
 import usersService from "@services/users.service";
+import { isAxiosError } from "@utils/utils";
 import { useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const CompareOtpPage = () => {
-  const [accessToken, setAccessToken] = useState("");
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const location = useLocation();
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
-  useEffect(() => {
-    const userObject = localStorage.getItem("user");
-    const access_token = JSON.parse(userObject!).access_token;
-    setAccessToken(access_token);
-  }, []);
+  useEffect(() => {}, []);
 
   const sendOtp = async () => {
     try {
-      const data = await usersService.getOtp({
-        access_token: accessToken,
-        _data: { email_phone: location.state.email_phone },
-      });
+      const data = await usersService.recovery(location.state.email_phone);
       if (data) {
         toast.success("Otp is being sent");
       }
@@ -43,24 +36,33 @@ const CompareOtpPage = () => {
   };
 
   const handleCompareOtp = async () => {
-    const dataIs = {
-      email_phone: location.state.email_phone,
-      forgot_password_otp: otp,
-    };
-
-    const { message, error } = await usersService.compareOtp({
-      access_token: accessToken,
-      _data: dataIs,
-    });
-
-    if (typeof error === "object" && error !== null && "response" in error) {
-      toast.error(error.response.data.data.forgot_password_otp);
-    } else {
-      toast.success(message as string);
-      setTimeout(
-        () => navigate("/password", { state: { from: location.pathname } }),
-        3000,
-      );
+    try {
+      const response = await usersService.compareOtp({
+        _data: {
+          email_phone: location.state.email_phone,
+          otp: otp,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Otp verified successfully");
+        setTimeout(
+          () =>
+            navigate("/password", {
+              state: {
+                from: location.pathname,
+                email_phone: location.state.email_phone,
+                otp: otp,
+              },
+            }),
+          3000,
+        );
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(
+          "Error occurred while verifying OTP. Please try again later.",
+        );
+      }
     }
   };
 

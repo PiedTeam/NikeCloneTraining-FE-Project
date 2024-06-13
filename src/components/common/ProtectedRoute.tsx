@@ -16,7 +16,7 @@ const ProtectedRoute = ({
   const { auth } = useAuthStore();
   const location = useLocation();
   const origin = location.state?.from;
-  if (redirectFromURL && origin !== redirectFromURL) {
+  if (redirectFromURL && origin !== redirectFromURL && origin !== "/oauth") {
     return <Navigate to={redirectPath} replace />;
   }
 

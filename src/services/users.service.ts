@@ -1,13 +1,11 @@
 import { ApiState } from "types/api";
 import {
   ChangePasswordResponse,
-  CompareOTPResponse,
   ErrorData,
   FormDataChangePasswordApi,
   LoginFormData,
   RecoveryForm,
   RegisterForm,
-  SendVerifyAccountOtpResponse,
   callLogin,
   callRegister,
   callSendVerifyAccountOTP,
@@ -15,10 +13,9 @@ import {
   compareOtp,
   compareOtpApi,
   getMe,
-  getOtp,
   passwordInterfaceApi,
   recovery,
-  sendOtp,
+  resetPassword,
   updatePassword,
   verifyAccount,
 } from "./users.api";
@@ -90,7 +87,7 @@ class UsersService {
 
   login = (data: LoginFormData) => callLogin(data);
 
-  sendVerifyAccountOTP = (data: { email_phone: string }) =>
+  sendVerifyAccountOTP = (data: { email_phone: string; token: string }) =>
     callSendVerifyAccountOTP(data);
 
   recovery = (data: RecoveryForm) => recovery(data);
@@ -105,37 +102,8 @@ class UsersService {
     _data: passwordInterfaceApi | undefined;
   }) => wrapApi(updatePassword, { access_token, _data });
 
-  getOtp = ({
-    access_token,
-    _data,
-  }: {
-    access_token: string;
-    _data: sendOtp | undefined;
-  }) =>
-    wrapApi<
-      {
-        access_token: string;
-        _data: sendOtp | undefined;
-      },
-      SendVerifyAccountOtpResponse,
-      ErrorData
-    >(getOtp, { access_token, _data });
-
-  compareOtp = ({
-    access_token,
-    _data,
-  }: {
-    access_token: string;
-    _data: compareOtpApi | undefined;
-  }) =>
-    wrapApi<
-      {
-        access_token: string;
-        _data: compareOtpApi | undefined;
-      },
-      CompareOTPResponse,
-      ErrorData
-    >(compareOtp, { access_token, _data });
+  compareOtp = ({ _data }: { _data: compareOtpApi | undefined }) =>
+    compareOtp({ _data });
 
   changePassword = ({
     accessToken,
@@ -158,8 +126,16 @@ class UsersService {
 
   verifyAccount = (_data: {
     email_phone: string;
-    verify_account_otp: string;
+    otp: string;
+    token: string;
   }) => verifyAccount(_data);
+
+  resetPassword = (_data: {
+    email_phone: string;
+    password: string;
+    confirm_password: string;
+    otp: string;
+  }) => resetPassword(_data);
 }
 
 const usersService = new UsersService();
