@@ -28,6 +28,7 @@ const OAuth = () => {
         isAuthenticated: true,
         isInitialized: true,
         user: user,
+        status: "VERIFIED",
       });
     }
   }, [user_infor, setAuth]);
