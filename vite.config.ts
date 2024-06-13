@@ -24,7 +24,6 @@ const viteConfig: UserConfig = {
       "@pages": "/src/pages",
       "@styles": "/src/styles",
       "@services": "/src/services",
-      "@stores": "/src/stores",
       "@utils": "/src/utils",
     },
   },

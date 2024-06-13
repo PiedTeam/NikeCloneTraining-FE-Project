@@ -1,6 +1,12 @@
 import { USER_API } from "@constants/user/api";
 import axios, { AxiosResponse, Method } from "axios";
 
+// interface response = {
+//   data: {
+//     data: ErrorData;
+//   };
+// };
+
 const http = <T extends object, U = unknown>({
   method = "get",
   url,

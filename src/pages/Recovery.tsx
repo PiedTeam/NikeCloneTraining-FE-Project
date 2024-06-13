@@ -2,11 +2,11 @@ import React, { ChangeEvent, MouseEventHandler } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Input, Select, SelectItem, Button } from "@nextui-org/react";
+import { Input, Select, SelectItem, Button } from "@nextui-org/react"; // Import Select and SelectItem
 import { RecoveryForm } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import usersService from "@services/users.service";
@@ -14,7 +14,6 @@ import usersService from "@services/users.service";
 const Recovery = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email");
-  const location = useLocation();
 
   const recoveryMethods = [
     { label: "Email", value: "email" },
@@ -64,7 +63,7 @@ const Recovery = () => {
         const newData = { otp, email_phone };
 
         setTimeout(() => {
-          navigate("/otp", { state: { ...newData, from: location.pathname } });
+          navigate("/otp", { state: newData });
         }, 2000);
       },
       onError: (error) => {
