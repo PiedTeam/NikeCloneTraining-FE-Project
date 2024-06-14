@@ -29,11 +29,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, Button } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import usersService from "@services/users.service";
-<<<<<<< HEAD
-
-=======
 import DOMPurify from "dompurify";
->>>>>>> d715941 (valid prevent xss input)
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
   label: string;

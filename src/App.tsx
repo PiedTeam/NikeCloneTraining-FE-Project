@@ -31,34 +31,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
-<<<<<<< HEAD
           <Route path="/recovery" element={<Recovery />} />
-=======
-          <Route
-            path="/otp"
-            element={
-              <ProtectedRoute redirectFromURL="/recovery">
-                <CompareOtpPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/password"
-            element={
-              <ProtectedRoute redirectFromURL="/otp">
-                <Password />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/change-password"
-            element={
-              <ProtectedRoute isAllowed="user">
-                <ChangePassword />
-              </ProtectedRoute>
-            }
-          />
->>>>>>> 52a4344 (valid prevent xss)
           <Route path="/oauth" element={<OAuth />} />
           <Route path="/password" element={<Password />} />
           <Route path="/otp" element={<CompareOtpPage />} />
