@@ -1,6 +1,6 @@
 // utils
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 // styles
 
 // contexts
@@ -12,23 +12,23 @@ import useWindowSize from "@hooks/useWindowSize";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //components
-import { Button, Checkbox, Input } from "@nextui-org/react";
-import LogoNike from "../../public/assets/logo/logo_nike.svg";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { RegisterForm } from "@services/users.api";
-import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
-import { ResponseApi } from "@utils/utils.type";
-import useDocumentTitle from "@hooks/useDocumentTitle";
 import {
   EyeFilledIcon,
   EyeSlashFilledIcon,
   ThirdParyButton,
 } from "@components/index";
+import useDocumentTitle from "@hooks/useDocumentTitle";
+import { Button, Checkbox, Input } from "@nextui-org/react";
+import { RegisterForm } from "@services/users.api";
 import usersService from "@services/users.service";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
+import { useMutation } from "@tanstack/react-query";
 import { isProduction } from "@utils/http";
+import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
+import { ResponseApi } from "@utils/utils.type";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { FaFacebook } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import LogoNike from "../../public/assets/logo/logo_nike.svg";
 
 const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
@@ -330,13 +330,13 @@ const Register = () => {
                   <p
                     className={`mt-2 text-xs ${errors.password?.types?.min || errors.password?.types?.optionality ? "" : "text-black"}`}
                   >
-                    Minumum of 8 characters
+                    Minimum is 8 characters
                   </p>
                   <p
                     className={`mt-2 text-xs ${errors.password?.types?.matches || errors.password?.types?.optionality ? "" : "text-black"}`}
                   >
-                    Uppercase, lowercase letters, one number and special
-                    characters
+                    Password must contain at least one uppercase letter, one
+                    lowercase letter, one digit and one special character
                   </p>
                 </div>
                 <Controller
