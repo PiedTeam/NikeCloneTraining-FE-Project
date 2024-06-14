@@ -19,7 +19,7 @@ const http = <T extends object, U = unknown>({
   token?: string;
 }): Promise<AxiosResponse<T>> =>
   axios<T>({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
+    baseURL: "http://localhost:4000/",
     timeout: 10000,
     headers: {
       "Content-Type": "application/json",

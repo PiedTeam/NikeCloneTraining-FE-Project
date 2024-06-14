@@ -16,7 +16,7 @@ export interface sendOtp {
 }
 export interface compareOtpApi {
   email_phone: string;
-  forgot_password_otp: string;
+  otp: string;
 }
 
 export type TokenResponse = {
@@ -136,18 +136,11 @@ export const callSendVerifyAccountOTP = (_data: { email_phone: string }) =>
     method: "post",
   });
 
-export const getOtp = ({
-  access_token,
-  _data,
-}: {
-  access_token: string;
-  _data: sendOtp | undefined;
-}) =>
+export const getOtp = ({ _data }: { _data: sendOtp | undefined }) =>
   http<SendVerifyAccountOtpResponse, typeof _data>({
     url: "user/send-verify-account-otp",
     data: _data,
     method: "post",
-    token: access_token,
   });
 
 export const recovery = (_data: RecoveryForm) =>
@@ -174,18 +167,11 @@ export const updatePassword = ({
     token: access_token,
   });
 
-export const compareOtp = ({
-  access_token,
-  _data,
-}: {
-  access_token: string;
-  _data: compareOtpApi | undefined;
-}) =>
+export const compareOtp = ({ _data }: { _data: compareOtpApi | undefined }) =>
   http<CompareOTPResponse, typeof _data>({
     url: "user/verify-otp",
     data: _data,
     method: "post",
-    token: access_token,
   });
 
 export const changePassword = ({

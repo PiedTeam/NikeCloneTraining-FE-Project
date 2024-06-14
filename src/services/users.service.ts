@@ -105,37 +105,23 @@ class UsersService {
     _data: passwordInterfaceApi | undefined;
   }) => wrapApi(updatePassword, { access_token, _data });
 
-  getOtp = ({
-    access_token,
-    _data,
-  }: {
-    access_token: string;
-    _data: sendOtp | undefined;
-  }) =>
+  getOtp = ({ _data }: { _data: sendOtp | undefined }) =>
     wrapApi<
       {
-        access_token: string;
         _data: sendOtp | undefined;
       },
       SendVerifyAccountOtpResponse,
       ErrorData
-    >(getOtp, { access_token, _data });
+    >(getOtp, { _data });
 
-  compareOtp = ({
-    access_token,
-    _data,
-  }: {
-    access_token: string;
-    _data: compareOtpApi | undefined;
-  }) =>
+  compareOtp = ({ _data }: { _data: compareOtpApi | undefined }) =>
     wrapApi<
       {
-        access_token: string;
         _data: compareOtpApi | undefined;
       },
       CompareOTPResponse,
       ErrorData
-    >(compareOtp, { access_token, _data });
+    >(compareOtp, { _data });
 
   changePassword = ({
     accessToken,

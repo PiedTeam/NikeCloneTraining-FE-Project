@@ -28,15 +28,18 @@ import {
 import usersService from "@services/users.service";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import DOMPurify from "dompurify";
 
 const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
     first_name: yup
       .string()
-      .required(ValidationRules.firstnameRule.required.message),
+      .required(ValidationRules.firstnameRule.required.message)
+      .matches(/^[^']*$/, "First Name cannot contain then sensitive character"),
     last_name: yup
       .string()
-      .required(ValidationRules.lastnameRule.required.message),
+      .required(ValidationRules.lastnameRule.required.message)
+      .matches(/^[^']*$/, "Last Name cannot contain then sensitive character"),
     email_phone: yup
       .string()
       .required("This field is required")
@@ -53,6 +56,10 @@ const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
           ).test(value);
           return isEmail || isPhone;
         },
+      )
+      .matches(
+        /^[^']*$/,
+        "Email or Phone cannot contain then sensitive character",
       ),
     password: yup
       .string()
@@ -61,6 +68,7 @@ const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
         ValidationRules.passwordRule.minLength.value,
         ValidationRules.passwordRule.minLength.message,
       )
+      .matches(/^[^']*$/, "Password cannot contain then sensitive character")
       .matches(
         new RegExp(ValidationRules.passwordRule.pattern.value),
         ValidationRules.passwordRule.pattern.message,
@@ -85,7 +93,15 @@ const Register = () => {
 
   const { mutate, error } = useMutation({
     mutationFn: (_body: Omit<RegisterForm, "agreeToTerms">) => {
-      return usersService.register(_body);
+      const registerData: Omit<RegisterForm, "agreeToTerms"> = {
+        first_name: DOMPurify.sanitize(_body.first_name),
+        last_name: DOMPurify.sanitize(_body.last_name),
+        email_phone: DOMPurify.sanitize(_body.email_phone),
+        password: DOMPurify.sanitize(_body.password),
+        subcribe: _body.subcribe,
+      };
+
+      return usersService.register(registerData);
     },
   });
 
@@ -399,7 +415,7 @@ const Register = () => {
 
                 <Button
                   type="submit"
-                  className="mt-6 block h-unit-13 w-full justify-end bg-black px-8 text-lg font-bold text-white"
+                  className="h-unit-13 mt-6 block w-full justify-end bg-black px-8 text-lg font-bold text-white"
                   radius="full"
                   // isLoading={true}
                 >

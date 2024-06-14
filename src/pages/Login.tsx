@@ -49,11 +49,18 @@ const PasswordSchema: LoginFieldSchema<LoginFormData> = {
 };
 
 const schema = yup.object().shape({
-  email_phone: yup.string().required("Email or Phone is required"),
+  email_phone: yup
+    .string()
+    .required("Email or Phone is required")
+    .matches(
+      /^[^']*$/,
+      "Email or Phone cannot contain then sensitive character",
+    ),
   password: yup
     .string()
     .required("Password is required")
-    .min(8, "Password must be at least 8 characters"),
+    .min(8, "Password must be at least 8 characters")
+    .matches(/^[^']*$/, "Password cannot contain then sensitive character"),
 });
 
 const Login = () => {
@@ -71,7 +78,12 @@ const Login = () => {
 
   const { mutate } = useMutation({
     mutationFn: (body: LoginFormData) => {
-      return usersService.login(body);
+      const data: LoginFormData = {
+        email_phone: DOMPurify.sanitize(body.email_phone),
+        password: DOMPurify.sanitize(body.password),
+      };
+
+      return usersService.login(data);
     },
   });
 

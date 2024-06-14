@@ -1,27 +1,26 @@
 import { Button, Link } from "@nextui-org/react";
 import usersService from "@services/users.service";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import OtpInput from "react-otp-input";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const CompareOtpPage = () => {
-  const [accessToken, setAccessToken] = useState("");
+  // const [accessToken, setAccessToken] = useState("");
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const location = useLocation();
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
-  useEffect(() => {
-    const userObject = localStorage.getItem("user");
-    const access_token = JSON.parse(userObject!).access_token;
-    setAccessToken(access_token);
-  }, []);
+  // useEffect(() => {
+  //   const userObject = localStorage.getItem("user");
+  //   const access_token = JSON.parse(userObject!).access_token;
+  //   setAccessToken(access_token);
+  // }, []);
 
   const sendOtp = async () => {
     try {
       const data = await usersService.getOtp({
-        access_token: accessToken,
         _data: { email_phone: location.state.email_phone },
       });
       if (data) {
@@ -41,7 +40,6 @@ const CompareOtpPage = () => {
       toast.error("Error occurred while sending OTP. Please try again later.");
     }
   };
-
   const handleCompareOtp = async () => {
     // const dataIs = {
     //   email_phone: location.state.email_phone,
@@ -49,10 +47,9 @@ const CompareOtpPage = () => {
     // };
 
     const { message, error } = await usersService.compareOtp({
-      access_token: accessToken,
       _data: {
         email_phone: location.state.email_phone,
-        forgot_password_otp: otp.toString(),
+        otp: otp.toString(),
       },
     });
 

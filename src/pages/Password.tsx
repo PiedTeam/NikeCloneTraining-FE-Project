@@ -9,7 +9,7 @@ import { passwordInterfaceApi } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import usersService from "@services/users.service.ts";
-
+import DOMPurify from "dompurify";
 export interface UserInfoForm {
   data: {
     email: string;
@@ -29,7 +29,10 @@ const Password = () => {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const schema = yup.object().shape({
-    password: yup.string().required("Password is required"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .matches(/^[^']*$/, "Password cannot contain then sensitive character"),
     confirmPassword: yup
       .string()
       .required("Confirm password is required")
@@ -52,8 +55,9 @@ const Password = () => {
     const { data: userInfo } = await usersService.getMe(access_token);
     const patchData: passwordInterfaceApi = {
       email: userInfo!.data.email,
-      password: dataForm.password,
+      password: DOMPurify.sanitize(dataForm.password),
     };
+
     const { message, error } = await usersService.updatePassword({
       access_token,
       _data: patchData,
@@ -91,11 +95,20 @@ const Password = () => {
         </div>
 
         <Input
+          onPaste={(e) => {
+            e.preventDefault();
+            return false;
+          }}
+          onCopy={(e) => {
+            e.preventDefault();
+            return false;
+          }}
           {...register("password")}
           isRequired
           label="Password"
           variant="bordered"
           placeholder="Enter your password"
+          isInvalid={errors.password?.message ? true : false}
           color={errors.password ? "danger" : "success"}
           errorMessage={errors.password?.message}
           endContent={
@@ -112,13 +125,22 @@ const Password = () => {
             </button>
           }
           type={isVisible ? "text" : "password"}
-          className="max-w-xs"
+          className="max-w-xs "
         />
         <Input
+          onPaste={(e) => {
+            e.preventDefault();
+            return false;
+          }}
+          onCopy={(e) => {
+            e.preventDefault();
+            return false;
+          }}
           {...register("confirmPassword")}
           isRequired
           label="Confirm Password"
           variant="bordered"
+          isInvalid={errors.password?.message ? true : false}
           placeholder="Enter your Confirm password"
           color={errors.confirmPassword ? "danger" : "success"}
           errorMessage={errors.confirmPassword?.message}
@@ -136,7 +158,7 @@ const Password = () => {
             </button>
           }
           type={isVisible ? "text" : "password"}
-          className="mt-4 max-w-xs"
+          className="mt-4 max-w-xs "
         />
         <Link
           className="t-0 mt-4"

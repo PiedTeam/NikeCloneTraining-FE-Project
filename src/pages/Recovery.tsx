@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import usersService from "@services/users.service";
-
+import DOMPurify from "dompurify";
 const Recovery = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email");
@@ -23,7 +23,11 @@ const Recovery = () => {
   const schema = yup.object().shape({
     email_phone:
       selectedKey === "email"
-        ? yup.string().email("Invalid email").required("Email is required")
+        ? yup
+            .string()
+            .email("Invalid email")
+            .required("Email is required")
+            .matches(/^[^']*$/, "Email cannot contain then sensitive character")
         : yup
             .string()
             .matches(/^[0-9]+$/, "Invalid phone number")
@@ -37,7 +41,10 @@ const Recovery = () => {
 
   const { mutate } = useMutation({
     mutationFn: (body: RecoveryForm) => {
-      return usersService.recovery(body);
+      const data: RecoveryForm = {
+        email_phone: DOMPurify.sanitize(body.email_phone),
+      };
+      return usersService.recovery(data);
     },
   });
 

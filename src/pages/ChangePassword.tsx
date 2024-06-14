@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
 import { FormDataChangePasswordApi } from "@services/users.api.ts";
 import usersService from "@services/users.service.ts";
-
+import DOMPurify from "dompurify";
 export interface FormDataChangePassword {
   oldPassword: string;
   confirmPassword: string;
@@ -22,8 +22,8 @@ const schema = yup.object().shape({
     .string()
     .required("Password is required")
     .matches(
-      /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-      "Password must contain at least 8 characters, including at least one digit, one special character, one uppercase letter, and one lowercase letter",
+      /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[^'\\]{8,}$/,
+      "Password must contain at least 8 characters, including at least one digit, one special character, one uppercase letter, NOT sensitive character and one lowercase letter,",
     ),
   confirmPassword: yup
     .string()
@@ -53,8 +53,8 @@ const ChangePassword = () => {
     dataPassChange,
   ) => {
     const updateData: FormDataChangePasswordApi = {
-      old_password: dataPassChange.oldPassword,
-      new_password: dataPassChange.password,
+      old_password: DOMPurify.sanitize(dataPassChange.oldPassword),
+      new_password: DOMPurify.sanitize(dataPassChange.password),
     };
 
     const { message, error } = await usersService.changePassword({
@@ -122,6 +122,7 @@ const ChangePassword = () => {
             label="Password"
             variant="bordered"
             placeholder="Enter your new password"
+            isInvalid={errors.password?.message ? true : false}
             color={errors.password ? "danger" : "success"}
             errorMessage={errors.password?.message}
             endContent={
@@ -146,6 +147,7 @@ const ChangePassword = () => {
             label="Confirm Password"
             variant="bordered"
             placeholder="Enter confirm new password"
+            isInvalid={errors.password?.message ? true : false}
             color={errors.confirmPassword ? "danger" : "success"}
             errorMessage={errors.confirmPassword?.message}
             endContent={
