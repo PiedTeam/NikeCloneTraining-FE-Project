@@ -191,6 +191,7 @@ const Register = () => {
                               "h-unit-13",
                               "border",
                               "border-1",
+                              "mb-3",
                               errors.first_name
                                 ? "border-red-600"
                                 : "border-black",
@@ -225,6 +226,8 @@ const Register = () => {
                               "w-full",
                               "h-unit-13",
                               "border",
+                              "border-1",
+                              "mb-3",
                               errors.last_name
                                 ? "border-red-600"
                                 : "border-black",
@@ -260,6 +263,8 @@ const Register = () => {
                             "w-full",
                             "h-unit-13",
                             "border",
+                            "border-1",
+                            "mb-3",
                             errors.email_phone
                               ? "border-red-600"
                               : "border-black",
