@@ -89,6 +89,8 @@ const Recovery = () => {
           toast.error(
             "Send otp over 3 time, Please wait 24 hours to try again",
           );
+        } else if (isAxiosError(error) && error.response?.status === 401) {
+          toast.error("Your account is not activated yet");
         }
       },
     });
