@@ -5,10 +5,16 @@ import EyeFilledIcon from "../components/icons/EyeFilledIcon.tsx";
 import EyeSlashFilledIcon from "../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { passwordInterfaceApi } from "@services/users.api";
+import {
+  ResetPasswordResponse,
+  passwordInterfaceApi,
+} from "@services/users.api";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import usersService from "@services/users.service.ts";
+import { useAuthStore } from "@stores/AuthStore.ts";
+import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
+import { ResponseApi } from "@utils/utils.type.ts";
 
 export interface UserInfoForm {
   data: {
@@ -22,11 +28,10 @@ export interface passwordInterface {
 }
 
 const Password = () => {
-  const userObject = localStorage.getItem("user");
-  const access_token: string = JSON.parse(userObject!).access_token;
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
-
+  const access_token = useAuthStore((state) => state.auth?.user?.access_token);
+  const location = useLocation();
   const toggleVisibility = () => setIsVisible(!isVisible);
   const schema = yup.object().shape({
     password: yup.string().required("Password is required"),
@@ -49,21 +54,54 @@ const Password = () => {
   const handleUpdatePassword: SubmitHandler<passwordInterface> = async (
     dataForm,
   ) => {
-    const { data: userInfo } = await usersService.getMe(access_token);
-    const patchData: passwordInterfaceApi = {
-      email: userInfo!.data.email,
-      password: dataForm.password,
-    };
-    const { message, error } = await usersService.updatePassword({
-      access_token,
-      _data: patchData,
-    });
-
-    if (typeof error === "object" && error !== null && "response" in error) {
-      toast.error(error.response.data.data.data.password);
+    if (location.state?.from === "/otp") {
+      try {
+        const response = await usersService.resetPassword({
+          email_phone: location.state.email_phone,
+          password: dataForm.password,
+          confirm_password: dataForm.confirmPassword,
+          otp: location.state.otp,
+        });
+        if (response.status === 200) {
+          toast.success("Reset Password Successfully");
+          setTimeout(() => navigate("/login"), 3000);
+        }
+      } catch (error) {
+        if (
+          isAxiosUnprocessableEntityError<ResponseApi<ResetPasswordResponse>>(
+            error,
+          )
+        ) {
+          const formError = error.response?.data.data;
+          if (formError) {
+            if ("password" in formError) {
+              toast.error(formError.data?.password);
+            } else if ("confirm_password" in formError) {
+              toast.error(formError.data?.confirm_password);
+            } else if ("otp" in formError) {
+              toast.error(formError.data?.otp);
+            }
+          }
+        }
+      }
     } else {
-      toast.success(message as string);
-      setTimeout(() => navigate("/"), 3000);
+      const { data: userInfo } = await usersService.getMe(
+        access_token as string,
+      );
+      const patchData: passwordInterfaceApi = {
+        email: userInfo!.data.email,
+        password: dataForm.password,
+      };
+      const { message, error } = await usersService.updatePassword({
+        access_token: access_token as string,
+        _data: patchData,
+      });
+      if (typeof error === "object" && error !== null && "response" in error) {
+        toast.error(error.response.data.data.data.password);
+      } else {
+        toast.success(message as string);
+        setTimeout(() => navigate("/"), 3000);
+      }
     }
   };
   const handleUpdateButtonClick: MouseEventHandler<HTMLButtonElement> = (

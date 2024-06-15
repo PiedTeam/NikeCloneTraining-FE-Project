@@ -8,13 +8,7 @@ import Jordan from "../../public/assets/images/Jordan.jpg";
 
 // hooks
 import useDocumentTitle from "@hooks/useDocumentTitle.ts";
-import {
-  useForm,
-  SubmitHandler,
-  FieldValues,
-  Path,
-  set,
-} from "react-hook-form";
+import { useForm, SubmitHandler, FieldValues, Path } from "react-hook-form";
 import { MouseEventHandler, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -85,7 +79,6 @@ const Login = () => {
       onSuccess: (response) => {
         toast.success("Login successfully");
         setErrorMsg("");
-        localStorage.setItem("user", JSON.stringify(response.data.data));
         setAuth({
           user: {
             access_token: response.data.data.access_token,

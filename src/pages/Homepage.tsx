@@ -39,6 +39,18 @@ const Homepage = () => {
         >
           CHangePassword
         </button>
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() => nav("/login")}
+        >
+          Login
+        </button>
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() => nav("/register")}
+        >
+          Register
+        </button>
       </div>
     </div>
   );

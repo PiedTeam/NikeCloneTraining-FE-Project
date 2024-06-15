@@ -8,7 +8,7 @@ const ProtectedRoute = ({
   children,
   redirectFromURL,
 }: {
-  isAllowed?: "user" | "admin";
+  isAllowed?: "user" | "admin" | "guest";
   redirectPath?: string;
   children?: ReactNode;
   redirectFromURL?: string;
@@ -16,12 +16,16 @@ const ProtectedRoute = ({
   const { auth } = useAuthStore();
   const location = useLocation();
   const origin = location.state?.from;
-  if (redirectFromURL && origin !== redirectFromURL) {
+  if (redirectFromURL && origin !== redirectFromURL && origin !== "/oauth") {
     return <Navigate to={redirectPath} replace />;
   }
 
   if (isAllowed === "user" && !auth?.user) {
     return <Navigate to={redirectPath} replace />;
+  }
+
+  if (isAllowed === "guest" && auth?.isAuthenticated) {
+    return <Navigate to="/" replace />;
   }
 
   return children ? children : <Outlet />;

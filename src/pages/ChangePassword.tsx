@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { FormDataChangePasswordApi } from "@services/users.api.ts";
 import usersService from "@services/users.service.ts";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@stores/AuthStore.ts";
 
 export interface FormDataChangePassword {
   oldPassword: string;
@@ -34,8 +35,11 @@ const schema = yup.object().shape({
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [accessToken, setAccessToken] = useState("");
-  const [isVisible, setIsVisible] = React.useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  const [isOldPasswordVisible, setIsOldPasswordVisible] = React.useState(false);
+  const [isNewPasswordVisible, setIsNewPasswordVisible] = React.useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    React.useState(false);
+  const auth = useAuthStore((state) => state.auth);
   const {
     register,
     handleSubmit,
@@ -44,10 +48,8 @@ const ChangePassword = () => {
     resolver: yupResolver(schema),
   });
   useEffect(() => {
-    const userObject = localStorage.getItem("user");
-    const access_token = JSON.parse(userObject!).access_token;
-    setAccessToken(access_token);
-  }, []);
+    setAccessToken(auth?.user?.access_token as string);
+  }, [auth?.user?.access_token]);
 
   const handleChangePassword: SubmitHandler<FormDataChangePassword> = async (
     dataPassChange,
@@ -104,16 +106,16 @@ const ChangePassword = () => {
               <button
                 className="mb4 focus:outline-none"
                 type="button"
-                onClick={toggleVisibility}
+                onClick={() => setIsOldPasswordVisible(!isOldPasswordVisible)}
               >
-                {isVisible ? (
+                {isOldPasswordVisible ? (
                   <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 ) : (
                   <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 )}
               </button>
             }
-            type={isVisible ? "text" : "password"}
+            type={isOldPasswordVisible ? "text" : "password"}
             className="mb-4 max-w-xs"
           />
           <Input
@@ -128,16 +130,16 @@ const ChangePassword = () => {
               <button
                 className="mb4 focus:outline-none"
                 type="button"
-                onClick={toggleVisibility}
+                onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
               >
-                {isVisible ? (
+                {isNewPasswordVisible ? (
                   <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 ) : (
                   <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 )}
               </button>
             }
-            type={isVisible ? "text" : "password"}
+            type={isNewPasswordVisible ? "text" : "password"}
             className="max-w-xs"
           />
           <Input
@@ -152,16 +154,18 @@ const ChangePassword = () => {
               <button
                 className="mb4 focus:outline-none"
                 type="button"
-                onClick={toggleVisibility}
+                onClick={() =>
+                  setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+                }
               >
-                {isVisible ? (
+                {isConfirmPasswordVisible ? (
                   <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 ) : (
                   <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 )}
               </button>
             }
-            type={isVisible ? "text" : "password"}
+            type={isConfirmPasswordVisible ? "text" : "password"}
             className="mt-4 max-w-xs"
           />
           <Link
