@@ -171,7 +171,7 @@ const Register = () => {
                 <h1 className="font-normal">Lets become a Nike Member</h1>
               </div>
               <form className="mt-3 " onSubmit={handleSubmit(onSubmit)}>
-                <div className="mt-unit-8 grid grid-cols-2 gap-5">
+                <div className="mt-8 grid grid-cols-2 gap-5">
                   <div className="col-span-1">
                     <Controller
                       name="first_name"
@@ -188,7 +188,7 @@ const Register = () => {
                             innerWrapper: ["bg-transparent"],
                             inputWrapper: [
                               "w-full",
-                              "h-unit-13",
+                              "h-13",
                               "border",
                               "border-1",
                               "mb-3",
@@ -224,7 +224,7 @@ const Register = () => {
                             innerWrapper: ["bg-transparent"],
                             inputWrapper: [
                               "w-full",
-                              "h-unit-13",
+                              "h-13",
                               "border",
                               "border-1",
                               "mb-3",
@@ -246,7 +246,7 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="mt-unit-8">
+                <div className="mt-8">
                   <Controller
                     name="email_phone"
                     control={control}
@@ -261,7 +261,7 @@ const Register = () => {
                           innerWrapper: ["bg-transparent"],
                           inputWrapper: [
                             "w-full",
-                            "h-unit-13",
+                            "h-13",
                             "border",
                             "border-1",
                             "mb-3",
@@ -297,9 +297,9 @@ const Register = () => {
                         ],
                         innerWrapper: ["bg-transparent"],
                         inputWrapper: [
-                          "mt-unit-8",
+                          "mt-8",
                           "w-full",
-                          "h-unit-13",
+                          "h-13",
                           "border",
                           errors.password ? "border-red-600" : "border-black",
                           "bg-white",
@@ -405,7 +405,7 @@ const Register = () => {
 
                 <Button
                   type="submit"
-                  className="h-unit-13 mt-6 block w-full justify-end bg-black px-8 text-lg font-bold text-white"
+                  className="h-13 mt-6 block w-full justify-end bg-black px-8 text-lg font-bold text-white"
                   radius="full"
                   // isLoading={true}
                 >
@@ -434,7 +434,7 @@ const Register = () => {
                     <FaFacebook className="text-5xl text-blue-800 " />
                   }
                   content="Register with Facebook"
-                  className="w-50 h-unit-13 text-small font-medium"
+                  className="w-50 h-13 text-small font-medium"
                 />
                 <ThirdParyButton
                   radius="full"
@@ -447,7 +447,7 @@ const Register = () => {
                   }}
                   startContent={<FcGoogle className="text-3xl" />}
                   content="Register with Google"
-                  className="w-50 h-unit-13 px-5 text-small font-medium"
+                  className="w-50 h-13 px-5 text-small font-medium"
                 />
               </div>
             </div>
