@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { FormDataChangePasswordApi } from "@services/users.api.ts";
 import usersService from "@services/users.service.ts";
+import { useAuthStore } from "@stores/AuthStore.ts";
 
 export interface FormDataChangePassword {
   oldPassword: string;
@@ -35,6 +36,7 @@ const ChangePassword = () => {
   const [accessToken, setAccessToken] = useState("");
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const auth = useAuthStore((state) => state.auth);
   const {
     register,
     handleSubmit,
@@ -43,9 +45,7 @@ const ChangePassword = () => {
     resolver: yupResolver(schema),
   });
   useEffect(() => {
-    const userObject = localStorage.getItem("user");
-    const access_token = JSON.parse(userObject!).access_token;
-    setAccessToken(access_token);
+    setAccessToken(auth?.user?.access_token as string);
   }, []);
 
   const handleChangePassword: SubmitHandler<FormDataChangePassword> = async (

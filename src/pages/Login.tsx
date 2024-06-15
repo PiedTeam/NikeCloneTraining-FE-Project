@@ -79,7 +79,6 @@ const Login = () => {
       onSuccess: (response) => {
         toast.success("Login successfully");
         setErrorMsg("");
-        localStorage.setItem("user", JSON.stringify(response.data.data));
         setAuth({
           user: {
             access_token: response.data.data.access_token,
