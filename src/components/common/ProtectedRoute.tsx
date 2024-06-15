@@ -8,7 +8,7 @@ const ProtectedRoute = ({
   children,
   redirectFromURL,
 }: {
-  isAllowed?: "user" | "admin";
+  isAllowed?: "user" | "admin" | "guest";
   redirectPath?: string;
   children?: ReactNode;
   redirectFromURL?: string;
@@ -22,6 +22,10 @@ const ProtectedRoute = ({
 
   if (isAllowed === "user" && !auth?.user) {
     return <Navigate to={redirectPath} replace />;
+  }
+
+  if (isAllowed === "guest" && auth?.isAuthenticated) {
+    return <Navigate to="/" replace />;
   }
 
   return children ? children : <Outlet />;

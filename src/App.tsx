@@ -34,8 +34,22 @@ function App() {
       <NextUIProvider navigate={navigate}>
         <Routes>
           <Route index element={<Homepage />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute isAllowed="guest">
+                <Register />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <ProtectedRoute isAllowed="guest">
+                <Login />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/recovery" element={<Recovery />} />
           {/* <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/otp" element={<CompareOtpPage />} />
