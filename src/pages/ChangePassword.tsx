@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { FormDataChangePasswordApi } from "@services/users.api.ts";
 import usersService from "@services/users.service.ts";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@stores/AuthStore.ts";
 
 export interface FormDataChangePassword {
@@ -32,7 +33,7 @@ const schema = yup.object().shape({
 });
 
 const ChangePassword = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [accessToken, setAccessToken] = useState("");
   const [isOldPasswordVisible, setIsOldPasswordVisible] = React.useState(false);
   const [isNewPasswordVisible, setIsNewPasswordVisible] = React.useState(false);
@@ -67,7 +68,7 @@ const ChangePassword = () => {
       toast.error(error.response.data.data.old_password);
     } else {
       toast.success(message as string);
-      // setTimeout(() => navigate("/"), 3000);
+      setTimeout(() => navigate("/"), 3000);
     }
   };
 
@@ -171,7 +172,7 @@ const ChangePassword = () => {
             className="t-0 mt-4"
             isBlock
             showAnchorIcon
-            href="#"
+            href="/"
             color="primary"
           >
             Back
@@ -182,7 +183,7 @@ const ChangePassword = () => {
             className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl  hover:-translate-y-1"
             onClick={handleChangePasswordButtonClick}
           >
-            Change
+            Submit
           </Button>
         </div>
       </div>
