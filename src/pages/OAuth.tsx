@@ -22,7 +22,6 @@ const OAuth = () => {
         iat: user_infor.iat,
         new_user: stringToBool(user_infor.new_user),
       };
-      localStorage.setItem("user", JSON.stringify(user));
       setNewUser(user.new_user);
       setAuth({
         isAuthenticated: true,
