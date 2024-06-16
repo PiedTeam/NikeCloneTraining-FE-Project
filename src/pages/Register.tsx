@@ -5,7 +5,7 @@ import ValidationRules from "@constants/validationRules.json";
 import useWindowSize from "@hooks/useWindowSize";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ButtonPreviewPassword, ThirdParyButton } from "@components/index";
+import { ButtonPreviewPassword, ThirdPartyButton } from "@components/index";
 import useDocumentTitle from "@hooks/useDocumentTitle";
 import { Button, Checkbox, Input } from "@nextui-org/react";
 import { RegisterForm } from "@services/users.api";
@@ -403,7 +403,7 @@ const Register = () => {
               </div>
 
               <div className="mt-4 flex items-center justify-between text-center">
-                <ThirdParyButton
+                <ThirdPartyButton
                   radius="full"
                   onClick={() => {
                     window.location.href = isProduction
@@ -418,7 +418,7 @@ const Register = () => {
                   content="Register with Facebook"
                   className="w-50 h-13 text-small font-medium"
                 />
-                <ThirdParyButton
+                <ThirdPartyButton
                   radius="full"
                   onClick={() => {
                     window.location.href = isProduction

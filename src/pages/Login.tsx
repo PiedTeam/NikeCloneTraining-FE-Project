@@ -14,7 +14,7 @@ import { ResponseApi } from "@utils/utils.type.ts";
 import {
   ButtonPreviewPassword,
   InputControl,
-  ThirdParyButton,
+  ThirdPartyButton,
 } from "@components/index";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -178,7 +178,7 @@ const Login = () => {
             <hr className="ml-1 mt-3 w-2/3 border border-gray-300" />
           </div>
           <div className="mt-4 flex">
-            <ThirdParyButton
+            <ThirdPartyButton
               className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_FACEBOOK_OAUTH_URL;
@@ -186,7 +186,7 @@ const Login = () => {
               endContent={<FaFacebook className="text-5xl text-blue-800 " />}
               content="Login With Facebook"
             />
-            <ThirdParyButton
+            <ThirdPartyButton
               className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
