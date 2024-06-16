@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/react";
 
-type ThirdParyButtonProps = {
+type ThirdPartyButtonProps = {
   radius?: "full" | "none";
   onClick: () => void;
   startContent?: React.ReactNode;
@@ -9,14 +9,14 @@ type ThirdParyButtonProps = {
   content: string;
 };
 
-const ThirdParyButton = ({
+const ThirdPartyButton = ({
   onClick,
   className,
   endContent,
   radius = "none",
   startContent,
   content,
-}: ThirdParyButtonProps) => {
+}: ThirdPartyButtonProps) => {
   return (
     <Button
       type="submit"
@@ -31,4 +31,4 @@ const ThirdParyButton = ({
   );
 };
 
-export default ThirdParyButton;
+export default ThirdPartyButton;

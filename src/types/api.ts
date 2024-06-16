@@ -1,4 +1,4 @@
-export interface ApiState<TData, TError> {
+export default interface ApiState<TData, TError> {
   data: TData | null;
   isLoading: boolean;
   isSuccess: boolean;

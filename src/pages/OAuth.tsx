@@ -2,7 +2,7 @@ import { useQueryString } from "@utils/utils";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@stores/AuthStore";
-import { UserInfo } from "types/user.types";
+import UserInfo from "types/user";
 
 const OAuth = () => {
   const navigate = useNavigate();

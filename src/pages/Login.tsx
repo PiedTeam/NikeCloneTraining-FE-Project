@@ -1,28 +1,20 @@
-//utils
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 
-// assets
-import Jordan from "../../public/assets/images/Jordan.jpg";
-
-// hooks
 import useDocumentTitle from "@hooks/useDocumentTitle.ts";
 import { useForm, SubmitHandler, FieldValues, Path } from "react-hook-form";
 import { MouseEventHandler, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-// apis
 import { LoginFormData } from "@services/users.api";
 import { ResponseApi } from "@utils/utils.type.ts";
 
-// components
 import {
   ButtonPreviewPassword,
   InputControl,
-  BrandLogo,
-  ThirdParyButton,
+  ThirdPartyButton,
 } from "@components/index";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -31,6 +23,7 @@ import { toast } from "react-toastify";
 import usersService from "@services/users.service";
 import { useAuthStore } from "@stores/AuthStore";
 import { jwtDecode } from "jwt-decode";
+import { BrandLogo } from "@common/components";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -137,7 +130,7 @@ const Login = () => {
       <div className="flex h-full justify-center">
         <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
           <h1>WELCOME BACK</h1>
-          <BrandLogo image_url={Jordan} showNikeLogo />
+          <BrandLogo isShowNikeLogo />
           <InputControl<LoginFormData>
             isRequired
             isError={!!errorMsg}
@@ -185,7 +178,7 @@ const Login = () => {
             <hr className="ml-1 mt-3 w-2/3 border border-gray-300" />
           </div>
           <div className="mt-4 flex">
-            <ThirdParyButton
+            <ThirdPartyButton
               className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_FACEBOOK_OAUTH_URL;
@@ -193,7 +186,7 @@ const Login = () => {
               endContent={<FaFacebook className="text-5xl text-blue-800 " />}
               content="Login With Facebook"
             />
-            <ThirdParyButton
+            <ThirdPartyButton
               className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
