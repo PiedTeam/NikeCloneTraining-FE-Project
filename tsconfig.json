@@ -5,8 +5,6 @@
     "lib": ["ES2021", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -26,13 +24,14 @@
       "@styles/*": ["styles/*"],
       "@services/*": ["services/*"],
       "@stores/*": ["stores/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@public/*": ["../public/*"],
+      "@common/*": ["common/*"],
     },
-    /* Linting */
     "strict": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "public/assets/logo"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
