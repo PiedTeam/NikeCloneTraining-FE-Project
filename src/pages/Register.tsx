@@ -1,22 +1,11 @@
-// utils
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-// styles
 
-// contexts
-
-// constants
 import ValidationRules from "@constants/validationRules.json";
-// hooks
 import useWindowSize from "@hooks/useWindowSize";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-//components
-import {
-  EyeFilledIcon,
-  EyeSlashFilledIcon,
-  ThirdParyButton,
-} from "@components/index";
+import { ButtonPreviewPassword, ThirdParyButton } from "@components/index";
 import useDocumentTitle from "@hooks/useDocumentTitle";
 import { Button, Checkbox, Input } from "@nextui-org/react";
 import { RegisterForm } from "@services/users.api";
@@ -28,7 +17,7 @@ import { ResponseApi } from "@utils/utils.type";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import LogoNike from "../../public/assets/logo/logo_nike.svg";
+import { SvgIcon } from "@common/components";
 
 const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
@@ -161,7 +150,7 @@ const Register = () => {
           {width >= 1024 && (
             <div className="flex flex-col items-center justify-center lg:p-[60px]">
               <div>
-                <img src={LogoNike} alt="Pied" />
+                <SvgIcon icon="nike" />
               </div>
             </div>
           )}
@@ -309,17 +298,10 @@ const Register = () => {
                       radius="sm"
                       placeholder="Password *"
                       endContent={
-                        <button
-                          className="focus:outline-none"
-                          type="button"
-                          onClick={toggleVisibility}
-                        >
-                          {isVisible ? (
-                            <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                          ) : (
-                            <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                          )}
-                        </button>
+                        <ButtonPreviewPassword
+                          isVisible={isVisible}
+                          toggleVisibility={toggleVisibility}
+                        />
                       }
                       type={isVisible ? "text" : "password"}
                     />
@@ -445,7 +427,7 @@ const Register = () => {
                       : (import.meta.env
                           .VITE_DEVELOPEMENT_GOOGLE_OAUTH_URL as string);
                   }}
-                  startContent={<FcGoogle className="text-3xl" />}
+                  startContent={<FcGoogle className="text-5xl text-blue-800" />}
                   content="Register with Google"
                   className="w-50 h-13 px-5 text-small font-medium"
                 />

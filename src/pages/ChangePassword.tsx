@@ -1,8 +1,6 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import EyeFilledIcon from "../components/icons/EyeFilledIcon.tsx";
-import EyeSlashFilledIcon from "../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
@@ -10,6 +8,8 @@ import { FormDataChangePasswordApi } from "@services/users.api.ts";
 import usersService from "@services/users.service.ts";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@stores/AuthStore.ts";
+import { SvgIcon } from "@common/components";
+import { ButtonPreviewPassword } from "@components/index";
 
 export interface FormDataChangePassword {
   oldPassword: string;
@@ -85,16 +85,11 @@ const ChangePassword = () => {
         <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
           <h1> Change Password </h1>
           <div className="mx-10 flex justify-center">
-            <img
-              src="../../src/assets/images/jordan.jpg"
-              alt=""
+            <SvgIcon
+              icon="jordan"
               className="h-4/12 w-4/12 max-[600px]:hidden "
             />
-            <img
-              src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
-              alt=""
-              className="h-4/12 w-4/12 max-[600px]:hidden"
-            />
+            <SvgIcon icon="nike" className="h-4/12 w-4/12 max-[600px]:hidden" />
           </div>
           <Input
             {...register("oldPassword")}
@@ -103,17 +98,12 @@ const ChangePassword = () => {
             variant="bordered"
             placeholder="Enter your old password"
             endContent={
-              <button
-                className="mb4 focus:outline-none"
-                type="button"
-                onClick={() => setIsOldPasswordVisible(!isOldPasswordVisible)}
-              >
-                {isOldPasswordVisible ? (
-                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                ) : (
-                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                )}
-              </button>
+              <ButtonPreviewPassword
+                isVisible={isOldPasswordVisible}
+                toggleVisibility={() =>
+                  setIsOldPasswordVisible(!isOldPasswordVisible)
+                }
+              />
             }
             type={isOldPasswordVisible ? "text" : "password"}
             className="mb-4 max-w-xs"
@@ -127,17 +117,12 @@ const ChangePassword = () => {
             color={errors.password ? "danger" : "success"}
             errorMessage={errors.password?.message}
             endContent={
-              <button
-                className="mb4 focus:outline-none"
-                type="button"
-                onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
-              >
-                {isNewPasswordVisible ? (
-                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                ) : (
-                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                )}
-              </button>
+              <ButtonPreviewPassword
+                isVisible={isNewPasswordVisible}
+                toggleVisibility={() =>
+                  setIsNewPasswordVisible(!isNewPasswordVisible)
+                }
+              />
             }
             type={isNewPasswordVisible ? "text" : "password"}
             className="max-w-xs"
@@ -151,19 +136,12 @@ const ChangePassword = () => {
             color={errors.confirmPassword ? "danger" : "success"}
             errorMessage={errors.confirmPassword?.message}
             endContent={
-              <button
-                className="mb4 focus:outline-none"
-                type="button"
-                onClick={() =>
+              <ButtonPreviewPassword
+                isVisible={isConfirmPasswordVisible}
+                toggleVisibility={() =>
                   setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
                 }
-              >
-                {isConfirmPasswordVisible ? (
-                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                ) : (
-                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                )}
-              </button>
+              />
             }
             type={isConfirmPasswordVisible ? "text" : "password"}
             className="mt-4 max-w-xs"

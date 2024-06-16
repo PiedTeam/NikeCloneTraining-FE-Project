@@ -1,4 +1,3 @@
-import { ApiState } from "types/api";
 import {
   ChangePasswordResponse,
   ErrorData,
@@ -21,6 +20,7 @@ import {
 } from "./users.api";
 import { AxiosResponse } from "axios";
 import { isAxiosUnprocessableEntityError } from "@utils/utils";
+import ApiState from "types/api";
 
 const wrapApi = async <TInput, TResponse extends { message: string }, TError>(
   func: (

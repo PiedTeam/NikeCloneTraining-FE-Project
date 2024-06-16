@@ -2,8 +2,8 @@ import { SiNike } from "react-icons/si";
 import { FaRegHeart } from "react-icons/fa6";
 import { BsCart } from "react-icons/bs";
 import { mainCategoryArray } from "../db/header";
-import { SearchIcon } from "./icons/SearchIcon";
 import { Input } from "@nextui-org/react";
+import { FaSearch } from "react-icons/fa";
 
 export interface MainCategory {
   mainCategoryName: string;
@@ -82,7 +82,7 @@ const Navbar = () => {
             }}
             placeholder="Search"
             size="md"
-            startContent={<SearchIcon size={18} />}
+            startContent={<FaSearch />}
             type="search"
             radius="full"
           />

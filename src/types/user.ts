@@ -1,4 +1,4 @@
-export interface UserInfo {
+export default interface UserInfo {
   access_token: string;
   exp: string;
   iat: string;

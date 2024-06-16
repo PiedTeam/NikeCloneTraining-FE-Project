@@ -1,4 +1,4 @@
-import { EyeFilledIcon, EyeSlashFilledIcon } from "..";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 type ButtonPreviewPasswordProps = {
   isVisible: boolean;
@@ -16,9 +16,9 @@ const ButtonPreviewPassword = ({
       onClick={toggleVisibility}
     >
       {isVisible ? (
-        <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
+        <FaEye className="pointer-events-none text-2xl text-default-400" />
       ) : (
-        <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
+        <FaEyeSlash className="pointer-events-none text-2xl text-default-400" />
       )}
     </button>
   );

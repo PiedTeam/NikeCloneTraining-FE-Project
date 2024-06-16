@@ -1,8 +1,6 @@
 import React, { MouseEventHandler } from "react";
 import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import EyeFilledIcon from "../components/icons/EyeFilledIcon.tsx";
-import EyeSlashFilledIcon from "../components/icons/EyeSlashFilledIcon.tsx";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -15,6 +13,8 @@ import usersService from "@services/users.service.ts";
 import { useAuthStore } from "@stores/AuthStore.ts";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
+import { SvgIcon } from "@common/components";
+import { ButtonPreviewPassword } from "@components/index";
 
 export interface UserInfoForm {
   data: {
@@ -116,14 +116,9 @@ const Password = () => {
       <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
         <h1> Your Password </h1>
         <div className="mx-10 flex justify-center">
-          <img
-            src="../../src/assets/images/jordan.jpg"
-            alt=""
-            className="h-4/12 w-4/12 max-[600px]:hidden "
-          />
-          <img
-            src="../../src/assets/images/nike-4-logo-svgrepo-com.svg"
-            alt=""
+          <SvgIcon icon="jordan" className="h-4/12 w-4/12 max-[600px]:hidden" />
+          <SvgIcon
+            icon="nike-signup"
             className="h-4/12 w-4/12 max-[600px]:hidden"
           />
         </div>
@@ -137,17 +132,10 @@ const Password = () => {
           color={errors.password ? "danger" : "success"}
           errorMessage={errors.password?.message}
           endContent={
-            <button
-              className="mb4 focus:outline-none"
-              type="button"
-              onClick={toggleVisibility}
-            >
-              {isVisible ? (
-                <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-              ) : (
-                <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-              )}
-            </button>
+            <ButtonPreviewPassword
+              isVisible={isVisible}
+              toggleVisibility={toggleVisibility}
+            />
           }
           type={isVisible ? "text" : "password"}
           className="max-w-xs"
@@ -161,17 +149,10 @@ const Password = () => {
           color={errors.confirmPassword ? "danger" : "success"}
           errorMessage={errors.confirmPassword?.message}
           endContent={
-            <button
-              className="mb4 focus:outline-none"
-              type="button"
-              onClick={toggleVisibility}
-            >
-              {isVisible ? (
-                <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-              ) : (
-                <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-              )}
-            </button>
+            <ButtonPreviewPassword
+              isVisible={isVisible}
+              toggleVisibility={toggleVisibility}
+            />
           }
           type={isVisible ? "text" : "password"}
           className="mt-4 max-w-xs"
