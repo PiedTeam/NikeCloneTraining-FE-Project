@@ -9,7 +9,7 @@ const Homepage = () => {
   const nav = useNavigate();
   useDocumentTitle({ title: "Homepage" });
   return (
-    <div className="px-2">
+    <div>
       <Header featureArray={featureArray} />
       <Navbar />
       <AdvertiseBar />
