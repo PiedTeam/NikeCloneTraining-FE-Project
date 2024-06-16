@@ -2,18 +2,20 @@ import React, { ChangeEvent, MouseEventHandler } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Input, Select, SelectItem, Button } from "@nextui-org/react"; // Import Select and SelectItem
+import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { RecoveryForm } from "@services/users.api";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import usersService from "@services/users.service";
+import { isAxiosError } from "axios";
 
 const Recovery = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email");
+  const location = useLocation();
 
   const recoveryMethods = [
     { label: "Email", value: "email" },
@@ -52,18 +54,16 @@ const Recovery = () => {
 
   const handleRecovery: SubmitHandler<RecoveryForm> = (data) => {
     mutate(data, {
-      onSuccess: (dataRes) => {
+      onSuccess: () => {
         toast.success("Recovery successful!", {
           position: "top-right",
           autoClose: 2000,
         });
-        const otp = dataRes.data.details.otp;
-        const email_phone = data.email_phone;
-
-        const newData = { otp, email_phone };
 
         setTimeout(() => {
-          navigate("/otp", { state: newData });
+          navigate("/otp", {
+            state: { email_phone: data.email_phone, from: location.pathname },
+          });
         }, 2000);
       },
       onError: (error) => {
@@ -85,6 +85,12 @@ const Recovery = () => {
               });
             });
           }
+        } else if (isAxiosError(error) && error.response?.status === 406) {
+          toast.error(
+            "Send otp over 3 time, Please wait 24 hours to try again",
+          );
+        } else if (isAxiosError(error) && error.response?.status === 401) {
+          toast.error("Your account is not activated yet");
         }
       },
     });

@@ -1,6 +1,6 @@
 // utils
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 // styles
 
 // contexts
@@ -12,22 +12,23 @@ import useWindowSize from "@hooks/useWindowSize";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //components
-import { Button, Checkbox, Input } from "@nextui-org/react";
-import LogoNike from "../../public/assets/logo/logo_nike.svg";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { RegisterForm } from "@services/users.api";
-import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
-import { ResponseApi } from "@utils/utils.type";
-import useDocumentTitle from "@hooks/useDocumentTitle";
 import {
   EyeFilledIcon,
   EyeSlashFilledIcon,
   ThirdParyButton,
 } from "@components/index";
+import useDocumentTitle from "@hooks/useDocumentTitle";
+import { Button, Checkbox, Input } from "@nextui-org/react";
+import { RegisterForm } from "@services/users.api";
 import usersService from "@services/users.service";
-import { FcGoogle } from "react-icons/fc";
+import { useMutation } from "@tanstack/react-query";
+import { isProduction } from "@utils/http";
+import { isAxiosError, isAxiosUnprocessableEntityError } from "@utils/utils";
+import { ResponseApi } from "@utils/utils.type";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { FaFacebook } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import LogoNike from "../../public/assets/logo/logo_nike.svg";
 
 const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
@@ -170,7 +171,7 @@ const Register = () => {
                 <h1 className="font-normal">Lets become a Nike Member</h1>
               </div>
               <form className="mt-3 " onSubmit={handleSubmit(onSubmit)}>
-                <div className="mt-unit-8 grid grid-cols-2 gap-5">
+                <div className="mt-8 grid grid-cols-2 gap-5">
                   <div className="col-span-1">
                     <Controller
                       name="first_name"
@@ -187,9 +188,10 @@ const Register = () => {
                             innerWrapper: ["bg-transparent"],
                             inputWrapper: [
                               "w-full",
-                              "h-unit-13",
+                              "h-13",
                               "border",
                               "border-1",
+                              "mb-3",
                               errors.first_name
                                 ? "border-red-600"
                                 : "border-black",
@@ -222,8 +224,10 @@ const Register = () => {
                             innerWrapper: ["bg-transparent"],
                             inputWrapper: [
                               "w-full",
-                              "h-unit-13",
+                              "h-13",
                               "border",
+                              "border-1",
+                              "mb-3",
                               errors.last_name
                                 ? "border-red-600"
                                 : "border-black",
@@ -242,7 +246,7 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="mt-unit-8">
+                <div className="mt-8">
                   <Controller
                     name="email_phone"
                     control={control}
@@ -257,8 +261,10 @@ const Register = () => {
                           innerWrapper: ["bg-transparent"],
                           inputWrapper: [
                             "w-full",
-                            "h-unit-13",
+                            "h-13",
                             "border",
+                            "border-1",
+                            "mb-3",
                             errors.email_phone
                               ? "border-red-600"
                               : "border-black",
@@ -291,9 +297,9 @@ const Register = () => {
                         ],
                         innerWrapper: ["bg-transparent"],
                         inputWrapper: [
-                          "mt-unit-8",
+                          "mt-8",
                           "w-full",
-                          "h-unit-13",
+                          "h-13",
                           "border",
                           errors.password ? "border-red-600" : "border-black",
                           "bg-white",
@@ -329,13 +335,13 @@ const Register = () => {
                   <p
                     className={`mt-2 text-xs ${errors.password?.types?.min || errors.password?.types?.optionality ? "" : "text-black"}`}
                   >
-                    Minumum of 8 characters
+                    Minimum is 8 characters
                   </p>
                   <p
                     className={`mt-2 text-xs ${errors.password?.types?.matches || errors.password?.types?.optionality ? "" : "text-black"}`}
                   >
-                    Uppercase, lowercase letters, one number and special
-                    characters
+                    Password must contain at least one uppercase letter, one
+                    lowercase letter, one digit and one special character
                   </p>
                 </div>
                 <Controller
@@ -399,7 +405,7 @@ const Register = () => {
 
                 <Button
                   type="submit"
-                  className="mt-6 block h-unit-13 w-full justify-end bg-black px-8 text-lg font-bold text-white"
+                  className="h-13 mt-6 block w-full justify-end bg-black px-8 text-lg font-bold text-white"
                   radius="full"
                   // isLoading={true}
                 >
@@ -418,24 +424,30 @@ const Register = () => {
                 <ThirdParyButton
                   radius="full"
                   onClick={() => {
-                    window.location.href =
-                      import.meta.env.VITE_FACEBOOK_OAUTH_URL;
+                    window.location.href = isProduction
+                      ? (import.meta.env
+                          .VITE_PRODUCTION_FACEBOOK_OAUTH_URL as string)
+                      : (import.meta.env
+                          .VITE_DEVELOPEMENT_FACEBOOK_OAUTH_URL as string);
                   }}
                   startContent={
                     <FaFacebook className="text-5xl text-blue-800 " />
                   }
                   content="Register with Facebook"
-                  className="w-50 h-unit-13 text-small font-medium"
+                  className="w-50 h-13 text-small font-medium"
                 />
                 <ThirdParyButton
                   radius="full"
                   onClick={() => {
-                    window.location.href =
-                      import.meta.env.VITE_GOOGLE_OAUTH_URL;
+                    window.location.href = isProduction
+                      ? (import.meta.env
+                          .VITE_PRODUCTION_GOOGLE_OAUTH_URL as string)
+                      : (import.meta.env
+                          .VITE_DEVELOPEMENT_GOOGLE_OAUTH_URL as string);
                   }}
                   startContent={<FcGoogle className="text-3xl" />}
                   content="Register with Google"
-                  className="w-50 h-unit-13 px-5 text-small font-medium"
+                  className="w-50 h-13 px-5 text-small font-medium"
                 />
               </div>
             </div>

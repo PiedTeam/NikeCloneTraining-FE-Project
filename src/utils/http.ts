@@ -1,11 +1,10 @@
 import { USER_API } from "@constants/user/api";
 import axios, { AxiosResponse, Method } from "axios";
 
-// interface response = {
-//   data: {
-//     data: ErrorData;
-//   };
-// };
+export const isProduction = process.env.NODE_ENV === "production";
+const backendURL = isProduction
+  ? (import.meta.env.VITE_PRODUCTION_BACKEND_URL as string)
+  : (import.meta.env.VITE_DEVELOPMENT_BACKEND_URL as string);
 
 const http = <T extends object, U = unknown>({
   method = "get",
@@ -19,7 +18,7 @@ const http = <T extends object, U = unknown>({
   token?: string;
 }): Promise<AxiosResponse<T>> =>
   axios<T>({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
+    baseURL: backendURL,
     timeout: 10000,
     headers: {
       "Content-Type": "application/json",

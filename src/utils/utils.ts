@@ -27,3 +27,8 @@ export const validatePhoneNumber = (phoneNumber: string) => {
   const regex = /^\d{10}$/;
   return regex.test(phoneNumber);
 };
+
+export const validateOtp = (otp: string) => {
+  const regex = /^\d{6}$/;
+  return regex.test(otp);
+};

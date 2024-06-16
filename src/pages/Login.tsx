@@ -29,6 +29,8 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, Button } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import usersService from "@services/users.service";
+import { useAuthStore } from "@stores/AuthStore";
+import { jwtDecode } from "jwt-decode";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -59,13 +61,10 @@ const schema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const [errorMsg, setErrorMsg] = useState<string>("");
   useDocumentTitle({ title: "Login" });
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<LoginFormData>({
+  const { register, handleSubmit, setError } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   });
 
@@ -79,7 +78,27 @@ const Login = () => {
     mutate(data, {
       onSuccess: (response) => {
         toast.success("Login successfully");
-        localStorage.setItem("user", JSON.stringify(response.data.data));
+        setErrorMsg("");
+        setAuth({
+          user: {
+            access_token: response.data.data.access_token,
+            exp: "",
+            iat: "",
+            new_user: false,
+          },
+          isAuthenticated: true,
+          isInitialized: true,
+          status:
+            jwtDecode<{
+              exp: number;
+              iat: number;
+              status: number;
+              token_type: number;
+              user_id: string;
+            }>(response.data.data.access_token).status === 1
+              ? "VERIFIED"
+              : "UNVERIFIED",
+        });
         setTimeout(() => {
           navigate("/");
         }, 2000);
@@ -88,6 +107,7 @@ const Login = () => {
         if (
           isAxiosUnprocessableEntityError<ResponseApi<LoginFormData>>(error)
         ) {
+          setErrorMsg("Email or Password is incorrect");
           const formError = error.response?.data.data;
           if (formError) {
             Object.keys(formError).forEach((key) => {
@@ -95,9 +115,11 @@ const Login = () => {
                 message: formError[key as keyof LoginFormData],
                 type: "Server",
               });
-              toast.error("Login failed");
+              toast.error("Invalid email or password");
             });
           }
+        } else {
+          toast.error("Please try again later");
         }
       },
     });
@@ -118,24 +140,18 @@ const Login = () => {
           <BrandLogo image_url={Jordan} showNikeLogo />
           <InputControl<LoginFormData>
             isRequired
-            isError={
-              !!errors.email_phone || !!errors.email || !!errors.phone_number
-            }
+            isError={!!errorMsg}
             register={register}
             className="mb-4 max-w-xs"
-            errorMessage={
-              errors.email_phone?.message ||
-              errors.email?.message ||
-              errors.phone_number?.message
-            }
+            errorMessage={errorMsg}
             {...EmailPhoneSchema}
           />
 
           <InputControl<LoginFormData>
             register={register}
             isRequired
-            isError={!!errors.password}
-            errorMessage={errors.password?.message}
+            isError={!!errorMsg}
+            errorMessage={errorMsg}
             endContent={
               <ButtonPreviewPassword
                 isVisible={isVisible}
@@ -150,7 +166,7 @@ const Login = () => {
             className="t-0 mt-4"
             isBlock
             showAnchorIcon
-            href="#"
+            href="/recovery"
             color="primary"
           >
             Forgot Password

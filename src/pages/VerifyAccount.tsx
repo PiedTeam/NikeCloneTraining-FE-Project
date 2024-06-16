@@ -1,14 +1,19 @@
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import {
+  isAxiosError,
   isAxiosUnprocessableEntityError,
   validateEmail,
+  validateOtp,
   validatePhoneNumber,
 } from "@utils/utils";
 import { ResponseApi } from "@utils/utils.type";
 import { AxiosError } from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import usersService from "@services/users.service";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@stores/AuthStore";
 
 enum VerifyMethod {
   EMAIL = "email",
@@ -28,9 +33,13 @@ interface VerifyAccountErrorProps {
 const VerifyAccount = () => {
   const [otpIsSent, setOtpIsSent] = useState<boolean>(false);
   const [otpIsClicked, setOtpIsClicked] = useState<boolean>(false);
+  const [otpError, setOtpError] = useState<string>("");
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
+  const isVerify = useAuthStore((state) => state.auth);
+  const token = useAuthStore((state) => state.auth?.user?.access_token);
   const [sendOTPError, setSendOTPError] = useState<string>("");
+  const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(
     VerifyMethod.EMAIL,
   );
@@ -41,7 +50,7 @@ const VerifyAccount = () => {
     });
 
   const { mutate } = useMutation({
-    mutationFn: (_body: { email_phone: string }) => {
+    mutationFn: (_body: { email_phone: string; token: string }) => {
       return usersService.sendVerifyAccountOTP(_body);
     },
   });
@@ -66,10 +75,13 @@ const VerifyAccount = () => {
     if (checkValidation()) {
       setOtpIsSent(true);
       mutate(
-        { email_phone: receiveOTPRef.current?.value || "" },
+        {
+          email_phone: receiveOTPRef.current?.value || "",
+          token: token as string,
+        },
         {
           onSuccess: () => {
-            alert("OTP sent successfully");
+            toast.success("OTP sent successfully");
             setSendOTPError("");
             setIsResendAvailable(false);
             const interval = setInterval(() => {
@@ -95,6 +107,10 @@ const VerifyAccount = () => {
                   setSendOTPError(formError.phone_number);
                 }
               }
+            } else if (isAxiosError(error) && error.response?.status === 406) {
+              toast.error(
+                "Send otp over 3 time, Please wait 24 hours to try again",
+              );
             }
           },
         },
@@ -103,38 +119,50 @@ const VerifyAccount = () => {
   };
 
   const handleVerifyOTP = async () => {
-    if (
-      OTPRef.current?.value !== null &&
-      receiveOTPRef.current?.value !== null
-    ) {
-      try {
-        const result = await usersService.verifyAccount({
-          email_phone: receiveOTPRef.current?.value as string,
-          verify_account_otp: OTPRef.current?.value as string,
-        });
-        if (result) {
-          setValidateOTPError({
-            ...validateOTPError,
-            email_phone: "",
-            verify_account_otp: "",
+    const otp = OTPRef.current?.value;
+    if (otp !== null && receiveOTPRef.current?.value !== null) {
+      if (!validateOtp(OTPRef.current?.value as string)) {
+        setOtpError("OTP must be 6 digits");
+      } else {
+        setOtpError("");
+        try {
+          const result = await usersService.verifyAccount({
+            email_phone: receiveOTPRef.current?.value as string,
+            otp: OTPRef.current?.value as string,
+            token: token as string,
           });
-          alert("Account Verified Successfully");
-        }
-      } catch (error: unknown) {
-        if (
-          error instanceof Error &&
-          isAxiosUnprocessableEntityError<ResponseApi<VerifyAccountErrorProps>>(
-            error,
-          )
-        ) {
-          setValidateOTPError(
-            (error as AxiosError<ResponseApi<VerifyAccountErrorProps>>).response
-              ?.data.data as VerifyAccountErrorProps,
-          );
+          if (result) {
+            setValidateOTPError({
+              ...validateOTPError,
+              email_phone: "",
+              verify_account_otp: "",
+            });
+            toast.success("Account Verified Successfully");
+            setTimeout(() => navigate("/"), 3000);
+          }
+        } catch (error: unknown) {
+          if (
+            error instanceof Error &&
+            isAxiosUnprocessableEntityError<
+              ResponseApi<VerifyAccountErrorProps>
+            >(error)
+          ) {
+            setValidateOTPError(
+              (error as AxiosError<ResponseApi<VerifyAccountErrorProps>>)
+                .response?.data.data as VerifyAccountErrorProps,
+            );
+          }
         }
       }
     }
   };
+
+  useEffect(() => {
+    if (isVerify?.status === "VERIFIED") {
+      toast.success("Account already verified");
+      navigate("/");
+    }
+  }, [isVerify, navigate]);
 
   return (
     <>
@@ -169,9 +197,11 @@ const VerifyAccount = () => {
                 }}
                 ref={receiveOTPRef}
                 placeholder={
-                  selectedMethod === VerifyMethod.SMS
-                    ? "Phone Number *"
-                    : "Email *"
+                  selectedMethod === VerifyMethod.SMS ? "Phone Number" : "Email"
+                }
+                isRequired
+                label={
+                  selectedMethod === VerifyMethod.SMS ? "Phone Number" : "Email"
                 }
               />
               <p className="fixed ml-3 mt-1 text-sm text-red-500">
@@ -218,6 +248,8 @@ const VerifyAccount = () => {
               }}
               ref={OTPRef}
               placeholder="Code *"
+              isRequired
+              isInvalid={!!otpError}
             />
             <Button
               color="default"
@@ -244,7 +276,8 @@ const VerifyAccount = () => {
             </Button>
           </div>
           <p className="relative ml-3 mt-2 text-sm italic text-red-500">
-            {validateOTPError.email_phone ||
+            {otpError ||
+              validateOTPError.email_phone ||
               validateOTPError.verify_account_otp}
           </p>
           {!isResendAvailable && (

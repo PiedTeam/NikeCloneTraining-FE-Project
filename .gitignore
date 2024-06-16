@@ -2,3 +2,6 @@ dist
 node_modules
 *.local
 .env
+deploy
+.firebase
+.DS_Store
