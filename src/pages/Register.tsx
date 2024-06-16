@@ -405,7 +405,7 @@ const Register = () => {
 
                 <Button
                   type="submit"
-                  className="h-13 mt-6 block w-full justify-end bg-black px-8 text-lg font-bold text-white"
+                  className="mt-3 block h-12 w-full justify-end bg-black px-8 text-lg font-bold text-white"
                   radius="full"
                   // isLoading={true}
                 >
@@ -431,10 +431,10 @@ const Register = () => {
                           .VITE_DEVELOPEMENT_FACEBOOK_OAUTH_URL as string);
                   }}
                   startContent={
-                    <FaFacebook className="text-5xl text-blue-800 " />
+                    <FaFacebook className="text-5xl text-blue-800" />
                   }
                   content="Register with Facebook"
-                  className="w-50 h-13 text-small font-medium"
+                  className="w-50 h-13 mr-2 text-small font-medium"
                 />
                 <ThirdParyButton
                   radius="full"
@@ -445,9 +445,9 @@ const Register = () => {
                       : (import.meta.env
                           .VITE_DEVELOPEMENT_GOOGLE_OAUTH_URL as string);
                   }}
-                  startContent={<FcGoogle className="text-3xl" />}
+                  startContent={<FcGoogle className="text-5xl text-blue-800" />}
                   content="Register with Google"
-                  className="w-50 h-13 px-5 text-small font-medium"
+                  className="w-50 h-13 ml-2 px-5 text-small font-medium"
                 />
               </div>
             </div>
