@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import usersService from "@services/users.service";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@stores/AuthStore";
+import DOMPurify from "dompurify";
 
 enum VerifyMethod {
   EMAIL = "email",
@@ -51,7 +52,11 @@ const VerifyAccount = () => {
 
   const { mutate } = useMutation({
     mutationFn: (_body: { email_phone: string; token: string }) => {
-      return usersService.sendVerifyAccountOTP(_body);
+      const data = {
+        email_phone: DOMPurify.sanitize(_body.email_phone),
+        token: DOMPurify.sanitize(_body.token),
+      };
+      return usersService.sendVerifyAccountOTP(data);
     },
   });
 

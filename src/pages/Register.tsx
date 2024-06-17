@@ -23,10 +23,12 @@ const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
     first_name: yup
       .string()
-      .required(ValidationRules.firstnameRule.required.message),
+      .required(ValidationRules.firstnameRule.required.message)
+      .matches(/^[^']*$/, "First Name cannot contain then sensitive character"),
     last_name: yup
       .string()
-      .required(ValidationRules.lastnameRule.required.message),
+      .required(ValidationRules.lastnameRule.required.message)
+      .matches(/^[^']*$/, "Last Name cannot contain then sensitive character"),
     email_phone: yup
       .string()
       .required("This field is required")
@@ -43,6 +45,10 @@ const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
           ).test(value);
           return isEmail || isPhone;
         },
+      )
+      .matches(
+        /^[^']*$/,
+        "Email or Phone cannot contain then sensitive character",
       ),
     password: yup
       .string()
@@ -54,7 +60,8 @@ const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
       .matches(
         new RegExp(ValidationRules.passwordRule.pattern.value),
         ValidationRules.passwordRule.pattern.message,
-      ),
+      )
+      .matches(/^[^']*$/, "Password cannot contain then sensitive character"),
     agreeToTerms: yup.boolean().required().isTrue(),
     subcribe: yup.boolean(),
   });

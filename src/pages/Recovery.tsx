@@ -11,6 +11,7 @@ import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import usersService from "@services/users.service";
 import { isAxiosError } from "axios";
+import DOMPurify from "dompurify";
 
 const Recovery = () => {
   const navigate = useNavigate();
@@ -34,12 +35,19 @@ const Recovery = () => {
               "Phone number must be exactly 10 digits",
               (val: string | undefined) => val!.length === 10,
             )
-            .required("Phone number is required"),
+            .required("Phone number is required")
+            .matches(
+              /^[^']*$/,
+              "Email or Phone cannot contain then sensitive character",
+            ),
   });
 
   const { mutate } = useMutation({
     mutationFn: (body: RecoveryForm) => {
-      return usersService.recovery(body);
+      const data: RecoveryForm = {
+        email_phone: DOMPurify.sanitize(body.email_phone),
+      };
+      return usersService.recovery(data);
     },
   });
 

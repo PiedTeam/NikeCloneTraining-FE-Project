@@ -15,6 +15,7 @@ import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import { SvgIcon } from "@common/components";
 import { ButtonPreviewPassword } from "@components/index";
+import DOMPurify from "dompurify";
 
 export interface UserInfoForm {
   data: {
@@ -34,14 +35,18 @@ const Password = () => {
   const location = useLocation();
   const toggleVisibility = () => setIsVisible(!isVisible);
   const schema = yup.object().shape({
-    password: yup.string().required("Password is required"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .matches(/^[^']*$/, "Password cannot contain then sensitive character"),
     confirmPassword: yup
       .string()
       .required("Confirm password is required")
       .oneOf(
         [yup.ref("password")],
         "Confirm password must match with passwords",
-      ),
+      )
+      .matches(/^[^']*$/, "Password cannot contain then sensitive character"),
   });
   const {
     register,
@@ -58,8 +63,8 @@ const Password = () => {
       try {
         const response = await usersService.resetPassword({
           email_phone: location.state.email_phone,
-          password: dataForm.password,
-          confirm_password: dataForm.confirmPassword,
+          password: DOMPurify.sanitize(dataForm.password),
+          confirm_password: DOMPurify.sanitize(dataForm.confirmPassword),
           otp: location.state.otp,
         });
         if (response.status === 200) {
