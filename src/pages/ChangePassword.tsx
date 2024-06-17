@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@stores/AuthStore.ts";
 import { SvgIcon } from "@common/components";
 import { ButtonPreviewPassword } from "@components/index";
-
+import DOMPurify from "dompurify";
 export interface FormDataChangePassword {
   oldPassword: string;
   confirmPassword: string;
@@ -19,17 +19,21 @@ export interface FormDataChangePassword {
 
 const schema = yup.object().shape({
   oldPassword: yup.string().required(),
+
   password: yup
     .string()
     .required("Password is required")
     .matches(
       /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
       "Password must contain at least 8 characters, including at least one digit, one special character, one uppercase letter, and one lowercase letter",
-    ),
+    )
+    .matches(/^[^']*$/, "Password cannot contain single quotes"),
+
   confirmPassword: yup
     .string()
     .required("Confirm password is required")
-    .oneOf([yup.ref("password")], "Confirm password must match with password"),
+    .oneOf([yup.ref("password")], "Confirm password must match with password")
+    .matches(/^[^']*$/, "Confirm password cannot contain single quotes"),
 });
 
 const ChangePassword = () => {
@@ -55,8 +59,8 @@ const ChangePassword = () => {
     dataPassChange,
   ) => {
     const updateData: FormDataChangePasswordApi = {
-      old_password: dataPassChange.oldPassword,
-      new_password: dataPassChange.password,
+      old_password: DOMPurify.sanitize(dataPassChange.oldPassword),
+      new_password: DOMPurify.sanitize(dataPassChange.password),
     };
 
     const { message, error } = await usersService.changePassword({
