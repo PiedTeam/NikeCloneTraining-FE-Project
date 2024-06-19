@@ -32,3 +32,6 @@ export const validateOtp = (otp: string) => {
   const regex = /^\d{6}$/;
   return regex.test(otp);
 };
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
