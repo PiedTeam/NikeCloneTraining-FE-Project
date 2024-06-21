@@ -108,8 +108,8 @@ const Recovery = () => {
   };
   return (
     <div>
-      <div className="flex h-full justify-center  ">
-        <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform flex-col   items-center p-12 shadow-2xl max-[600px]:p-4 ">
+      <div className="flex h-full justify-center">
+        <div className="max-[900px]:text-[14 px] mt-24 flex h-3/4 w-1/2 -translate-y-5 transform flex-col items-center p-12 shadow-2xl max-[600px]:p-4">
           <h1 className="text-center">RECOVERY PASSWORD</h1>
           <Input
             {...register("email_phone")}
@@ -124,7 +124,7 @@ const Recovery = () => {
             isRequired
           />
           <div className="">
-            <p className="mb-4 mr-2 font-bold ">CHOICE YOUR METHOD:</p>
+            <p className="mb-4 mr-2 font-bold">CHOICE YOUR METHOD:</p>
             <Select
               isRequired
               label="Recovery Method"

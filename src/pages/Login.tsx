@@ -128,7 +128,7 @@ const Login = () => {
   return (
     <>
       <div className="flex h-full justify-center">
-        <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
+        <div className="max-[900px]:text-[14 px] mt-24 flex h-3/4 w-1/2 -translate-y-5 transform flex-col items-center p-12 shadow-2xl">
           <h1>WELCOME BACK</h1>
           <BrandLogo isShowNikeLogo />
           <InputControl<LoginFormData>
@@ -167,7 +167,7 @@ const Login = () => {
           <Button
             disableRipple
             size="lg"
-            className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl  hover:-translate-y-1"
+            className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl hover:-translate-y-1"
             onClick={handleLoginButtonClick}
           >
             Login
@@ -179,15 +179,15 @@ const Login = () => {
           </div>
           <div className="mt-4 flex">
             <ThirdPartyButton
-              className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
+              className="mr-4 w-2/4 border-4 max-[900px]:w-32 max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_FACEBOOK_OAUTH_URL;
               }}
-              endContent={<FaFacebook className="text-5xl text-blue-800 " />}
+              endContent={<FaFacebook className="text-5xl text-blue-800" />}
               content="Login With Facebook"
             />
             <ThirdPartyButton
-              className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
+              className="mr-4 w-2/4 border-4 max-[900px]:w-32 max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
               }}
