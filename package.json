@@ -18,7 +18,7 @@
     "eslint:debug": "eslint ./src --debug --ext .ts,.tsx,.js,.jsx --max-warnings 0",
     "eslint:check-allow-warning": "eslint --quiet ./src --ext .ts,.tsx,.js,.jsx",
     "check-conflict-prettier-eslint": "npx eslint-config-prettier src/App.tsx --print-config",
-    "check-types": "cross-env tsc --noemit"
+    "check-types": "tsc --noemit"
   },
   "lint-staged": {
     "*.*": [

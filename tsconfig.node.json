@@ -1,4 +1,6 @@
 // this tsconfig is for the vite config file only
+
+// ******* DO NOT USE THIS WHEN DEVELOPMENT, this is for the vite server *********
 {
   "schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {

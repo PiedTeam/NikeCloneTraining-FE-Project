@@ -58,7 +58,7 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": "latest",
-    "project": ["./tsconfig.json"],
+    "project": "./tsconfig.json",
     "ecmaFeatures": {
       "jsx": true
     }
@@ -121,9 +121,6 @@
     // need to set react version for eslint-plugin-react, doesn't auto detect by default
     "react": {
       "version": "detect"
-    },
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"] //eslint-plugin-import and eslint-import-resolver-typescript
     },
     "import/resolver": {
       //eslint-plugin-import and eslint-import-resolver-typescript

@@ -1,6 +1,6 @@
-// this tsconfig is for SRC FOLDER === MEAN THIS IS FOR CLIENT SIDE (BROWSER TO RUN)
+// this tsconfig is for SRC FOLDER === mean this is config for client side (browser) to run
 
-// ******* DOES NOT USE THIS CONFIG TO CONFIG WHEN DEVELOPMENT *********
+// ******* USE THIS WHEN DEVELOPMENT *********
 {
   "schema": "https://json.schemastore.org/tsconfig",
   "extends": "@tsconfig/vite-react/tsconfig.json",
@@ -26,13 +26,7 @@
       "@common/*": ["common/*"]
     }
   },
-  "include": [
-    "./src",
-    "src",
-    "src/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-    "./src/hooks/**/*.{ts,tsx}"
-  ],
+  "include": ["./src", "src", "src/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   // reference simple term mean extend tsconfig from another tsconfig
   "references": [{ "path": "./tsconfig.node.json" }]
 }
