@@ -14,7 +14,7 @@ const Homepage = () => {
       <Navbar />
       <AdvertiseBar />
 
-      <div className="flex justify-between ">
+      <div className="flex justify-between">
         <button
           className="rounded border-2 border-black px-2"
           onClick={() => nav("/verify-account")}

@@ -1,16 +1,13 @@
+// this tsconfig is for SRC FOLDER === mean this is config for client side (browser) to run
+
+// ******* USE THIS WHEN DEVELOPMENT *********
 {
+  "schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@tsconfig/vite-react/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2021",
-    "useDefineForClassFields": true,
-    "lib": ["ES2021", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+    "sourceMap": true, //source map for debugging
+    "noUnusedLocals": false, //false so that warnings can still be okay
+    "noUnusedParameters": false, //false so that warnings can still be okay
     "baseUrl": "./src",
     "paths": {
       "@apis/*": ["apis/*"],
@@ -26,12 +23,10 @@
       "@stores/*": ["stores/*"],
       "@utils/*": ["utils/*"],
       "@public/*": ["../public/*"],
-      "@common/*": ["common/*"],
-    },
-    "strict": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+      "@common/*": ["common/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["./src", "src", "src/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  // reference simple term mean extend tsconfig from another tsconfig
   "references": [{ "path": "./tsconfig.node.json" }]
 }

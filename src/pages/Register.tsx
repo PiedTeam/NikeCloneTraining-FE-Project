@@ -154,12 +154,12 @@ const Register = () => {
               </div>
             </div>
           )}
-          <div className=" flex w-full items-center justify-center px-4 py-10 lg:p-[60px]">
+          <div className="flex w-full items-center justify-center px-4 py-10 lg:p-[60px]">
             <div className="w-full max-w-[460px]">
               <div className="flex flex-col gap-2.5">
                 <h1 className="font-normal">Lets become a Nike Member</h1>
               </div>
-              <form className="mt-3 " onSubmit={handleSubmit(onSubmit)}>
+              <form className="mt-3" onSubmit={handleSubmit(onSubmit)}>
                 <div className="mt-8 grid grid-cols-2 gap-5">
                   <div className="col-span-1">
                     <Controller
@@ -413,7 +413,7 @@ const Register = () => {
                           .VITE_DEVELOPEMENT_FACEBOOK_OAUTH_URL as string);
                   }}
                   startContent={
-                    <FaFacebook className="text-5xl text-blue-800 " />
+                    <FaFacebook className="text-5xl text-blue-800" />
                   }
                   content="Register with Facebook"
                   className="w-50 h-13 text-small font-medium"
