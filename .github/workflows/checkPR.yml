@@ -68,4 +68,4 @@ jobs:
         run: pnpm install
 
       - name: Lint
-        run: "echo 'Linting...'"
+        run: prettier:check && pnpm run eslint:check-allow-warning && pnpm run check-types
