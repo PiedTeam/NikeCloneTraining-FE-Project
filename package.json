@@ -8,7 +8,7 @@
     "dev": "cross-env vite",
     "build": "cross-env tsc && vite build",
     "preview": "cross-env vite preview",
-    "prepare": "cross-env husky install",
+    "prepare": "husky",
     "lint": "pnpm run prettier:fix && pnpm run eslint:check && pnpm run check-types",
     "lint-staged": "lint-staged",
     "prettier:check": "prettier --check . --cache",
