@@ -4,10 +4,10 @@ import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 
 import useDocumentTitle from "@hooks/useDocumentTitle.ts";
 import { useForm, SubmitHandler, FieldValues, Path } from "react-hook-form";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useCallback, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { LoginFormData } from "@services/users.api";
 import { ResponseApi } from "@utils/utils.type.ts";
 
@@ -56,6 +56,21 @@ const Login = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const setAuth = useAuthStore((state) => state.setAuth);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const handleReCaptchaVerify = useCallback(async () => {
+    if (!executeRecaptcha) {
+      // console.log('Execute recaptcha not yet available');
+      return;
+    }
+
+    const token = await executeRecaptcha("yourAction");
+    // console.log(token);
+  }, [executeRecaptcha]);
+
+  // useEffect(() => {
+  //   handleReCaptchaVerify();
+  // }, [handleReCaptchaVerify]);
+
   useDocumentTitle({ title: "Login" });
   const { register, handleSubmit, setError } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
@@ -68,6 +83,7 @@ const Login = () => {
   });
 
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
+    handleReCaptchaVerify();
     mutate(data, {
       onSuccess: (response) => {
         toast.success("Login successfully");
@@ -189,7 +205,8 @@ const Login = () => {
             <ThirdPartyButton
               className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
-                window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
+                window.location.href =
+                  import.meta.env.VITE_DEVELOPEMENT_GOOGLE_OAUTH_URL;
               }}
               endContent={<FcGoogle className="text-4xl" />}
               content="Login With Google"

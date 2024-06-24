@@ -43,6 +43,7 @@ const CompareOtpPage = () => {
           otp: otp,
         },
       });
+      // if(response.status===)
       if (response.status === 200) {
         toast.success("Otp verified successfully");
         setTimeout(
