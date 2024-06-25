@@ -23,7 +23,9 @@
       "@stores/*": ["stores/*"],
       "@utils/*": ["utils/*"],
       "@public/*": ["../public/*"],
-      "@common/*": ["common/*"]
+      "@common/*": ["common/*"],
+      "@provider/*": ["provider/*"],
+      "@routes/*": ["routes/*"]
     }
   },
   "include": ["./src", "src", "src/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],

@@ -2,7 +2,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 
-import useDocumentTitle from "@hooks/useDocumentTitle.ts";
+import useDocumentTitle from "@hooks/useDocumentTitle";
 import { useForm, SubmitHandler, FieldValues, Path } from "react-hook-form";
 import { MouseEventHandler, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
