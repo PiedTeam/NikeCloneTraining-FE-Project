@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { redirectPath } from "routes";
+import { redirectPath } from "@routes/index";
 
 export const NestedRoute = (): JSX.Element => {
   const location = useLocation();

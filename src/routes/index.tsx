@@ -6,7 +6,7 @@ import PageNotFound from "@pages/PageNotFound";
 import Recovery from "@pages/Recovery";
 import Register from "@pages/Register";
 import VerifyAccount from "@pages/VerifyAccount";
-import { useAuth } from "provider/AuthProvider";
+import { useAuth } from "@provider/AuthProvider";
 import {
   Navigate,
   RouterProvider,
