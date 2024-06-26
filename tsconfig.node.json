@@ -12,7 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "tailwind.config.ts"]
 }
 
 // why do we need this tsconfig.node.json??? because vite server run in node??? // or maybe need to convert .ts config file back to .js like tailwind.config.ts ??
