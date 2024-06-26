@@ -12,13 +12,7 @@
     "jsx-a11y",
     "react-refresh"
   ],
-  "ignorePatterns": [
-    "node_modules/",
-    "dist/",
-    "server.js",
-    "*.d.ts",
-    "*.config.ts"
-  ],
+  "ignorePatterns": ["node_modules/", "dist/", "server.js", "*.d.ts"],
   "extends": [
     // extends mean use config from devDependencies that community created or recommended
 
@@ -58,7 +52,7 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": "latest",
-    "project": "./tsconfig.json",
+    "project": ["./tsconfig.json", "./tsconfig.node.json"],
     "ecmaFeatures": {
       "jsx": true
     }
@@ -129,7 +123,7 @@
       },
       "typescript": {
         "alwaysTryTypes": true,
-        "project": "./tsconfig.json"
+        "project": ["./tsconfig.json", "./tsconfig.node.json"]
       }
     }
   }
