@@ -21,18 +21,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-standalone
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        # id: pnpmahihi
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 9
           run_install: false
           standalone: false
 
-      # - name: Install Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 20
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       # - name: which pnpm
       #   shell: bash
@@ -56,8 +55,8 @@ jobs:
       #   run: |
       #     echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - uses: actions/cache@v4
-        name: Setup pnpm node_module cache
+      - name: Setup pnpm node_module cache
+        uses: actions/cache@v4
         with:
           path: /home/runner/setup-pnpm/node_modules/.bin/store/v3
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -68,4 +67,4 @@ jobs:
         run: pnpm install
 
       - name: Lint
-        run: prettier:check && pnpm run eslint:check-allow-warning && pnpm run check-types
+        run: pnpm run prettier:check && pnpm run eslint:check-allow-warning && pnpm run check-types
