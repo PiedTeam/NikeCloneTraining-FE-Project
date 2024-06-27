@@ -2,12 +2,12 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 
-import useDocumentTitle from "@hooks/useDocumentTitle.ts";
+import useDocumentTitle from "@hooks/useDocumentTitle.tsx";
 import { useForm, SubmitHandler, FieldValues, Path } from "react-hook-form";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { LoginFormData } from "@services/users.api";
 import { ResponseApi } from "@utils/utils.type.ts";
 
@@ -24,6 +24,8 @@ import usersService from "@services/users.service";
 import { useAuthStore } from "@stores/AuthStore";
 import { jwtDecode } from "jwt-decode";
 import { BrandLogo } from "@common/components";
+import { CaptchaApiResponse } from "@services/captcha.api";
+import useCaptcha from "@services/captcha.service";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -57,6 +59,33 @@ const Login = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
   const [errorMsg, setErrorMsg] = useState<string>("");
   useDocumentTitle({ title: "Login" });
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const handleReCaptchaVerify = useCallback(async (): Promise<
+    CaptchaApiResponse | string
+  > => {
+    if (!executeRecaptcha) {
+      return "Execute recaptcha not yet available";
+    }
+
+    const token = await executeRecaptcha("yourAction");
+    try {
+      const response = await useCaptcha.captcha({ capcha: token });
+      const captcha: CaptchaApiResponse = {
+        success: response.data.success,
+        message: response.data.message,
+        score: response.data.score,
+      };
+
+      return captcha;
+    } catch (error) {
+      return "Something is wrong";
+    }
+  }, [executeRecaptcha]);
+
+  useEffect(() => {
+    handleReCaptchaVerify();
+  }, [handleReCaptchaVerify]);
   const { register, handleSubmit, setError } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   });
@@ -67,7 +96,17 @@ const Login = () => {
     },
   });
 
-  const handleLogin: SubmitHandler<LoginFormData> = (data) => {
+  const handleLogin: SubmitHandler<LoginFormData> = async (data) => {
+    const captcha = await handleReCaptchaVerify();
+    if (typeof captcha === "string") {
+      toast.error(captcha);
+      return;
+    }
+
+    if (!captcha.success) {
+      toast.error(captcha.message);
+      return;
+    }
     mutate(data, {
       onSuccess: (response) => {
         toast.success("Login successfully");
