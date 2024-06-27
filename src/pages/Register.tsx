@@ -3,7 +3,7 @@ import * as yup from "yup";
 
 import ValidationRules from "@constants/validationRules.json";
 import useWindowSize from "@hooks/useWindowSize";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ButtonPreviewPassword, ThirdPartyButton } from "@components/index";
 import useDocumentTitle from "@hooks/useDocumentTitle";
@@ -18,6 +18,10 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { SvgIcon } from "@common/components";
+import { CaptchaApiResponse } from "@services/captcha.api";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import useCaptcha from "@services/captcha.service";
+import { toast } from "react-toastify";
 
 const schema: yup.ObjectSchema<Omit<RegisterForm, "email" | "phone_number">> =
   yup.object().shape({
@@ -72,7 +76,33 @@ const Register = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
+  const handleReCaptchaVerify = useCallback(async (): Promise<
+    CaptchaApiResponse | string
+  > => {
+    if (!executeRecaptcha) {
+      return "Execute recaptcha not yet available";
+    }
+
+    const token = await executeRecaptcha("yourAction");
+    try {
+      const response = await useCaptcha.captcha({ capcha: token });
+      const captcha: CaptchaApiResponse = {
+        success: response.data.success,
+        message: response.data.message,
+        score: response.data.score,
+      };
+
+      return captcha;
+    } catch (error) {
+      return "Something is wrong";
+    }
+  }, [executeRecaptcha]);
+
+  useEffect(() => {
+    handleReCaptchaVerify();
+  }, [handleReCaptchaVerify]);
   const { mutate, error } = useMutation({
     mutationFn: (_body: Omit<RegisterForm, "agreeToTerms">) => {
       return usersService.register(_body);
@@ -99,7 +129,17 @@ const Register = () => {
     resolver: yupResolver(schema),
     criteriaMode: "all",
   });
-  const onSubmit: SubmitHandler<RegisterForm> = (_data) => {
+  const onSubmit: SubmitHandler<RegisterForm> = async (_data) => {
+    const captcha = await handleReCaptchaVerify();
+    if (typeof captcha === "string") {
+      toast.error(captcha);
+      return;
+    }
+
+    if (!captcha.success) {
+      toast.error(captcha.message);
+      return;
+    }
     mutate(_data, {
       onSuccess: () => {
         // alert("Register successfully");
@@ -150,7 +190,7 @@ const Register = () => {
           {width >= 1024 && (
             <div className="flex flex-col items-center justify-center lg:p-[60px]">
               <div>
-                <SvgIcon icon="nike" />
+                <SvgIcon className="w-96" icon="nike" />
               </div>
             </div>
           )}

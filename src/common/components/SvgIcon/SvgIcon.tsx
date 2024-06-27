@@ -12,11 +12,20 @@ const SvgIcon = ({ icon, ...rest }: SvgIconProps) => {
   const SvgIconComponent = useMemo(() => {
     switch (icon) {
       case "nike":
-        return <img src={NikeSvgPath} alt="Nike SVG" {...rest} />;
+        return (
+          <img src={NikeSvgPath} className="w-32" alt="Nike SVG" {...rest} />
+        );
       case "facebook":
         return <img src={FbSvgPath} alt="Facebook SVG" {...rest} />;
       case "jordan":
-        return <img src={JordanSvgPath} alt="Jordan SVG" {...rest} />;
+        return (
+          <img
+            src={JordanSvgPath}
+            className="w-32"
+            alt="Jordan SVG"
+            {...rest}
+          />
+        );
       case "nike-signup":
         return <img src={NikeSignupSvgPath} alt="Nike Signup SVG" {...rest} />;
       default:
