@@ -21,7 +21,6 @@ import Register from "@pages/Register";
 import VerifyAccount from "@pages/VerifyAccount";
 import OAuth from "@pages/OAuth";
 import PageNotFound from "@pages/PageNotFound";
-import Account from "@pages/Account";
 
 function App() {
   const queryClient = new QueryClient();
@@ -90,7 +89,6 @@ function App() {
           />
           <Route path="/oauth" element={<OAuth />} />
           <Route path="/404" element={<PageNotFound />} />
-          <Route path="account" element={<Account />}></Route>
           {/* <Route path="*" element={<Navigate to="/404" />} /> */}
         </Routes>
       </NextUIProvider>

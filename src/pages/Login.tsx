@@ -4,7 +4,7 @@ import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 
 import useDocumentTitle from "@hooks/useDocumentTitle.ts";
 import { useForm, SubmitHandler, FieldValues, Path } from "react-hook-form";
-import { MouseEventHandler, useCallback, useState } from "react";
+import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -24,6 +24,8 @@ import usersService from "@services/users.service";
 import { useAuthStore } from "@stores/AuthStore";
 import { jwtDecode } from "jwt-decode";
 import { BrandLogo } from "@common/components";
+import { captchaApiResponse } from "@services/captcha.api";
+import captchaService from "@services/captcha.service";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -57,19 +59,32 @@ const Login = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const handleReCaptchaVerify = useCallback(async () => {
+
+  const handleReCaptchaVerify = useCallback(async (): Promise<
+    captchaApiResponse | string
+  > => {
     if (!executeRecaptcha) {
-      // console.log('Execute recaptcha not yet available');
-      return;
+      return "Execute recaptcha not yet available";
     }
 
     const token = await executeRecaptcha("yourAction");
-    // console.log(token);
+    try {
+      const response = await captchaService.captcha({ capcha: token });
+      const captcha: captchaApiResponse = {
+        success: response.data.success,
+        message: response.data.message,
+        score: response.data.score,
+      };
+
+      return captcha;
+    } catch (error) {
+      return "Something is wrong";
+    }
   }, [executeRecaptcha]);
 
-  // useEffect(() => {
-  //   handleReCaptchaVerify();
-  // }, [handleReCaptchaVerify]);
+  useEffect(() => {
+    handleReCaptchaVerify();
+  }, [handleReCaptchaVerify]);
 
   useDocumentTitle({ title: "Login" });
   const { register, handleSubmit, setError } = useForm<LoginFormData>({
@@ -82,8 +97,18 @@ const Login = () => {
     },
   });
 
-  const handleLogin: SubmitHandler<LoginFormData> = (data) => {
-    handleReCaptchaVerify();
+  const handleLogin: SubmitHandler<LoginFormData> = async (data) => {
+    const captcha = await handleReCaptchaVerify();
+    if (typeof captcha === "string") {
+      toast.error(captcha);
+      return;
+    }
+
+    if (!captcha.success) {
+      toast.error(captcha.message);
+      return;
+    }
+
     mutate(data, {
       onSuccess: (response) => {
         toast.success("Login successfully");
