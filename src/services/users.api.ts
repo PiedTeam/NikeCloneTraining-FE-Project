@@ -140,15 +140,11 @@ export const callLogin = (_data: LoginFormData) =>
     data: _data,
   });
 
-export const callSendVerifyAccountOTP = (_data: {
-  email_phone: string;
-  token: string;
-}) =>
+export const callSendVerifyAccountOTP = (_data: { email_phone: string }) =>
   http<SendVerifyAccountOtpResponse, typeof _data>({
     url: "user/send-verify-account-otp",
     data: _data,
     method: "post",
-    token: _data.token,
   });
 
 export const recovery = (_data: RecoveryForm) =>
@@ -158,21 +154,13 @@ export const recovery = (_data: RecoveryForm) =>
     method: "post",
   });
 
-export const getMe = (accessToken: string) =>
-  http<ApiResponse>({ url: "user/me", method: "get", token: accessToken });
+export const getMe = () => http<ApiResponse>({ url: "user/me", method: "get" });
 
-export const updatePassword = ({
-  access_token,
-  _data,
-}: {
-  access_token: string;
-  _data: passwordInterfaceApi | undefined;
-}) =>
+export const updatePassword = (_data: passwordInterfaceApi | undefined) =>
   http<UpdatePasswordResponse, typeof _data>({
     url: "pass/updatePass",
     data: _data,
     method: "post",
-    token: access_token,
   });
 
 export const compareOtp = ({ _data }: { _data: compareOtpApi | undefined }) =>
@@ -182,30 +170,18 @@ export const compareOtp = ({ _data }: { _data: compareOtpApi | undefined }) =>
     method: "post",
   });
 
-export const changePassword = ({
-  accessToken,
-  _data,
-}: {
-  accessToken: string;
-  _data: FormDataChangePasswordApi | undefined;
-}) =>
+export const changePassword = (_data: FormDataChangePasswordApi | undefined) =>
   http<ChangePasswordResponse, typeof _data>({
     url: "user/change-password",
     data: _data,
     method: "post",
-    token: accessToken,
   });
 
-export const verifyAccount = (_data: {
-  email_phone: string;
-  otp: string;
-  token: string;
-}) =>
+export const verifyAccount = (_data: { email_phone: string; otp: string }) =>
   http<VerifyAccountResponse, typeof _data>({
     url: "user/verify-account",
     data: _data,
     method: "post",
-    token: _data.token,
   });
 
 export const resetPassword = (_data: {
@@ -220,3 +196,9 @@ export const resetPassword = (_data: {
     method: "post",
   });
 };
+
+export const callAccessToken = () =>
+  http<TokenResponse, unknown>({
+    url: "user/refresh-token",
+    method: "post",
+  });

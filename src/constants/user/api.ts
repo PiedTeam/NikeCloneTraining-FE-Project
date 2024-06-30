@@ -8,4 +8,5 @@ export type USER_API =
   | "user/verify-otp"
   | "user/change-password"
   | "user/verify-account"
-  | "user/reset-password";
+  | "user/reset-password"
+  | "user/refresh-token";

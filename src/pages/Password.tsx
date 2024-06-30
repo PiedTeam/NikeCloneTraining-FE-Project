@@ -10,11 +10,11 @@ import {
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import usersService from "@services/users.service.ts";
-import { useAuthStore } from "@stores/AuthStore.ts";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import { SvgIcon } from "@common/components";
 import { ButtonPreviewPassword } from "@components/index";
+import { useAuth } from "@provider/AuthProvider";
 
 export interface UserInfoForm {
   data: {
@@ -30,7 +30,7 @@ export interface passwordInterface {
 const Password = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = React.useState(false);
-  const access_token = useAuthStore((state) => state.auth?.user?.access_token);
+  const { token } = useAuth();
   const location = useLocation();
   const toggleVisibility = () => setIsVisible(!isVisible);
   const schema = yup.object().shape({
@@ -85,17 +85,12 @@ const Password = () => {
         }
       }
     } else {
-      const { data: userInfo } = await usersService.getMe(
-        access_token as string,
-      );
+      const { data: userInfo } = await usersService.getMe();
       const patchData: passwordInterfaceApi = {
         email: userInfo!.data.email,
         password: dataForm.password,
       };
-      const { message, error } = await usersService.updatePassword({
-        access_token: access_token as string,
-        _data: patchData,
-      });
+      const { message, error } = await usersService.updatePassword(patchData);
       if (typeof error === "object" && error !== null && "response" in error) {
         toast.error(error.response.data.data.data.password);
       } else {
@@ -112,8 +107,8 @@ const Password = () => {
   };
 
   return (
-    <div className="flex h-full  justify-center  ">
-      <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
+    <div className="flex h-full justify-center">
+      <div className="max-[900px]:text-[14 px] mt-24 flex h-3/4 w-1/2 -translate-y-5 transform flex-col items-center p-12 shadow-2xl">
         <h1> Your Password </h1>
         <div className="mx-10 flex justify-center">
           <SvgIcon icon="jordan" className="h-4/12 w-4/12 max-[600px]:hidden" />
@@ -169,7 +164,7 @@ const Password = () => {
         <Button
           disableRipple
           size="lg"
-          className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl  hover:-translate-y-1"
+          className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl hover:-translate-y-1"
           onClick={handleUpdateButtonClick}
         >
           Next

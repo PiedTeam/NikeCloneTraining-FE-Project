@@ -5,6 +5,7 @@ import {
   LoginFormData,
   RecoveryForm,
   RegisterForm,
+  callAccessToken,
   callLogin,
   callRegister,
   callSendVerifyAccountOTP,
@@ -24,9 +25,9 @@ import ApiState from "types/api";
 
 const wrapApi = async <TInput, TResponse extends { message: string }, TError>(
   func: (
-    data: TInput,
+    data?: TInput,
   ) => Promise<AxiosResponse<TResponse> | AxiosResponse<TError>>,
-  _data: TInput,
+  _data?: TInput,
 ) => {
   const initialState: ApiState<TResponse, TError | string> = {
     data: null,
@@ -38,7 +39,12 @@ const wrapApi = async <TInput, TResponse extends { message: string }, TError>(
   };
 
   try {
-    const res = await func(_data);
+    let res;
+    if (_data) {
+      res = await func(_data);
+    } else {
+      res = await func();
+    }
     if ((res.data as TResponse).message !== undefined) {
       return {
         ...initialState,
@@ -87,48 +93,28 @@ class UsersService {
 
   login = (data: LoginFormData) => callLogin(data);
 
-  sendVerifyAccountOTP = (data: { email_phone: string; token: string }) =>
+  sendVerifyAccountOTP = (data: { email_phone: string }) =>
     callSendVerifyAccountOTP(data);
 
   recovery = (data: RecoveryForm) => recovery(data);
 
-  getMe = (accessToken: string) => wrapApi(getMe, accessToken);
+  getMe = () => wrapApi(getMe);
 
-  updatePassword = ({
-    access_token,
-    _data,
-  }: {
-    access_token: string;
-    _data: passwordInterfaceApi | undefined;
-  }) => wrapApi(updatePassword, { access_token, _data });
+  updatePassword = (_data: passwordInterfaceApi | undefined) =>
+    wrapApi(updatePassword, _data);
 
   compareOtp = ({ _data }: { _data: compareOtpApi | undefined }) =>
     compareOtp({ _data });
 
-  changePassword = ({
-    accessToken,
-    _data,
-  }: {
-    accessToken: string;
-    _data: FormDataChangePasswordApi | undefined;
-  }) =>
+  changePassword = (_data: FormDataChangePasswordApi | undefined) =>
     wrapApi<
-      {
-        accessToken: string;
-        _data: FormDataChangePasswordApi | undefined;
-      },
+      FormDataChangePasswordApi | undefined,
       ChangePasswordResponse,
       ErrorData
-    >(changePassword, {
-      accessToken,
-      _data,
-    });
+    >(changePassword, _data);
 
-  verifyAccount = (_data: {
-    email_phone: string;
-    otp: string;
-    token: string;
-  }) => verifyAccount(_data);
+  verifyAccount = (_data: { email_phone: string; otp: string }) =>
+    verifyAccount(_data);
 
   resetPassword = (_data: {
     email_phone: string;
@@ -136,6 +122,8 @@ class UsersService {
     confirm_password: string;
     otp: string;
   }) => resetPassword(_data);
+
+  callAccessToken = () => callAccessToken();
 }
 
 const usersService = new UsersService();

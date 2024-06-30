@@ -21,9 +21,8 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, Button } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import usersService from "@services/users.service";
-import { useAuthStore } from "@stores/AuthStore";
-import { jwtDecode } from "jwt-decode";
 import { BrandLogo } from "@common/components";
+import { useAuth } from "@provider/AuthProvider";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -54,7 +53,7 @@ const schema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { setToken } = useAuth();
   const [errorMsg, setErrorMsg] = useState<string>("");
   useDocumentTitle({ title: "Login" });
   const { register, handleSubmit, setError } = useForm<LoginFormData>({
@@ -70,31 +69,10 @@ const Login = () => {
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
     mutate(data, {
       onSuccess: (response) => {
+        setToken(response.data.data.access_token);
         toast.success("Login successfully");
         setErrorMsg("");
-        setAuth({
-          user: {
-            access_token: response.data.data.access_token,
-            exp: "",
-            iat: "",
-            new_user: false,
-          },
-          isAuthenticated: true,
-          isInitialized: true,
-          status:
-            jwtDecode<{
-              exp: number;
-              iat: number;
-              status: number;
-              token_type: number;
-              user_id: string;
-            }>(response.data.data.access_token).status === 1
-              ? "VERIFIED"
-              : "UNVERIFIED",
-        });
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
+        navigate("/");
       },
       onError: (error) => {
         if (
@@ -128,7 +106,7 @@ const Login = () => {
   return (
     <>
       <div className="flex h-full justify-center">
-        <div className="max-[900px]:text-[14 px] mt-24  flex h-3/4 w-1/2 -translate-y-5 transform  flex-col items-center p-12 shadow-2xl ">
+        <div className="max-[900px]:text-[14 px] mt-24 flex h-3/4 w-1/2 -translate-y-5 transform flex-col items-center p-12 shadow-2xl">
           <h1>WELCOME BACK</h1>
           <BrandLogo isShowNikeLogo />
           <InputControl<LoginFormData>
@@ -167,7 +145,7 @@ const Login = () => {
           <Button
             disableRipple
             size="lg"
-            className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl  hover:-translate-y-1"
+            className="relative mb-4 mt-4 overflow-visible rounded-full bg-black px-12 text-white shadow-xl hover:-translate-y-1"
             onClick={handleLoginButtonClick}
           >
             Login
@@ -179,15 +157,15 @@ const Login = () => {
           </div>
           <div className="mt-4 flex">
             <ThirdPartyButton
-              className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
+              className="mr-4 w-2/4 border-4 max-[900px]:w-32 max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_FACEBOOK_OAUTH_URL;
               }}
-              endContent={<FaFacebook className="text-5xl text-blue-800 " />}
+              endContent={<FaFacebook className="text-5xl text-blue-800" />}
               content="Login With Facebook"
             />
             <ThirdPartyButton
-              className="mr-4 w-2/4 border-4  max-[900px]:w-32  max-[900px]:text-[0] max-[600px]:w-16"
+              className="mr-4 w-2/4 border-4 max-[900px]:w-32 max-[900px]:text-[0] max-[600px]:w-16"
               onClick={() => {
                 window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL;
               }}
