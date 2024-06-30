@@ -3,6 +3,7 @@ import usersService from "@services/users.service";
 import axios, { AxiosResponse, Method } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
+import { isAxiosError } from "./utils";
 
 export const isProduction = process.env.NODE_ENV === "production";
 const backendURL = isProduction
@@ -10,11 +11,13 @@ const backendURL = isProduction
   : (import.meta.env.VITE_DEVELOPMENT_BACKEND_URL as string);
 
 export const axiosInstance = axios.create({
-  baseURL: backendURL,
+  // baseURL: backendURL,
+  baseURL: "http://localhost:4000/",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 const withoutAccessTokenRoute = [
@@ -37,14 +40,19 @@ axiosInstance.interceptors.request.use(
           if (newToken.status === 200) {
             localStorage.setItem("token", newToken.data.data.access_token);
             axiosInstance.defaults.headers.common.Authorization = `Bearer ${newToken.data.data.access_token}`;
+            config.headers.Authorization = `Bearer ${newToken.data.data.access_token}`;
           }
         } catch (err) {
-          localStorage.removeItem("token");
-          delete axiosInstance.defaults.headers.common.Authorization;
-          toast.error("Token expired, please login again");
-          setTimeout(() => {
-            window.location.href = "/login";
-          }, 2000);
+          if (isAxiosError(err)) {
+            if (err.response?.status === 401) {
+              toast.error("Token Expired, Please login again");
+              delete axiosInstance.defaults.headers.common.Authorization;
+              setTimeout(() => {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+              }, 2000);
+            }
+          }
         }
       }
     }
