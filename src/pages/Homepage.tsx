@@ -4,9 +4,12 @@ import Navbar from "@components/Navbar";
 import { featureArray } from "../db/header";
 import useDocumentTitle from "@hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
+import { Toast } from "@components/index";
+import { useState } from "react";
 
 const Homepage = () => {
   const nav = useNavigate();
+  const [showToast, setShowToast] = useState<boolean>(false);
   useDocumentTitle({ title: "Homepage" });
   return (
     <div>
@@ -51,6 +54,15 @@ const Homepage = () => {
         >
           Register
         </button>
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() => setShowToast(!showToast)}
+        >
+          Show Toast
+        </button>
+      </div>
+      <div className="mx-auto mt-3">
+        <Toast />
       </div>
     </div>
   );
