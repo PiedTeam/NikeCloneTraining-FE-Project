@@ -9,7 +9,7 @@
     "build": "cross-env tsc && vite build",
     "preview": "cross-env vite preview",
     "prepare": "husky",
-    "lint": "pnpm run prettier:fix && pnpm run eslint:check && pnpm run check-types",
+    "lint": "npm run prettier:fix && npm run eslint:check && npm run check-types",
     "lint-staged": "lint-staged",
     "prettier:check": "prettier --check . --cache",
     "prettier:fix": "prettier --write . --cache",
@@ -22,7 +22,7 @@
   },
   "lint-staged": {
     "*.*": [
-      "pnpm run prettier:fix"
+      "npm run prettier:fix"
     ]
   },
   "dependencies": {
