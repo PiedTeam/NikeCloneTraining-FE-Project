@@ -27,6 +27,7 @@
       "@utils/*": ["utils/*"],
       "@public/*": ["../public/*"],
       "@common/*": ["common/*"],
+      "@providers/*": ["providers/*"]
     },
     "strict": true,
     "noUnusedParameters": true,

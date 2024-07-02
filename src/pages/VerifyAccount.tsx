@@ -1,6 +1,5 @@
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import {
   isAxiosError,
   isAxiosUnprocessableEntityError,
@@ -14,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import usersService from "@services/users.service";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@stores/AuthStore";
+import { useToast } from "@providers/ToastProvider";
 
 enum VerifyMethod {
   EMAIL = "email",
@@ -39,6 +39,7 @@ const VerifyAccount = () => {
   const isVerify = useAuthStore((state) => state.auth);
   const token = useAuthStore((state) => state.auth?.user?.access_token);
   const [sendOTPError, setSendOTPError] = useState<string>("");
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState<VerifyMethod>(
     VerifyMethod.EMAIL,
@@ -81,7 +82,7 @@ const VerifyAccount = () => {
         },
         {
           onSuccess: () => {
-            toast.success("OTP sent successfully");
+            toast.success({ message: "OTP sent successfully" });
             setSendOTPError("");
             setIsResendAvailable(false);
             const interval = setInterval(() => {
@@ -108,9 +109,10 @@ const VerifyAccount = () => {
                 }
               }
             } else if (isAxiosError(error) && error.response?.status === 406) {
-              toast.error(
-                "Send otp over 3 time, Please wait 24 hours to try again",
-              );
+              toast.danger({
+                message:
+                  "Send otp over 3 time, Please wait 24 hours to try again",
+              });
             }
           },
         },
@@ -137,7 +139,7 @@ const VerifyAccount = () => {
               email_phone: "",
               verify_account_otp: "",
             });
-            toast.success("Account Verified Successfully");
+            toast.success({ message: "Account Verified Successfully" });
             setTimeout(() => navigate("/"), 3000);
           }
         } catch (error: unknown) {
@@ -159,7 +161,7 @@ const VerifyAccount = () => {
 
   useEffect(() => {
     if (isVerify?.status === "VERIFIED") {
-      toast.success("Account already verified");
+      toast.success({ message: "Account already verified" });
       navigate("/");
     }
   }, [isVerify, navigate]);

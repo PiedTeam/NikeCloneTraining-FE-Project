@@ -19,11 +19,11 @@ import {
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, Button } from "@nextui-org/react";
-import { toast } from "react-toastify";
 import usersService from "@services/users.service";
 import { useAuthStore } from "@stores/AuthStore";
 import { jwtDecode } from "jwt-decode";
 import { BrandLogo } from "@common/components";
+import { useToast } from "@providers/ToastProvider";
 
 type LoginFieldSchema<T extends FieldValues> = {
   name: Path<T>;
@@ -56,6 +56,7 @@ const Login = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const setAuth = useAuthStore((state) => state.setAuth);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const { toast } = useToast();
   useDocumentTitle({ title: "Login" });
   const { register, handleSubmit, setError } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
@@ -70,7 +71,7 @@ const Login = () => {
   const handleLogin: SubmitHandler<LoginFormData> = (data) => {
     mutate(data, {
       onSuccess: (response) => {
-        toast.success("Login successfully");
+        toast.success({ message: "Login Successfully" });
         setErrorMsg("");
         setAuth({
           user: {
@@ -108,11 +109,11 @@ const Login = () => {
                 message: formError[key as keyof LoginFormData],
                 type: "Server",
               });
-              toast.error("Invalid email or password");
+              toast.danger({ message: "Invalid email or password" });
             });
           }
         } else {
-          toast.error("Please try again later");
+          toast.danger({ message: "Please try again later" });
         }
       },
     });

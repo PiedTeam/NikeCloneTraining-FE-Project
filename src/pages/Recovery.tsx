@@ -4,18 +4,19 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { RecoveryForm } from "@services/users.api";
-import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import usersService from "@services/users.service";
 import { isAxiosError } from "axios";
+import { useToast } from "@providers/ToastProvider";
 
 const Recovery = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("email");
   const location = useLocation();
+  const { toast } = useToast();
 
   const recoveryMethods = [
     { label: "Email", value: "email" },
@@ -55,10 +56,7 @@ const Recovery = () => {
   const handleRecovery: SubmitHandler<RecoveryForm> = (data) => {
     mutate(data, {
       onSuccess: () => {
-        toast.success("Recovery successful!", {
-          position: "top-right",
-          autoClose: 2000,
-        });
+        toast.success({ message: "Recovery successful!" });
 
         setTimeout(() => {
           navigate("/otp", {
@@ -71,12 +69,13 @@ const Recovery = () => {
           const formError = error.response?.data.data;
 
           if (formError) {
-            toast.error(
-              formError.email ? formError.email : formError.phone_number,
-              {
-                autoClose: 2000,
-              },
-            );
+            toast.danger({
+              message: formError.email
+                ? formError.email
+                : (formError.phone_number as string),
+              timeout: 2000,
+            });
+
             Object.keys(formError).forEach((key) => {
               const errorMessage = formError[key as keyof RecoveryForm];
               setError(key as keyof RecoveryForm, {
@@ -86,11 +85,11 @@ const Recovery = () => {
             });
           }
         } else if (isAxiosError(error) && error.response?.status === 406) {
-          toast.error(
-            "Send otp over 3 time, Please wait 24 hours to try again",
-          );
+          toast.danger({
+            message: "Send otp over 3 time, Please wait 24 hours to try again",
+          });
         } else if (isAxiosError(error) && error.response?.status === 401) {
-          toast.error("Your account is not activated yet");
+          toast.danger({ message: "Your account is not activated yet" });
         }
       },
     });

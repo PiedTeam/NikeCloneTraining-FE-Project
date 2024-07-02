@@ -7,7 +7,6 @@ import {
   ResetPasswordResponse,
   passwordInterfaceApi,
 } from "@services/users.api";
-import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import usersService from "@services/users.service.ts";
 import { useAuthStore } from "@stores/AuthStore.ts";
@@ -15,6 +14,7 @@ import { isAxiosUnprocessableEntityError } from "@utils/utils.ts";
 import { ResponseApi } from "@utils/utils.type.ts";
 import { SvgIcon } from "@common/components";
 import { ButtonPreviewPassword } from "@components/index";
+import { useToast } from "@providers/ToastProvider";
 
 export interface UserInfoForm {
   data: {
@@ -32,6 +32,7 @@ const Password = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const access_token = useAuthStore((state) => state.auth?.user?.access_token);
   const location = useLocation();
+  const { toast } = useToast();
   const toggleVisibility = () => setIsVisible(!isVisible);
   const schema = yup.object().shape({
     password: yup.string().required("Password is required"),
@@ -63,7 +64,7 @@ const Password = () => {
           otp: location.state.otp,
         });
         if (response.status === 200) {
-          toast.success("Reset Password Successfully");
+          toast.success({ message: "Reset Password Successfully" });
           setTimeout(() => navigate("/login"), 3000);
         }
       } catch (error) {
@@ -75,11 +76,13 @@ const Password = () => {
           const formError = error.response?.data.data;
           if (formError) {
             if ("password" in formError) {
-              toast.error(formError.data?.password);
+              toast.danger({ message: formError.data?.password as string });
             } else if ("confirm_password" in formError) {
-              toast.error(formError.data?.confirm_password);
+              toast.danger({
+                message: formError.data?.confirm_password as string,
+              });
             } else if ("otp" in formError) {
-              toast.error(formError.data?.otp);
+              toast.danger({ message: formError.data?.otp as string });
             }
           }
         }
@@ -97,9 +100,9 @@ const Password = () => {
         _data: patchData,
       });
       if (typeof error === "object" && error !== null && "response" in error) {
-        toast.error(error.response.data.data.data.password);
+        toast.danger({ message: error.response.data.data.data.password });
       } else {
-        toast.success(message as string);
+        toast.success({ message: message as string });
         setTimeout(() => navigate("/"), 3000);
       }
     }

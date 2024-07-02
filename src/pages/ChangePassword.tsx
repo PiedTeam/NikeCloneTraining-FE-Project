@@ -3,13 +3,13 @@ import { Input, Link, Button } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-toastify";
 import { FormDataChangePasswordApi } from "@services/users.api.ts";
 import usersService from "@services/users.service.ts";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@stores/AuthStore.ts";
 import { SvgIcon } from "@common/components";
 import { ButtonPreviewPassword } from "@components/index";
+import { useToast } from "@providers/ToastProvider";
 
 export interface FormDataChangePassword {
   oldPassword: string;
@@ -40,6 +40,7 @@ const ChangePassword = () => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     React.useState(false);
   const auth = useAuthStore((state) => state.auth);
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
@@ -65,9 +66,9 @@ const ChangePassword = () => {
     });
 
     if (typeof error === "object" && error !== null && "response" in error) {
-      toast.error(error.response.data.data.old_password);
+      toast.danger({ message: error.response.data.data.old_password });
     } else {
-      toast.success(message as string);
+      toast.success({ message: message as string });
       setTimeout(() => navigate("/"), 3000);
     }
   };

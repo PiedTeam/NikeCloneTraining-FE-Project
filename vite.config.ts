@@ -28,6 +28,7 @@ const viteConfig: UserConfig = {
       "@utils": "/src/utils",
       "@public": "/public",
       "@common": "/src/common",
+      "@providers": "/src/providers",
     },
   },
 };

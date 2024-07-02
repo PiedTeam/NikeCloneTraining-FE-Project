@@ -1,16 +1,17 @@
 import { Button, Link } from "@nextui-org/react";
+import { useToast } from "@providers/ToastProvider";
 import usersService from "@services/users.service";
 import { isAxiosError } from "@utils/utils";
 import { useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const CompareOtpPage = () => {
   const [isResendAvailable, setIsResendAvailable] = useState<boolean>(true);
   const location = useLocation();
   const [timeRemaining, setTimeRemaining] = useState<number>(30);
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [otp, setOtp] = useState("");
   useEffect(() => {}, []);
 
@@ -18,7 +19,7 @@ const CompareOtpPage = () => {
     try {
       const data = await usersService.recovery(location.state.email_phone);
       if (data) {
-        toast.success("Otp is being sent");
+        toast.success({ message: "Otp is being sent" });
       }
       setIsResendAvailable(false);
       let remainingTime = 30;
@@ -31,7 +32,9 @@ const CompareOtpPage = () => {
         setTimeRemaining(30);
       }, 30000);
     } catch (error) {
-      toast.error("Error occurred while sending OTP. Please try again later.");
+      toast.danger({
+        message: "Error occurred while sending OTP. Please try again later.",
+      });
     }
   };
 
@@ -44,7 +47,7 @@ const CompareOtpPage = () => {
         },
       });
       if (response.status === 200) {
-        toast.success("Otp verified successfully");
+        toast.success({ message: "Otp verified successfully" });
         setTimeout(
           () =>
             navigate("/password", {
@@ -59,9 +62,10 @@ const CompareOtpPage = () => {
       }
     } catch (error) {
       if (isAxiosError(error)) {
-        toast.error(
-          "Error occurred while verifying OTP. Please try again later.",
-        );
+        toast.danger({
+          message:
+            "Error occurred while verifying OTP. Please try again later.",
+        });
       }
     }
   };

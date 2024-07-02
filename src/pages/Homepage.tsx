@@ -4,12 +4,11 @@ import Navbar from "@components/Navbar";
 import { featureArray } from "../db/header";
 import useDocumentTitle from "@hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
-import { Toast } from "@components/index";
-import { useState } from "react";
+import { useToast } from "@providers/ToastProvider";
 
 const Homepage = () => {
   const nav = useNavigate();
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const { toast } = useToast();
   useDocumentTitle({ title: "Homepage" });
   return (
     <div>
@@ -56,13 +55,34 @@ const Homepage = () => {
         </button>
         <button
           className="rounded border-2 border-black px-2"
-          onClick={() => setShowToast(!showToast)}
+          onClick={() =>
+            toast.success({ message: "Login Successfully", timeout: 5000 })
+          }
         >
-          Show Toast
+          Success
         </button>
-      </div>
-      <div className="mx-auto mt-3">
-        <Toast />
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() =>
+            toast.danger({
+              message: "Your Login Crediential is Incorrect",
+              timeout: 3000,
+            })
+          }
+        >
+          Danger
+        </button>
+        <button
+          className="rounded border-2 border-black px-2"
+          onClick={() =>
+            toast.warning({
+              message: "Check Your Login Crediential Again",
+              timeout: 1000,
+            })
+          }
+        >
+          Warning
+        </button>
       </div>
     </div>
   );
